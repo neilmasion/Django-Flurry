@@ -1,0 +1,247 @@
+.container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: var(--spacing-lg);
+}
+
+.container input {
+    font-size: .8rem;
+}
+
+.account-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    padding: 3rem;
+}
+
+.account-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.back-btn {
+    position: fixed;
+    top: 3rem;
+    left: 4rem;
+    color: var(--text-tertiary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.back-btn:hover {
+    color: var(--text-primary);
+}
+
+.back-btn i {
+    margin-right: .5rem;
+    font-size: 0.75rem;
+}
+
+.account-header {
+    margin-bottom: 2rem;
+}
+
+.account-header h1 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.account-header p {
+    color: var(--text-tertiary);
+    font-size: 0.8rem;
+    margin-bottom: 0;
+}
+
+.form-panel {
+    display: none;
+}
+
+.form-panel.active {
+    display: block;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.75rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding-right: 2.5rem;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 0.7rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    font-size: 0.8rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-fast);
+}
+
+.toggle-password:hover {
+    color: var(--text-primary);
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.remember-me input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.forgot-link {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.forgot-link:hover {
+    color: var(--text-primary);
+}
+
+.forgot-msg {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.forgot-msg i {
+    color: var(--text-tertiary);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.error-msg {
+    color: #ef4444;
+    font-size: 0.72rem;
+    margin-top: 0.2rem;
+    display: block;
+    min-height: 1rem;
+}
+
+.btn-block {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.form-switch-link {
+    text-align: center;
+    margin-top: 1rem;
+    color: var(--text-tertiary);
+    font-size: 0.8rem;
+}
+
+.form-switch-link a {
+    color: var(--text-primary);
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.form-switch-link a:hover {
+    color: var(--primary-color);
+}
+
+.demo-form .form-row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.demo-form .half {
+    flex: 1;
+}
+
+.demo-form select {
+    width: 100%;
+    padding: 0.7rem;
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    transition: all var(--transition-fast);
+}
+
+.demo-form select:focus {
+    outline: none;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: auto;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}

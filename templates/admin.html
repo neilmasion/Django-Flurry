@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flurry | Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../static/images/logo.png">
+    <link rel="stylesheet" href="../static/css/root.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/admin.css">
+</head>
+<body>
+    <canvas id="cloudCanvas"></canvas>
+    <div class="admin-login-wrap" id="adminLoginWrap">
+        <div class="admin-login-box">
+            <div class="admin-login-logo">
+                <img src="../static/images/logo.png" alt="Flurry Logo">
+                <span>Flurry</span>
+                <button class="admin-theme-btn" id="loginThemeBtn" style="margin-left:auto;" aria-label="Toggle theme">
+                    <img src="../static/images/theme.png" alt="Theme" class="theme-icon">
+                </button>
+            </div>
+            <div class="admin-login-header">
+                <span class="admin-eyebrow"><i class="fa-solid fa-shield-halved"></i> Admin Access</span>
+                <h2>Welcome back, Admin</h2>
+                <p>Sign in to manage Flurry's community.</p>
+            </div>
+            <form id="adminLoginForm" novalidate>
+                <div class="aform-group">
+                    <label for="adminEmail">Email</label>
+                    <input type="email" id="adminEmail" placeholder="admin@flurry.com">
+                    <span class="aerror" id="adminEmailErr"></span>
+                </div>
+                <div class="aform-group">
+                    <label for="adminPass">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="adminPass" placeholder="Enter admin password">
+                        <button type="button" class="toggle-password" data-target="adminPass">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
+                    </div>
+                    <span class="aerror" id="adminPassErr"></span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+            <a href="index.html" class="admin-back-link"><i class="fa-solid fa-arrow-left"></i> Back to site</a>
+        </div>
+    </div>
+
+    <div class="admin-app" id="adminApp" style="display:none;">
+        <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
+
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="admin-sidebar-top">
+                <div class="admin-brand">
+                    <img src="../static/images/logo.png" alt="Flurry">
+                    <span>Flurry Admin</span>
+                </div>
+                <nav class="admin-nav">
+                    <button class="admin-nav-item active" data-section="dashboard">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </button>
+                    <button class="admin-nav-item" data-section="users">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Users</span>
+                    </button>
+                    <button class="admin-nav-item" data-section="events">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>Events</span>
+                    </button>
+                    <button class="admin-nav-item" data-section="enrollments">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Enrollments</span>
+                    </button>
+                </nav>
+            </div>
+            <div class="admin-sidebar-bottom">
+                <button class="admin-logout-btn" id="adminLogoutBtn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <div class="admin-topbar-left">
+                    <button class="admin-menu-toggle" id="adminMenuToggle">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="admin-breadcrumb">
+                        <span id="adminBreadcrumb">Dashboard</span>
+                    </div>
+                </div>
+                <div class="admin-topbar-right">
+                    <button class="admin-theme-btn" id="appThemeBtn" aria-label="Toggle theme">
+                        <img src="../static/images/theme.png" alt="Theme" class="theme-icon">
+                    </button>
+                    <div class="admin-topbar-badge">
+                        <i class="fa-solid fa-shield-halved"></i> Admin
+                    </div>
+                </div>
+            </header>
+
+            <section class="admin-section active" id="section-dashboard">
+                <div class="admin-section-header">
+                    <h2>Dashboard</h2>
+                    <p>Overview of Flurry community activity.</p>
+                </div>
+
+                <div class="dash-stats">
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i class="fa-solid fa-users"></i></div>
+                        <div class="dash-stat-body">
+                            <div class="dash-stat-num" id="statTotalUsers">0</div>
+                            <div class="dash-stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <div class="dash-stat-body">
+                            <div class="dash-stat-num" id="statTotalEnrollments">0</div>
+                            <div class="dash-stat-label">Total Enrollments</div>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                        <div class="dash-stat-body">
+                            <div class="dash-stat-num" id="statTotalEvents">0</div>
+                            <div class="dash-stat-label">Active Events</div>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="dash-stat-body">
+                            <div class="dash-stat-num" id="statAvgEnroll">0</div>
+                            <div class="dash-stat-label">Avg. Enrollments / User</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-lower">
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h4><i class="fa-solid fa-fire"></i> Top Enrolled Events</h4>
+                        </div>
+                        <div class="dash-card-body" id="topEvents"></div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h4><i class="fa-solid fa-clock-rotate-left"></i> Recent Registrations</h4>
+                        </div>
+                        <div class="dash-card-body" id="recentRegs"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-section" id="section-users">
+                <div class="admin-section-header">
+                    <h2>User Management</h2>
+                    <p>View and manage registered members.</p>
+                </div>
+                <div class="admin-toolbar">
+                    <div class="admin-search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="userSearch" placeholder="Search by name or email…" class="admin-search">
+                    </div>
+                    <span class="admin-count" id="userCount">0 users</span>
+                </div>
+                <div class="admin-table-wrap">
+                    <table class="admin-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Course</th>
+                                <th>Year</th>
+                                <th>Enrolled</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                    <div class="admin-empty" id="usersEmpty" style="display:none;">
+                        <i class="fa-solid fa-users-slash"></i>
+                        <p>No users found.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-section" id="section-events">
+                <div class="admin-section-header">
+                    <h2>Event Management</h2>
+                    <p>Add, edit, or remove events and workshops.</p>
+                </div>
+                <div class="admin-toolbar">
+                    <button class="btn btn-primary btn-small" id="addEventBtn">
+                        <i class="fa-solid fa-plus"></i> Add Event
+                    </button>
+                    <span class="admin-count" id="eventCount">0 events</span>
+                </div>
+                <div class="events-admin-grid" id="eventsAdminGrid"></div>
+                <div class="admin-empty" id="eventsEmpty" style="display:none;">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                    <p>No events yet. Add one above.</p>
+                </div>
+            </section>
+
+            <section class="admin-section" id="section-enrollments">
+                <div class="admin-section-header">
+                    <h2>Enrollments Overview</h2>
+                    <p>See who enrolled in which event.</p>
+                </div>
+                <div class="admin-toolbar">
+                    <div class="admin-search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="enrollSearch" placeholder="Search by name or event…" class="admin-search">
+                    </div>
+                    <div class="admin-filter-wrap">
+                        <select id="enrollFilter" class="admin-filter-select">
+                            <option value="">All Events</option>
+                        </select>
+                    </div>
+                    <span class="admin-count" id="enrollCount">0 enrollments</span>
+                </div>
+                <div class="admin-table-wrap">
+                    <table class="admin-table" id="enrollTable">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Event</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Enrolled At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="enrollTableBody"></tbody>
+                    </table>
+                    <div class="admin-empty" id="enrollEmpty" style="display:none;">
+                        <i class="fa-solid fa-inbox"></i>
+                        <p>No enrollments found.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="admin-modal-overlay" id="eventModalOverlay" style="display:none;">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3 id="eventModalTitle">Add Event</h3>
+                <button class="admin-modal-close" id="eventModalClose"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="eventForm" novalidate>
+                <input type="hidden" id="eventId">
+                <div class="aform-group">
+                    <label for="evTitle">Event Title*</label>
+                    <input type="text" id="evTitle" placeholder="e.g. AWS Cloud Practitioner Bootcamp">
+                    <span class="aerror" id="evTitleErr"></span>
+                </div>
+                <div class="aform-row">
+                    <div class="aform-group">
+                        <label for="evDate">Date*</label>
+                        <input type="text" id="evDate" placeholder="e.g. March 15, 2026">
+                        <span class="aerror" id="evDateErr"></span>
+                    </div>
+                    <div class="aform-group">
+                        <label for="evTime">Time*</label>
+                        <input type="text" id="evTime" placeholder="e.g. 9:00 AM – 5:00 PM">
+                        <span class="aerror" id="evTimeErr"></span>
+                    </div>
+                </div>
+                <div class="aform-row">
+                    <div class="aform-group">
+                        <label for="evTag">Tag</label>
+                        <select id="evTag">
+                            <option value="Workshop">Workshop</option>
+                            <option value="Tech Talk">Tech Talk</option>
+                            <option value="Bootcamp">Bootcamp</option>
+                            <option value="Seminar">Seminar</option>
+                        </select>
+                    </div>
+                    <div class="aform-group">
+                        <label for="evLocation">Location</label>
+                        <input type="text" id="evLocation" placeholder="e.g. Room 401, IT Building">
+                    </div>
+                </div>
+                <div class="aform-group">
+                    <label for="evDesc">Description</label>
+                    <textarea id="evDesc" rows="3" placeholder="Short event description…"></textarea>
+                </div>
+                <div class="admin-modal-actions">
+                    <button type="button" class="btn btn-outline" id="eventModalCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="eventModalSubmit">Save Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-modal-overlay" id="deleteModalOverlay" style="display:none;">
+        <div class="admin-modal admin-modal--sm">
+            <div class="admin-modal-icon danger"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 id="deleteModalTitle">Delete User?</h3>
+            <p id="deleteModalDesc">This action cannot be undone.</p>
+            <div class="admin-modal-actions">
+                <button class="btn btn-outline" id="deleteCancel">Cancel</button>
+                <button class="btn admin-btn-danger" id="deleteConfirm">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-toast" id="adminToast" style="display:none;">
+        <i id="adminToastIcon" class="fa-solid fa-circle-check"></i>
+        <span id="adminToastMsg"></span>
+    </div>
+
+    <script src="../static/js/modules/cloudparticles.js" type="module"></script>
+    <script type="module">
+        import { setupCloudParticles } from '../static/js/modules/cloudparticles.js';
+        setupCloudParticles();
+    </script>
+    <script src="../static/js/admin.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+:root {
+    --primary-color: #1565c0;
+    --primary-dark: #0d47a1;
+    --primary-light: #1976d2;
+    --secondary-color: #ffffff;
+    --accent-color: #29b4f6;
+
+    --bg-primary: #1565c0;
+    --bg-secondary: rgba(255, 255, 255, 0.12);
+    --bg-tertiary: rgba(255, 255, 255, 0.2);
+    --bg-hover: rgba(255, 255, 255, 0.22);
+
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-tertiary: rgba(255, 255, 255, 0.55);
+
+    --border-color: rgba(255, 255, 255, 0.22);
+    --border-light: rgba(255, 255, 255, 0.1);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.3);
+
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-2xl: 4rem;
+
+    --radius-xs: 0.2rem;
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+
+    --transition-fast: 150ms ease-in-out;
+    --transition-base: 200ms ease-in-out;
+    --transition-slow: 300ms ease-in-out;
+}
+
+[data-theme="dark"] {
+    --primary-color: #ffffff;
+    --primary-dark: #111111;
+    --primary-light: #bbbbbb;
+    --secondary-color: #000000;
+    --accent-color: #999999;
+
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #121212;
+    --bg-tertiary: #1e1e1e;
+    --bg-hover: #2a2a2a;
+
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-tertiary: #999999;
+
+    --border-color: #475569;
+    --border-light: #64748b;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.7);
+    --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.8);
+    --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.9);
+}
+
+html:not([data-theme="dark"]) body {
+    background-color: #1565c0;
+    background-image: linear-gradient(45deg, #ffffff76 0%, #1976d2 45%, #0d47a1 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+:not([data-theme="dark"]) .navbar {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.112);
+}
+
+:not([data-theme="dark"]) .nav-menu {background: transparent;}
+:not([data-theme="dark"]) input[type="text"],
+:not([data-theme="dark"]) input[type="email"],
+:not([data-theme="dark"]) input[type="password"],
+:not([data-theme="dark"]) input[type="tel"],
+:not([data-theme="dark"]) textarea,
+:not([data-theme="dark"]) select {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+:not([data-theme="dark"]) input[type="text"]::placeholder,
+:not([data-theme="dark"]) input[type="email"]::placeholder,
+:not([data-theme="dark"]) input[type="password"]::placeholder,
+:not([data-theme="dark"]) input[type="tel"]::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+:not([data-theme="dark"]) input[type="text"]:focus,
+:not([data-theme="dark"]) input[type="email"]:focus,
+:not([data-theme="dark"]) input[type="password"]:focus,
+:not([data-theme="dark"]) input[type="tel"]:focus,
+:not([data-theme="dark"]) textarea:focus,
+:not([data-theme="dark"]) select:focus {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(245, 230, 66, 0.7);
+    box-shadow: 0 0 0 3px rgba(245, 230, 66, 0.15);
+}
+
+:not([data-theme="dark"]) .modal-content {
+    background: rgba(13, 36, 144, 0.45);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+:not([data-theme="dark"]) .footer {
+    background: transparent;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+:not([data-theme="dark"]) .footer a {
+    color: #fff;
+}
+
+:not([data-theme="dark"]) .btn-primary {
+    background-color: #ffffff;
+    color: #000;
+    border: none;
+    font-weight: 700;
+}
+
+:not([data-theme="dark"]) .btn-primary:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+:not([data-theme="dark"]) .btn-outline {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+}
+
+:not([data-theme="dark"]) .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #ffffff;
+    color: #ffffff;
+}
+
+:not([data-theme="dark"]) .hero-buttons input[type="email"] {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+:not([data-theme="dark"]) .hero-buttons input[type="email"]::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+:not([data-theme="dark"]) .partners-section {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+:not([data-theme="dark"]) .partners-label {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+:not([data-theme="dark"]) .partner-item {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+:not([data-theme="dark"]) .partner-name {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+:not([data-theme="dark"]) .demo-form select option {
+    background: #1d3bc18b;
+    color: #ffffff;
+}
+
+:not([data-theme="dark"]) .forgot-msg {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .about-card,
+[data-theme="dark"] .learn-card,
+[data-theme="dark"] .event-card,
+[data-theme="dark"] .testimonial-card,
+[data-theme="dark"] .hero-badge,
+[data-theme="dark"] .partner-item {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+[data-theme="dark"] .about-card:hover,
+[data-theme="dark"] .learn-card:hover,
+[data-theme="dark"] .event-card:hover,
+[data-theme="dark"] .testimonial-card:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-light);
+}
+
+[data-theme="dark"] .about-text h2,
+[data-theme="dark"] .learn-header h2,
+[data-theme="dark"] .events-header h2,
+[data-theme="dark"] .testimonials-header h2,
+[data-theme="dark"] .cta-content h2,
+[data-theme="dark"] .about-card h4,
+[data-theme="dark"] .learn-card h4,
+[data-theme="dark"] .event-card h3,
+[data-theme="dark"] .event-day,
+[data-theme="dark"] .hero-stat-num {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .about-text p,
+[data-theme="dark"] .learn-header p,
+[data-theme="dark"] .events-header p,
+[data-theme="dark"] .cta-content p,
+[data-theme="dark"] .about-card p,
+[data-theme="dark"] .learn-card p,
+[data-theme="dark"] .event-card p,
+[data-theme="dark"] .event-meta span,
+[data-theme="dark"] .event-spots,
+[data-theme="dark"] .testimonial-card p,
+[data-theme="dark"] .testimonial-author span,
+[data-theme="dark"] .section-eyebrow,
+[data-theme="dark"] .hero-stat-label,
+[data-theme="dark"] .event-month {
+    color: var(--text-tertiary);
+}
+
+[data-theme="dark"] .testimonial-author strong {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .learn-icon,
+[data-theme="dark"] .testimonial-avatar {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .event-tag,
+[data-theme="dark"] .event-tag--workshop,
+[data-theme="dark"] .event-tag--talk {
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .hero-stat-divider {
+    background: var(--border-color);
+}
+
+[data-theme="dark"] .hero-badge {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+:not([data-theme="dark"]) .cf-group select option {
+    background: #1d3bc18b;
+    color: #ffffff;
+}
+
+[data-theme="dark"] #cloudCanvas {
+    opacity: 0.12;
+}
+
+[data-theme="dark"] .scroll-top-btn {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .scroll-top-btn:hover {
+    background: var(--bg-hover);
+}

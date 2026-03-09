@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flurry | My Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../static/images/logo.png">
+    <link rel="stylesheet" href="../static/css/root.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/profile.css">
+    <link rel="stylesheet" href="../static/css/query.css">
+</head>
+<body>
+    <canvas id="cloudCanvas"></canvas>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="../static/images/logo.png" class="logo-icon" alt="Flurry Logo">
+                <span class="logo-text">Flurry</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="events.html" class="nav-link">Events</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li class="nav-theme desktop-theme">
+                    <button class="btn theme-toggle" aria-label="Toggle theme">
+                        <img class="theme-icon" src="../static/images/theme.png" alt="Theme">
+                    </button>
+                </li>
+                <li class="nav-auth">
+                    <button id="loginBtn" class="btn btn-outline btn-small">Login</button>
+                    <div class="user-menu" id="userMenu" style="display:none;">
+                        <button class="user-menu-btn" id="userMenuBtn">
+                            <div class="user-avatar-sm" id="userAvatarNav"></div>
+                            <span id="userName"></span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fa-solid fa-user"></i> My Profile
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item dropdown-item--danger" id="logoutBtn">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="nav-right-controls">
+                <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
+                <img src="../static/images/theme.png" alt="Theme" class="theme-icon">
+            </button>
+                <div class="hamburger">
+                <i class="fa-solid fa-bars open-icon"></i>
+                <i class="fa-solid fa-xmark close-icon"></i>
+            </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-page">
+        <aside class="profile-sidebar">
+            <div class="profile-avatar-wrap">
+                <div class="profile-avatar" id="profileAvatar"></div>
+                <div class="profile-avatar-ring"></div>
+                <button type="button" class="avatar-upload-btn" id="avatarActionBtn" title="Change photo">
+                    <i class="fa-solid fa-camera" id="avatarActionIcon"></i>
+                </button>
+                <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+            </div>
+            <div class="profile-identity">
+                <h2 id="profileFullName">—</h2>
+                <span class="profile-badge"><i class="fa-brands fa-aws"></i> Cloud Member</span>
+            </div>
+            <div class="profile-meta-list">
+                <div class="profile-meta-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span id="profileEmail">—</span>
+                </div>
+                <div class="profile-meta-item">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span id="profileCourse">—</span>
+                </div>
+                <div class="profile-meta-item">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span id="profileYear">—</span>
+                </div>
+            </div>
+            <button class="btn btn-outline profile-logout-btn" id="profileLogoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i> Log Out
+            </button>
+        </aside>
+
+        <main class="profile-main">
+            <div class="profile-tabs">
+                <button class="profile-tab active" data-tab="overview">
+                    <i class="fa-solid fa-chart-simple"></i> Overview
+                </button>
+                <button class="profile-tab" data-tab="workshops">
+                    <i class="fa-solid fa-book-open"></i> Workshops
+                </button>
+                <button class="profile-tab" data-tab="edit">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit Profile
+                </button>
+            </div>
+
+            <div class="tab-panel active" id="tab-overview">
+                <div class="overview-sidebar-layout">
+                    <div class="overview-welcome">
+                        <div class="welcome-left">
+                            <div class="welcome-avatar" id="welcomeAvatar"></div>
+                            <div class="welcome-text">
+                                <span class="section-eyebrow">Welcome back</span>
+                                <h3 id="welcomeName">—</h3>
+                                <p class="welcome-bio" id="welcomeBio">No bio yet. Add one in Edit Profile!</p>
+                            </div>
+                        </div>
+                        <div class="welcome-art">
+                            <i class="fa-brands fa-aws"></i>
+                        </div>
+                    </div>
+
+                    <div class="overview-bottom">
+                        <div class="overview-activity">
+                            <h4>Recent Activity</h4>
+                            <div class="activity-empty" id="activityEmpty">
+                                <i class="fa-solid fa-inbox"></i>
+                                <p>No activity yet. Enroll in a workshop to get started!</p>
+                            </div>
+                        </div>
+
+                        <div class="combined-stats-card">
+                            <div class="combined-stats-title">
+                                <i class="fa-solid fa-chart-simple"></i> Your Stats
+                            </div>
+                            <div class="combined-stat-item">
+                                <div class="combined-stat-icon"><i class="fa-solid fa-book-open"></i></div>
+                                <div class="combined-stat-body">
+                                    <div class="combined-stat-num" id="statEnrolled">0</div>
+                                    <div class="combined-stat-label">Enrolled</div>
+                                </div>
+                            </div>
+                            <div class="combined-stat-divider"></div>
+                            <div class="combined-stat-item">
+                                <div class="combined-stat-icon"><i class="fa-solid fa-certificate"></i></div>
+                                <div class="combined-stat-body">
+                                    <div class="combined-stat-num">0</div>
+                                    <div class="combined-stat-label">Certs</div>
+                                </div>
+                            </div>
+                            <div class="combined-stat-divider"></div>
+                            <div class="combined-stat-item">
+                                <div class="combined-stat-icon"><i class="fa-solid fa-fire"></i></div>
+                                <div class="combined-stat-body">
+                                    <div class="combined-stat-num">1</div>
+                                    <div class="combined-stat-label">Day Streak</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-panel" id="tab-workshops">
+                <div class="workshops-header">
+                    <h3>My Workshops</h3>
+                    <a href="events.html" class="btn btn-outline btn-small">Browse More</a>
+                </div>
+                <div class="enrolled-grid" id="enrolledGrid">
+                    <div class="enrolled-empty">
+                        <i class="fa-solid fa-book-open"></i>
+                        <h4>No workshops yet</h4>
+                        <p>Browse events and enroll in a workshop to see it here.</p>
+                        <a href="events.html" class="btn btn-primary">Explore Workshops</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-panel" id="tab-edit">
+                <h3 class="edit-title">Edit Profile</h3>
+                <form class="edit-form" id="editForm" novalidate>
+
+                    <div class="edit-group">
+                        <label for="editBio">Bio</label>
+                        <textarea id="editBio" placeholder="Tell the community a bit about yourself..." rows="3" style="resize:vertical;"></textarea>
+                    </div>
+
+                    <div class="edit-divider"></div>
+
+                    <div class="edit-row">
+                        <div class="edit-group">
+                            <label for="editFirstName">First Name</label>
+                            <input type="text" id="editFirstName" placeholder="First name">
+                        </div>
+                        <div class="edit-group">
+                            <label for="editLastName">Last Name</label>
+                            <input type="text" id="editLastName" placeholder="Last name">
+                        </div>
+                    </div>
+                    <div class="edit-group">
+                        <label for="editEmail">Email</label>
+                        <input type="email" id="editEmail" placeholder="Your email">
+                    </div>
+                    <div class="edit-row">
+                        <div class="edit-group">
+                            <label for="editCourse">Course</label>
+                            <select id="editCourse">
+                                <option value="">Select course...</option>
+                                <option>Information Technology (IT)</option>
+                                <option>Computer Science (CS)</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="edit-group">
+                            <label for="editYear">Year Level</label>
+                            <select id="editYear">
+                                <option value="">Select year...</option>
+                                <option>1st Year</option>
+                                <option>2nd Year</option>
+                                <option>3rd Year</option>
+                                <option>4th Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="edit-divider"></div>
+                    <h4 class="edit-section-title">Change Password</h4>
+                    <div class="edit-group">
+                        <label for="editCurrentPassword">Current Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="editCurrentPassword" placeholder="Enter current password">
+                            <button type="button" class="toggle-password" data-target="editCurrentPassword">
+                                <i class="fa-solid fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="edit-row">
+                        <div class="edit-group">
+                            <label for="editNewPassword">New Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="editNewPassword" placeholder="New password">
+                                <button type="button" class="toggle-password" data-target="editNewPassword">
+                                    <i class="fa-solid fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="edit-group">
+                            <label for="editConfirmPassword">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="editConfirmPassword" placeholder="Confirm new password">
+                                <button type="button" class="toggle-password" data-target="editConfirmPassword">
+                                    <i class="fa-solid fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="edit-actions">
+                        <span class="edit-success" id="editSuccess" style="display:none;">
+                            <i class="fa-solid fa-circle-check"></i> Profile updated!
+                        </span>
+                        <span class="edit-error" id="editError" style="display:none;"></span>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <div class="remove-photo-modal" id="removePhotoModal" style="display:none;">
+        <div class="remove-photo-dialog">
+            <div class="remove-photo-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h4>Remove profile photo?</h4>
+            <p>Your photo will be deleted and replaced with your initials.</p>
+            <div class="remove-photo-actions">
+                <button class="btn btn-outline" id="removePhotoCancel">Cancel</button>
+                <button class="btn remove-photo-confirm-btn" id="removePhotoConfirm">Yes, Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../static/js/main.js"></script>
+    <script type="module" src="../static/js/modules/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flurry | Contact</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="../static/images/logo.png">
+    <link rel="stylesheet" href="../static/css/root.css">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/profile.css">
+    <link rel="stylesheet" href="../static/css/contact.css">
+    <link rel="stylesheet" href="../static/css/query.css">
+</head>
+<body>
+    <canvas id="cloudCanvas"></canvas>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="../static/images/logo.png" class="logo-icon" alt="Flurry Logo">
+                <span class="logo-text">Flurry</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="events.html" class="nav-link">Events</a></li>
+                <li><a href="contact.html" class="nav-link active">Contact</a></li>
+                <li class="nav-theme desktop-theme">
+                    <button class="btn theme-toggle" aria-label="Toggle theme">
+                        <img class="theme-icon" src="../static/images/theme.png" alt="Theme">
+                    </button>
+                </li>
+                                <li class="nav-auth">
+                    <button id="loginBtn" class="btn btn-outline btn-small">Login</button>
+                    <div class="user-menu" id="userMenu" style="display:none;">
+                        <button class="user-menu-btn" id="userMenuBtn">
+                            <div class="user-avatar-sm" id="userAvatarNav"></div>
+                            <span id="userName"></span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="profile.html" class="dropdown-item">
+                                <i class="fa-solid fa-user"></i> My Profile
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <button class="dropdown-item dropdown-item--danger" id="logoutBtn">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="nav-right-controls">
+                <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
+                <img src="../static/images/theme.png" alt="Theme" class="theme-icon">
+            </button>
+                <div class="hamburger">
+                <i class="fa-solid fa-bars open-icon"></i>
+                <i class="fa-solid fa-xmark close-icon"></i>
+            </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="page-hero" data-animate>
+        <div class="page-hero-content">
+            <span class="section-eyebrow">Get in Touch</span>
+            <h1>We'd love to<br>hear from you.</h1>
+            <p>Have a question, want to partner, or just want to know more about Flurry? Reach out through any of our channels or drop us a message below.</p>
+        </div>
+    </section>
+
+    <section class="contact-section" data-animate>
+        <div class="contact-inner">
+            <div class="contact-info">
+                <div class="contact-info-header">
+                    <h2>Reach Out Directly</h2>
+                    <p>Whether you're a student wanting to join, an organization looking to partner, or someone with a question — we're always open.</p>
+                </div>
+                <div class="contact-channels">
+                    <a href="/cdn-cgi/l/email-protection#e583899097979ca58492968686cb868a88" class="contact-channel">
+                        <div class="contact-channel-icon"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="contact-channel-body">
+                            <strong>Email</strong>
+                            <span><span class="__cf_email__" data-cfemail="94f2f8e1e6e6edd4f5e3e7f7f7baf7fbf9">[email&#160;protected]</span></span>
+                        </div>
+                    </a>
+                    <a href="#" class="contact-channel">
+                        <div class="contact-channel-icon"><i class="fa-brands fa-discord"></i></div>
+                        <div class="contact-channel-body">
+                            <strong>Discord</strong>
+                            <span>Join our community server</span>
+                        </div>
+                    </a>
+                    <a href="#" class="contact-channel">
+                        <div class="contact-channel-icon"><i class="fa-brands fa-facebook"></i></div>
+                        <div class="contact-channel-body">
+                            <strong>Facebook</strong>
+                            <span>AWS Cloud Club - Flurry</span>
+                        </div>
+                    </a>
+                    <a href="#" class="contact-channel">
+                        <div class="contact-channel-icon"><i class="fa-brands fa-instagram"></i></div>
+                        <div class="contact-channel-body">
+                            <strong>Instagram</strong>
+                            <span>@awscc.flurry</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="contact-form-wrap">
+                <h3>Send a Message</h3>
+                <p>We'll get back to you within 1-2 business days.</p>
+                <form class="contact-form" id="contactForm" novalidate>
+                    <div class="form-row-two">
+                        <div class="cf-group">
+                            <label for="cfName">Full Name*</label>
+                            <input type="text" id="cfName" placeholder="Juan dela Cruz" required>
+                            <span class="error-msg" id="cfNameError"></span>
+                        </div>
+                        <div class="cf-group">
+                            <label for="cfEmail">Email*</label>
+                            <input type="email" id="cfEmail" placeholder="juan@example.com" required>
+                            <span class="error-msg" id="cfEmailError"></span>
+                        </div>
+                    </div>
+                    <div class="cf-group">
+                        <label for="cfSubject">Subject*</label>
+                        <select id="cfSubject">
+                            <option value="">Select a topic...</option>
+                            <option>General Inquiry</option>
+                            <option>Workshop / Event Question</option>
+                            <option>Partnership Proposal</option>
+                            <option>Membership Question</option>
+                            <option>Other</option>
+                        </select>
+                        <span class="error-msg" id="cfSubjectError"></span>
+                    </div>
+                    <div class="cf-group">
+                        <label for="cfMessage">Message*</label>
+                        <textarea id="cfMessage" placeholder="Write your message here..."></textarea>
+                        <span class="error-msg" id="cfMessageError"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+                    <div class="form-success" id="formSuccess">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Message sent! We'll get back to you soon.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="facts-section" data-animate>
+        <span class="section-eyebrow">By the Numbers</span>
+        <h2 style="font-size:1.8rem; font-weight:600; color:#fff; margin-top:0.5rem; margin-bottom:0;">Flurry in Facts</h2>
+        <div class="facts-grid">
+            <div class="fact-card">
+                <div class="fact-icon"><i class="fa-solid fa-users"></i></div>
+                <div class="fact-num">120+</div>
+                <div class="fact-label">Active Members</div>
+                <p class="fact-desc">Students from IT and CS who actively participate in workshops and events.</p>
+            </div>
+            <div class="fact-card">
+                <div class="fact-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <div class="fact-num">30+</div>
+                <div class="fact-label">Workshops Held</div>
+                <p class="fact-desc">From S3 basics to VPC design — all hands-on, all free for members.</p>
+            </div>
+            <div class="fact-card">
+                <div class="fact-icon"><i class="fa-solid fa-certificate"></i></div>
+                <div class="fact-num">50+</div>
+                <div class="fact-label">AWS Certs Earned</div>
+                <p class="fact-desc">Members who passed AWS exams with support from Flurry study sessions.</p>
+            </div>
+            <div class="fact-card">
+                <div class="fact-icon"><i class="fa-solid fa-handshake"></i></div>
+                <div class="fact-num">7+</div>
+                <div class="fact-label">Partner Chapters</div>
+                <p class="fact-desc">AWS Cloud Clubs across the region we actively collaborate and share resources with.</p>
+            </div>
+            <div class="fact-card">
+                <div class="fact-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                <div class="fact-num">2023</div>
+                <div class="fact-label">Year Founded</div>
+                <p class="fact-desc">Started by a small group of students who wanted real cloud experience.</p>
+            </div>
+            <div class="fact-card">
+                <div class="fact-icon"><i class="fa-solid fa-trophy"></i></div>
+                <div class="fact-num">3</div>
+                <div class="fact-label">Hackathon Wins</div>
+                <p class="fact-desc">Flurry members have placed in regional cloud-focused hackathons and competitions.</p>
+            </div>
+            <div class="fact-card">
+                <div class="fact-icon"><i class="fa-solid fa-clock"></i></div>
+                <div class="fact-num">500+</div>
+                <div class="fact-label">Learning Hours</div>
+                <p class="fact-desc">Total hands-on hours logged across all Flurry workshops and bootcamps.</p>
+            </div>
+            <div class="fact-card">
+                <div class="fact-icon"><i class="fa-solid fa-heart"></i></div>
+                <div class="fact-num">100%</div>
+                <div class="fact-label">Free to Join</div>
+                <p class="fact-desc">Membership is always free. No fees, no barriers — just a passion for the cloud.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section" data-animate>
+        <span class="section-eyebrow">FAQ</span>
+        <h2 style="font-size:1.8rem; font-weight:600; color:#fff; margin-top:0.5rem; margin-bottom:0;">Frequently Asked Questions</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Who can join AWS Cloud Club - Flurry?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Any student enrolled in an IT, CS, or related program can join. We welcome complete beginners — no prior cloud experience required. If you're curious about AWS, there's a place for you here.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Is membership free?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes, 100% free. Joining Flurry costs nothing. Workshops, events, and study resources are all provided at no charge to members. AWS Cloud Clubs are built around accessibility.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Do I need an AWS account for workshops?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>For most workshops, yes — but we'll guide you through setting up a free AWS account before the session. AWS Free Tier gives you access to 100+ services at no cost, which is more than enough for our workshops.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>How do I register for a workshop or event?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Create a free Flurry account, then browse the Events page and click Register on any upcoming event. Spots are limited so we recommend signing up early. You'll receive a confirmation email with details.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Can I volunteer or become an officer?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutely. We hold officer elections at the start of each academic year. In the meantime, you can volunteer as an event facilitator or workshop assistant. Reach out to us through Discord or email to express your interest.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Does Flurry help with AWS certification exams?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes — it's one of our core focuses. We run structured study sessions, exam prep bootcamps, and provide curated resources. We've helped 50+ members pass their AWS certifications so far, starting with the Cloud Practitioner exam.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-description">
+                <h3>Flurry</h3>
+                <p>An official AWS Cloud Club chapter dedicated to empowering students through cloud education, community, and hands-on learning.</p>
+            </div>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Navigate</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="events.html">Events</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://aws.amazon.com/free/" target="_blank">AWS Free Tier</a></li>
+                        <li><a href="https://skillbuilder.aws/" target="_blank">Skill Builder</a></li>
+                        <li><a href="https://workshops.aws/" target="_blank">AWS Workshops</a></li>
+                        <li><a href="https://aws.amazon.com/certification/" target="_blank">Certifications</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="#"><span class="__cf_email__" data-cfemail="f2949e8780808bb29385819191dc919d9f">[email&#160;protected]</span></a></li>
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Facebook</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Flurry. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Back to top">
+        <i class="fa-solid fa-chevron-up"></i>
+    </button>
+
+    <script type="module" src="../static/js/main.js" defer></script>
+</body>
+</html>
