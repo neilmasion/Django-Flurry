@@ -12,6 +12,7 @@ import { setupOfficerDeck } from './modules/officers.js';
 import { setupAccount } from './modules/account.js';
 import { setupContactForm } from './modules/contact.js';
 import { setupEventEnroll } from './modules/events.js';
+import { setupProfile } from './modules/profile.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
@@ -30,17 +31,25 @@ document.addEventListener('DOMContentLoaded', () => {
     setupScrollToTop();
     setupTestimonialSlider();
     setupOfficerDeck();
-    setupContactForm();
     setupEventEnroll();
+    setupProfile();
 
     if (document.getElementById('workshopsList')) displayWorkshops();
 
     const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) loginBtn.addEventListener('click', () => { window.location.href = 'account.html'; });
+    if (loginBtn) loginBtn.addEventListener('click', () => { window.location.href = '/account/'; });
 
     const ctaSignup = document.getElementById('ctaSignup');
-    if (ctaSignup) ctaSignup.addEventListener('click', () => { window.location.href = 'account.html'; });
+    if (ctaSignup) ctaSignup.addEventListener('click', () => { window.location.href = '/account/'; });
 
     const joinBtn = document.getElementById('joinCommunityBtn');
-    if (joinBtn) joinBtn.addEventListener('click', () => { window.location.href = 'account.html'; });
+    if (joinBtn) joinBtn.addEventListener('click', () => { window.location.href = '/account/'; });
+
+    // Hide skeleton loader after initialization
+    const loader = document.getElementById('skeleton-loader');
+    if (loader) {
+        setTimeout(() => {
+            loader.classList.add('hidden');
+        }, 300); // Small delay for smooth transition
+    }
 });

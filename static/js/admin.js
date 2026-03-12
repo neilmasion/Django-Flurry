@@ -1,17 +1,17 @@
 const ADMIN_CREDS = { email: 'admin@flurry.com', password: 'admin123' };
-const ADMIN_KEY   = 'flurryAdminAuth';
+const ADMIN_KEY = 'flurryAdminAuth';
 const DEFAULT_EVENTS = [
-    { id: 'ev1', title: 'AWS Cloud Practitioner Bootcamp',          tag: 'Bootcamp',  date: 'March 15, 2026',  time: '9:00 AM – 5:00 PM',  location: 'Room 401, IT Building', desc: 'A full-day intensive prep session for the AWS Certified Cloud Practitioner exam.' },
-    { id: 'ev2', title: 'Building Serverless APIs with Lambda',      tag: 'Workshop',  date: 'March 22, 2026',  time: '2:00 PM – 5:00 PM',  location: 'CS Lab 3',              desc: 'Deploy a real REST API using AWS Lambda, API Gateway, and DynamoDB from scratch.' },
-    { id: 'ev3', title: 'Cloud Careers: From Student to AWS Engineer', tag: 'Tech Talk', date: 'April 5, 2026',   time: '3:00 PM – 5:00 PM',  location: 'Auditorium B',          desc: 'Industry professionals share their journey into cloud engineering.' },
-    { id: 'ev4', title: 'IAM & Security Deep Dive',                  tag: 'Workshop',  date: 'April 19, 2026',  time: '1:00 PM – 4:00 PM',  location: 'IT Lab 2',              desc: 'Understand AWS Identity and Access Management in practice.' },
+    { id: 'ev1', title: 'AWS Cloud Practitioner Bootcamp', tag: 'Bootcamp', date: 'March 15, 2026', time: '9:00 AM – 5:00 PM', location: 'Room 401, IT Building', desc: 'A full-day intensive prep session for the AWS Certified Cloud Practitioner exam.' },
+    { id: 'ev2', title: 'Building Serverless APIs with Lambda', tag: 'Workshop', date: 'March 22, 2026', time: '2:00 PM – 5:00 PM', location: 'CS Lab 3', desc: 'Deploy a real REST API using AWS Lambda, API Gateway, and DynamoDB from scratch.' },
+    { id: 'ev3', title: 'Cloud Careers: From Student to AWS Engineer', tag: 'Tech Talk', date: 'April 5, 2026', time: '3:00 PM – 5:00 PM', location: 'Auditorium B', desc: 'Industry professionals share their journey into cloud engineering.' },
+    { id: 'ev4', title: 'IAM & Security Deep Dive', tag: 'Workshop', date: 'April 19, 2026', time: '1:00 PM – 4:00 PM', location: 'IT Lab 2', desc: 'Understand AWS Identity and Access Management in practice.' },
 ];
 
-function getEvents()     { return JSON.parse(localStorage.getItem('flurryEvents') || 'null') || DEFAULT_EVENTS; }
+function getEvents() { return JSON.parse(localStorage.getItem('flurryEvents') || 'null') || DEFAULT_EVENTS; }
 function saveEvents(evs) { localStorage.setItem('flurryEvents', JSON.stringify(evs)); }
 function getUsers() {
     const stored = JSON.parse(localStorage.getItem('flurryUser') || 'null');
-    const all    = JSON.parse(localStorage.getItem('flurryUsers') || '[]');
+    const all = JSON.parse(localStorage.getItem('flurryUsers') || '[]');
     if (stored && !all.find(u => u.email === stored.email)) all.push(stored);
     return all;
 }
@@ -23,26 +23,26 @@ function getEnrollments() {
 }
 
 function getUserEnrollments() {
-    const base  = getEnrollments();
+    const base = getEnrollments();
     const users = getUsers();
-    const user  = JSON.parse(localStorage.getItem('flurryUser') || 'null');
+    const user = JSON.parse(localStorage.getItem('flurryUser') || 'null');
     if (!user) return [];
     return base.map(e => ({
-        userEmail:  user.email,
-        userName:   [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email,
-        title:      e.title || e,
-        date:       e.date  || '—',
-        time:       e.time  || '—',
+        userEmail: user.email,
+        userName: [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email,
+        title: e.title || e,
+        date: e.date || '—',
+        time: e.time || '—',
         enrolledAt: e.enrolledAt || '—',
     }));
 }
 
 function showToast(msg, success = true) {
-    const toast  = document.getElementById('adminToast');
-    const msgEl  = document.getElementById('adminToastMsg');
+    const toast = document.getElementById('adminToast');
+    const msgEl = document.getElementById('adminToastMsg');
     const iconEl = document.getElementById('adminToastIcon');
-    msgEl.textContent  = msg;
-    iconEl.className   = success ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
+    msgEl.textContent = msg;
+    iconEl.className = success ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
     iconEl.style.color = success ? '#86efac' : '#fbbf24';
     toast.style.display = 'flex';
     clearTimeout(toast._t);
@@ -50,65 +50,33 @@ function showToast(msg, success = true) {
 }
 
 function escHtml(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function initTheme() {
-    const saved  = localStorage.getItem('lumioTheme');
+    const saved = localStorage.getItem('lumioTheme');
     const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', saved || system);
 }
 
 function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
-    const next    = current === 'dark' ? 'light' : 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('lumioTheme', next);
 }
 
 function initLogin() {
-    if (localStorage.getItem(ADMIN_KEY) === 'true') {
-        showApp();
-        return;
-    }
-
     document.querySelectorAll('.toggle-password').forEach(btn => {
         btn.addEventListener('click', () => {
-            const input   = document.getElementById(btn.dataset.target);
+            const input = document.getElementById(btn.dataset.target);
             if (!input) return;
-            const hidden  = input.type === 'password';
-            input.type    = hidden ? 'text' : 'password';
+            const hidden = input.type === 'password';
+            input.type = hidden ? 'text' : 'password';
             btn.querySelector('i').classList.toggle('fa-eye-slash', !hidden);
             btn.querySelector('i').classList.toggle('fa-eye', hidden);
         });
     });
-
-    document.getElementById('adminLoginForm').addEventListener('submit', e => {
-        e.preventDefault();
-        const email = document.getElementById('adminEmail').value.trim();
-        const pass  = document.getElementById('adminPass').value;
-        document.getElementById('adminEmailErr').textContent = '';
-        document.getElementById('adminPassErr').textContent  = '';
-
-        let ok = true;
-        if (!email) { document.getElementById('adminEmailErr').textContent = 'Email is required'; ok = false; }
-        if (!pass)  { document.getElementById('adminPassErr').textContent  = 'Password is required'; ok = false; }
-        if (!ok) return;
-
-        if (email !== ADMIN_CREDS.email || pass !== ADMIN_CREDS.password) {
-            document.getElementById('adminPassErr').textContent = 'Invalid admin credentials';
-            return;
-        }
-
-        localStorage.setItem(ADMIN_KEY, 'true');
-        showApp();
-    });
-}
-
-function showApp() {
-    document.getElementById('adminLoginWrap').style.display = 'none';
-    document.getElementById('adminApp').style.display       = 'flex';
-    initApp();
 }
 
 function initApp() {
@@ -141,27 +109,31 @@ function initApp() {
 
     if (!localStorage.getItem('flurryEvents')) saveEvents(DEFAULT_EVENTS);
 
-    renderDashboard();
-    renderUsers();
-    renderEvents();
-    renderEnrollments();
+    // renderDashboard();
+    // renderUsers();
+    // renderEvents();
+    // renderEnrollments();
+    setupDjangoListeners();
 }
 
 function renderDashboard() {
-    const users   = getUsers();
-    const evs     = getEvents();
+    const users = getUsers();
+    const evs = getEvents();
     const enrolls = getUserEnrollments();
 
+    // Statistics are now handled by Django template tags
+    /*
     document.getElementById('statTotalUsers').textContent       = users.length;
     document.getElementById('statTotalEnrollments').textContent = enrolls.length;
     document.getElementById('statTotalEvents').textContent      = evs.length;
     const avg = users.length ? (enrolls.length / users.length).toFixed(1) : 0;
     document.getElementById('statAvgEnroll').textContent = avg;
+    */
 
     const countMap = {};
     enrolls.forEach(e => { countMap[e.title] = (countMap[e.title] || 0) + 1; });
-    const sorted = Object.entries(countMap).sort((a,b) => b[1]-a[1]);
-    const topEl  = document.getElementById('topEvents');
+    const sorted = Object.entries(countMap).sort((a, b) => b[1] - a[1]);
+    const topEl = document.getElementById('topEvents');
     if (!sorted.length) {
         topEl.innerHTML = '<div class="dash-empty">No enrollments yet.</div>';
     } else {
@@ -180,84 +152,63 @@ function renderDashboard() {
     } else {
         recentEl.innerHTML = recentUsers.map(u =>
             `<div class="dash-row">
-                <span class="dash-row-title">${escHtml([u.firstName,u.lastName].filter(Boolean).join(' ') || u.email)}</span>
+                <span class="dash-row-title">${escHtml([u.firstName, u.lastName].filter(Boolean).join(' ') || u.email)}</span>
                 <span class="dash-row-meta">${escHtml(u.course || '—')}</span>
             </div>`
         ).join('');
     }
 }
 
-function renderUsers(filter = '') {
-    const enrolls = getUserEnrollments();
-    let users = getUsers();
-    if (filter) {
-        const f = filter.toLowerCase();
-        users = users.filter(u =>
-            [u.firstName, u.lastName, u.email].join(' ').toLowerCase().includes(f)
-        );
+function filterTable(tbodyId, searchStr, filterStr = '', filterColumnIndex = -1) {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+    const rows = tbody.getElementsByTagName('tr');
+    const search = searchStr.toLowerCase();
+
+    let visibleCount = 0;
+    for (let row of rows) {
+        if (row.cells.length < 2) continue; // Skip "No users found" row
+        let text = row.textContent.toLowerCase();
+        let matchesSearch = text.includes(search);
+        let matchesFilter = true;
+        
+        if (filterStr && filterColumnIndex >= 0) {
+            const cell = row.cells[filterColumnIndex];
+            if (cell) {
+                matchesFilter = cell.textContent.trim() === filterStr;
+            }
+        }
+        
+        const isVisible = matchesSearch && matchesFilter;
+        row.style.display = isVisible ? '' : 'none';
+        if (isVisible) visibleCount++;
     }
 
-    document.getElementById('userCount').textContent = `${users.length} user${users.length !== 1 ? 's' : ''}`;
-    const tbody = document.getElementById('usersTableBody');
-    const empty = document.getElementById('usersEmpty');
-
-    if (!users.length) {
-        tbody.innerHTML = '';
-        empty.style.display = 'flex';
-        document.getElementById('usersTable').style.display = 'none';
-        return;
+    // Handle empty state visibility
+    const empty = document.getElementById(tbodyId.replace('Body', 'Empty'));
+    const table = document.getElementById(tbodyId.replace('Body', ''));
+    if (empty && table) {
+        if (visibleCount === 0 && rows.length > 0) {
+            empty.style.display = 'flex';
+            table.style.display = 'none';
+        } else {
+            empty.style.display = 'none';
+            table.style.display = '';
+        }
     }
-
-    empty.style.display = 'none';
-    document.getElementById('usersTable').style.display = '';
-
-    tbody.innerHTML = users.map((u, idx) => {
-        const name = [u.firstName, u.lastName].filter(Boolean).join(' ') || '—';
-        const enrolled = enrolls.filter(e => e.userEmail === u.email).length;
-        return `<tr>
-            <td class="name-cell" data-label="Name">${escHtml(name)}</td>
-            <td data-label="Email">${escHtml(u.email)}</td>
-            <td data-label="Course">${escHtml(u.course || '—')}</td>
-            <td data-label="Year">${escHtml(u.year || '—')}</td>
-            <td data-label="Enrolled"><span class="admin-tag admin-tag--green">${enrolled}</span></td>
-            <td data-label="">
-                <div class="admin-actions">
-                    <button class="admin-btn-icon admin-btn-icon--danger" title="Delete user" data-delete-user="${escHtml(u.email)}">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>`;
-    }).join('');
-
-    tbody.querySelectorAll('[data-delete-user]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const email = btn.dataset.deleteUser;
-            openDeleteModal('Delete User?', `Remove "${email}" from Flurry? This cannot be undone.`, () => {
-                let users = getUsers().filter(u => u.email !== email);
-                saveUsers(users);
-                // Also clear if it's the single flurryUser
-                const single = JSON.parse(localStorage.getItem('flurryUser') || 'null');
-                if (single && single.email === email) localStorage.removeItem('flurryUser');
-                renderUsers(document.getElementById('userSearch').value);
-                renderDashboard();
-                showToast('User deleted.');
-            });
-        });
-    });
 }
 
 document.getElementById('userSearch')?.addEventListener('input', e => {
-    renderUsers(e.target.value);
+    filterTable('usersTableBody', e.target.value);
 });
 
 function renderEvents() {
-    const evs     = getEvents();
+    const evs = getEvents();
     const enrolls = getUserEnrollments();
-    const grid    = document.getElementById('eventsAdminGrid');
-    const empty   = document.getElementById('eventsEmpty');
+    const grid = document.getElementById('eventsAdminGrid');
+    const empty = document.getElementById('eventsEmpty');
 
-    document.getElementById('eventCount').textContent = `${evs.length} event${evs.length !== 1 ? 's' : ''}`;
+    // document.getElementById('eventCount').textContent = `${evs.length} event${evs.length !== 1 ? 's' : ''}`;
 
     if (!evs.length) {
         grid.innerHTML = '';
@@ -314,20 +265,20 @@ function renderEvents() {
 }
 
 function openEventModal(ev = null) {
-    const modal     = document.getElementById('eventModalOverlay');
-    const titleEl   = document.getElementById('eventModalTitle');
-    const idInput   = document.getElementById('eventId');
-    ['evTitleErr','evDateErr','evTimeErr'].forEach(id => document.getElementById(id).textContent = '');
+    const modal = document.getElementById('eventModalOverlay');
+    const titleEl = document.getElementById('eventModalTitle');
+    const idInput = document.getElementById('eventId');
+    ['evTitleErr', 'evDateErr', 'evTimeErr'].forEach(id => document.getElementById(id).textContent = '');
 
     if (ev) {
-        titleEl.textContent                        = 'Edit Event';
-        idInput.value                              = ev.id;
-        document.getElementById('evTitle').value   = ev.title;
-        document.getElementById('evDate').value    = ev.date;
-        document.getElementById('evTime').value    = ev.time;
-        document.getElementById('evTag').value     = ev.tag;
-        document.getElementById('evLocation').value= ev.location || '';
-        document.getElementById('evDesc').value    = ev.desc    || '';
+        titleEl.textContent = 'Edit Event';
+        idInput.value = ev.id;
+        document.getElementById('evTitle').value = ev.title;
+        document.getElementById('evDate').value = ev.date;
+        document.getElementById('evTime').value = ev.time;
+        document.getElementById('evTag').value = ev.tag;
+        document.getElementById('evLocation').value = ev.location || '';
+        document.getElementById('evDesc').value = ev.desc || '';
     } else {
         titleEl.textContent = 'Add Event';
         document.getElementById('eventForm').reset();
@@ -351,20 +302,20 @@ document.getElementById('eventModalOverlay')?.addEventListener('click', e => {
 document.getElementById('eventForm')?.addEventListener('submit', e => {
     e.preventDefault();
     const title = document.getElementById('evTitle').value.trim();
-    const date  = document.getElementById('evDate').value.trim();
-    const time  = document.getElementById('evTime').value.trim();
+    const date = document.getElementById('evDate').value.trim();
+    const time = document.getElementById('evTime').value.trim();
     let ok = true;
 
     document.getElementById('evTitleErr').textContent = '';
-    document.getElementById('evDateErr').textContent  = '';
-    document.getElementById('evTimeErr').textContent  = '';
+    document.getElementById('evDateErr').textContent = '';
+    document.getElementById('evTimeErr').textContent = '';
 
     if (!title) { document.getElementById('evTitleErr').textContent = 'Title is required'; ok = false; }
-    if (!date)  { document.getElementById('evDateErr').textContent  = 'Date is required';  ok = false; }
-    if (!time)  { document.getElementById('evTimeErr').textContent  = 'Time is required';  ok = false; }
+    if (!date) { document.getElementById('evDateErr').textContent = 'Date is required'; ok = false; }
+    if (!time) { document.getElementById('evTimeErr').textContent = 'Time is required'; ok = false; }
     if (!ok) return;
 
-    const id  = document.getElementById('eventId').value;
+    const id = document.getElementById('eventId').value;
     const evs = getEvents();
     const idx = evs.findIndex(e => e.id === id);
 
@@ -373,13 +324,13 @@ document.getElementById('eventForm')?.addEventListener('submit', e => {
         title,
         date,
         time,
-        tag:      document.getElementById('evTag').value,
+        tag: document.getElementById('evTag').value,
         location: document.getElementById('evLocation').value.trim(),
-        desc:     document.getElementById('evDesc').value.trim(),
+        desc: document.getElementById('evDesc').value.trim(),
     };
 
     if (idx >= 0) evs[idx] = updated;
-    else          evs.push(updated);
+    else evs.push(updated);
 
     saveEvents(evs);
     document.getElementById('eventModalOverlay').style.display = 'none';
@@ -388,74 +339,39 @@ document.getElementById('eventForm')?.addEventListener('submit', e => {
     showToast(idx >= 0 ? 'Event updated.' : 'Event added.');
 });
 
-function renderEnrollments(filter = '', eventFilter = '') {
-    let enrolls = getUserEnrollments();
-
-    const sel = document.getElementById('enrollFilter');
-    if (sel.options.length <= 1) {
-        const titles = [...new Set(enrolls.map(e => e.title))];
-        titles.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t; opt.textContent = t;
-            sel.appendChild(opt);
-        });
-    }
-
-    if (filter) {
-        const f = filter.toLowerCase();
-        enrolls = enrolls.filter(e =>
-            e.userName.toLowerCase().includes(f) ||
-            e.title.toLowerCase().includes(f) ||
-            e.userEmail.toLowerCase().includes(f)
-        );
-    }
-    if (eventFilter) {
-        enrolls = enrolls.filter(e => e.title === eventFilter);
-    }
-
-    document.getElementById('enrollCount').textContent =
-        `${enrolls.length} enrollment${enrolls.length !== 1 ? 's' : ''}`;
-
+function setupEnrollmentFilters() {
     const tbody = document.getElementById('enrollTableBody');
-    const empty = document.getElementById('enrollEmpty');
+    const sel = document.getElementById('enrollFilter');
+    if (!tbody || !sel) return;
 
-    if (!enrolls.length) {
-        tbody.innerHTML = '';
-        empty.style.display = 'flex';
-        document.getElementById('enrollTable').style.display = 'none';
-        return;
+    const rows = tbody.getElementsByTagName('tr');
+    const eventTitles = new Set();
+    for (let row of rows) {
+        if (row.cells.length >= 3) {
+            eventTitles.add(row.cells[2].textContent.trim());
+        }
     }
 
-    empty.style.display = 'none';
-    document.getElementById('enrollTable').style.display = '';
+    eventTitles.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t; opt.textContent = t;
+        sel.appendChild(opt);
+    });
 
-    tbody.innerHTML = enrolls.map(e => {
-        const when = e.enrolledAt && e.enrolledAt !== '—'
-            ? new Date(e.enrolledAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : '—';
-        return `<tr>
-            <td class="name-cell" data-label="User">${escHtml(e.userName)}</td>
-            <td data-label="Email">${escHtml(e.userEmail)}</td>
-            <td data-label="Event">${escHtml(e.title)}</td>
-            <td data-label="Date">${escHtml(e.date)}</td>
-            <td data-label="Time">${escHtml(e.time)}</td>
-            <td data-label="Enrolled At">${escHtml(when)}</td>
-        </tr>`;
-    }).join('');
+    const searchInput = document.getElementById('enrollSearch');
+    const handleInput = () => {
+        filterTable('enrollTableBody', searchInput.value, sel.value, 2);
+    };
+
+    searchInput?.addEventListener('input', handleInput);
+    sel?.addEventListener('change', handleInput);
 }
-
-document.getElementById('enrollSearch')?.addEventListener('input', e => {
-    renderEnrollments(e.target.value, document.getElementById('enrollFilter').value);
-});
-document.getElementById('enrollFilter')?.addEventListener('change', e => {
-    renderEnrollments(document.getElementById('enrollSearch').value, e.target.value);
-});
 
 let _deleteCallback = null;
 
 function openDeleteModal(title, desc, onConfirm) {
     document.getElementById('deleteModalTitle').textContent = title;
-    document.getElementById('deleteModalDesc').textContent  = desc;
+    document.getElementById('deleteModalDesc').textContent = desc;
     _deleteCallback = onConfirm;
     document.getElementById('deleteModalOverlay').style.display = 'flex';
 }
@@ -482,4 +398,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('appThemeBtn')?.addEventListener('click', toggleTheme);
 
     initLogin();
+
+    const adminApp = document.getElementById('adminApp');
+    if (adminApp) {
+        initApp();
+        setupEnrollmentFilters();
+    }
+
+    // Hide skeleton loader after initialization
+    const loader = document.getElementById('skeleton-loader');
+    if (loader) {
+        setTimeout(() => {
+            loader.classList.add('hidden');
+        }, 300); // Small delay for smooth transition
+    }
 });

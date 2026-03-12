@@ -6,12 +6,7 @@ export const state = {
 };
 
 export function loadState() {
-    const auth = localStorage.getItem('flurryAuth');
-    const user = localStorage.getItem('flurryUser');
-    if (auth === 'true' && user) {
-        state.user = JSON.parse(user);
-        state.isAuthenticated = true;
-        state.enrolledWorkshops = JSON.parse(localStorage.getItem('enrolledWorkshops') || '[]');
-        state.wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-    }
+    state.isAuthenticated = !!document.getElementById('userMenu');
+    state.enrolledWorkshops = JSON.parse(localStorage.getItem('enrolledWorkshops') || '[]');
+    state.wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
 }

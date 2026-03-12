@@ -1,11 +1,6 @@
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes slideUp {
@@ -21,9 +16,7 @@
 }
 
 @keyframes spin {
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 [data-animate] {
@@ -62,32 +55,16 @@ section {
     padding: 0;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     line-height: 1.2;
     margin-bottom: var(--spacing-md);
 }
 
-h1 {
-    font-size: 2.2rem;
-}
-
-h2 {
-    font-size: 1.8rem;
-}
-
-h3 {
-    font-size: 1.25rem;
-}
-
-h4 {
-    font-size: 1rem;
-}
+h1 {font-size: 2.2rem;}
+h2 {font-size: 1.8rem;}
+h3 {font-size: 1.25rem;}
+h4 {font-size: 1rem;}
 
 p {
     color: var(--text-secondary);
@@ -696,3 +673,47 @@ textarea {
     min-height: 300px;
     color: var(--text-tertiary);
 }
+
+/* Skeleton Loading */
+#skeleton-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-primary);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#skeleton-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.skeleton-shimmer {
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.05) 25%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton-header { width: 100%; height: 60px; margin-bottom: 2rem; }
+.skeleton-hero { width: 100%; height: 300px; border-radius: var(--radius-xl); }
+.skeleton-title { width: 60%; height: 40px; }
+.skeleton-text { width: 90%; height: 20px; }
+.skeleton-text-short { width: 40%; height: 20px; }
+.skeleton-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+.skeleton-card { height: 200px; }

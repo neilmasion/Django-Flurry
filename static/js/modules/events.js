@@ -6,7 +6,7 @@ const EVENT_INFO = {
 };
 
 function isLoggedIn() {
-    return localStorage.getItem('flurryAuth') === 'true';
+    return document.body.dataset.authenticated === 'true';
 }
 
 function showToast(msg, success = true) {
@@ -26,17 +26,22 @@ function showToast(msg, success = true) {
     toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 3500);
 }
 
+function getEnrolledKey() {
+    const email = document.body.dataset.email || 'guest';
+    return `enrolledWorkshops_${email}`;
+}
+
 function getEnrolled() {
-    return JSON.parse(localStorage.getItem('enrolledWorkshops') || '[]');
+    return JSON.parse(localStorage.getItem(getEnrolledKey()) || '[]');
 }
 
 function saveEnrolled(list) {
-    localStorage.setItem('enrolledWorkshops', JSON.stringify(list));
+    localStorage.setItem(getEnrolledKey(), JSON.stringify(list));
 }
 
 function handleEnroll(btn) {
     if (!isLoggedIn()) {
-        window.location.href = 'account.html';
+        window.location.href = '/account/?next=/events/';
         return;
     }
 
@@ -52,8 +57,8 @@ function handleEnroll(btn) {
 
     enrolled.push({
         title,
-        date:       info.date || '—',
-        time:       info.time || '—',
+        date:       info.date || btn.dataset.date || '—',
+        time:       info.time || btn.dataset.time || '—',
         enrolledAt: new Date().toISOString()
     });
     saveEnrolled(enrolled);

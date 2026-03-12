@@ -1,71 +1,118 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry | My Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="../static/images/logo.png">
-    <link rel="stylesheet" href="../static/css/root.css">
-    <link rel="stylesheet" href="../static/css/main.css">
-    <link rel="stylesheet" href="../static/css/profile.css">
-    <link rel="stylesheet" href="../static/css/query.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/root.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
-<body>
+
+<body data-first-name="{{ user.first_name }}" data-last-name="{{ user.last_name }}" data-email="{{ user.email }}" data-course="{{ user.course|default:'' }}" data-year="{{ user.year_level|default:'' }}" data-authenticated="true">
+    <!-- Skeleton Loading Screen -->
+    <div id="skeleton-loader">
+        <div class="skeleton-header skeleton-shimmer"></div>
+        <div class="skeleton-hero skeleton-shimmer"></div>
+        <div class="skeleton-title skeleton-shimmer"></div>
+        <div class="skeleton-text skeleton-shimmer"></div>
+        <div class="skeleton-text skeleton-shimmer"></div>
+        <div class="skeleton-grid">
+            <div class="skeleton-card skeleton-shimmer"></div>
+            <div class="skeleton-card skeleton-shimmer"></div>
+            <div class="skeleton-card skeleton-shimmer"></div>
+        </div>
+    </div>
+
     <canvas id="cloudCanvas"></canvas>
 
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <img src="../static/images/logo.png" class="logo-icon" alt="Flurry Logo">
+                <img src="{% static 'images/logo.png' %}" class="logo-icon" alt="Flurry Logo">
                 <span class="logo-text">Flurry</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="about.html" class="nav-link">About</a></li>
-                <li><a href="events.html" class="nav-link">Events</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+                <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                <li><a href="{% url 'events' %}" class="nav-link">Events</a></li>
+                <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
                 <li class="nav-theme desktop-theme">
                     <button class="btn theme-toggle" aria-label="Toggle theme">
-                        <img class="theme-icon" src="../static/images/theme.png" alt="Theme">
+                        <img class="theme-icon" src="{% static 'images/theme.png' %}" alt="Theme">
                     </button>
                 </li>
                 <li class="nav-auth">
-                    <button id="loginBtn" class="btn btn-outline btn-small">Login</button>
-                    <div class="user-menu" id="userMenu" style="display:none;">
+                    {% if user.is_authenticated %}
+                    <div class="user-menu" id="userMenu">
                         <button class="user-menu-btn" id="userMenuBtn">
-                            <div class="user-avatar-sm" id="userAvatarNav"></div>
-                            <span id="userName"></span>
+                            <div class="user-avatar-sm" id="userAvatarNav">{{ user.username|slice:":1"|upper }}</div>
+                            <span id="userName">{{ user.first_name|default:user.username }}</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div class="user-dropdown" id="userDropdown">
-                            <a href="profile.html" class="dropdown-item">
+                            <a href="{% url 'profile' %}" class="dropdown-item">
                                 <i class="fa-solid fa-user"></i> My Profile
                             </a>
+                            {% if user.is_staff %}
+                            <a href="{% url 'admin-dashboard' %}" class="dropdown-item">
+                                <i class="fa-solid fa-shield-halved"></i> {% if user.role == 'admin' or user.is_superuser %}Admin Dashboard{% else %}Dashboard{% endif %}
+                            </a>
+                            {% endif %}
                             <div class="dropdown-divider"></div>
-                            <button class="dropdown-item dropdown-item--danger" id="logoutBtn">
-                                <i class="fa-solid fa-right-from-bracket"></i> Logout
-                            </button>
+                            <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item dropdown-item--danger">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                </button>
+                            </form>
                         </div>
                     </div>
+                    {% else %}
+                    <a href="{% url 'account' %}" class="btn btn-outline btn-small">Login</a>
+                    {% endif %}
                 </li>
             </ul>
             <div class="nav-right-controls">
                 <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
-                <img src="../static/images/theme.png" alt="Theme" class="theme-icon">
-            </button>
+                    <img src="{% static 'images/theme.png' %}" alt="Theme" class="theme-icon">
+                </button>
                 <div class="hamburger">
-                <i class="fa-solid fa-bars open-icon"></i>
-                <i class="fa-solid fa-xmark close-icon"></i>
-            </div>
+                    <i class="fa-solid fa-bars open-icon"></i>
+                    <i class="fa-solid fa-xmark close-icon"></i>
+                </div>
             </div>
         </div>
     </nav>
 
+    {% if messages %}
+    <div class="messages" style="position: fixed; top: 5rem; right: 2rem; z-index: 5000; min-width: 300px;">
+        {% for message in messages %}
+            <div class="toast-message {{ message.tags }}" style="background: rgba(13, 36, 144, 0.9); color: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); backdrop-filter: blur(8px); display: flex; align-items: center; gap: 0.75rem; animation: slideIn 0.3s ease-out;">
+                <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        setTimeout(() => {
+            const msgs = document.querySelector('.messages');
+            if (msgs) msgs.style.opacity = '0';
+            setTimeout(() => { if (msgs) msgs.remove(); }, 500);
+        }, 4000);
+    </script>
+    <style>@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }</style>
+    {% endif %}
+
     <div class="profile-page">
         <aside class="profile-sidebar">
             <div class="profile-avatar-wrap">
-                <div class="profile-avatar" id="profileAvatar"></div>
+                <div class="profile-avatar" id="profileAvatar">{{ user.username|slice:":1"|upper }}</div>
                 <div class="profile-avatar-ring"></div>
                 <button type="button" class="avatar-upload-btn" id="avatarActionBtn" title="Change photo">
                     <i class="fa-solid fa-camera" id="avatarActionIcon"></i>
@@ -73,26 +120,29 @@
                 <input type="file" id="avatarInput" accept="image/*" style="display:none;">
             </div>
             <div class="profile-identity">
-                <h2 id="profileFullName">—</h2>
+                <h2 id="profileFullName">{{ user.first_name }} {{ user.last_name }}</h2>
                 <span class="profile-badge"><i class="fa-brands fa-aws"></i> Cloud Member</span>
             </div>
             <div class="profile-meta-list">
                 <div class="profile-meta-item">
                     <i class="fa-solid fa-envelope"></i>
-                    <span id="profileEmail">—</span>
+                    <span id="profileEmail">{{ user.email }}</span>
                 </div>
                 <div class="profile-meta-item">
                     <i class="fa-solid fa-graduation-cap"></i>
-                    <span id="profileCourse">—</span>
+                    <span id="profileCourse">{{ user.get_course_display }}</span>
                 </div>
                 <div class="profile-meta-item">
                     <i class="fa-solid fa-layer-group"></i>
-                    <span id="profileYear">—</span>
+                    <span id="profileYear">{{ user.get_year_level_display }}</span>
                 </div>
             </div>
-            <button class="btn btn-outline profile-logout-btn" id="profileLogoutBtn">
-                <i class="fa-solid fa-right-from-bracket"></i> Log Out
-            </button>
+            <form action="{% url 'logout' %}" method="POST" style="width:100%;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline profile-logout-btn" style="width:100%;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Log Out
+                </button>
+            </form>
         </aside>
 
         <main class="profile-main">
@@ -106,17 +156,20 @@
                 <button class="profile-tab" data-tab="edit">
                     <i class="fa-solid fa-pen-to-square"></i> Edit Profile
                 </button>
+                <button class="profile-tab" data-tab="feedback">
+                    <i class="fa-solid fa-comment-dots"></i> Feedback
+                </button>
             </div>
 
             <div class="tab-panel active" id="tab-overview">
                 <div class="overview-sidebar-layout">
                     <div class="overview-welcome">
                         <div class="welcome-left">
-                            <div class="welcome-avatar" id="welcomeAvatar"></div>
+                            <div class="welcome-avatar" id="welcomeAvatar">{{ user.username|slice:":1"|upper }}</div>
                             <div class="welcome-text">
                                 <span class="section-eyebrow">Welcome back</span>
-                                <h3 id="welcomeName">—</h3>
-                                <p class="welcome-bio" id="welcomeBio">No bio yet. Add one in Edit Profile!</p>
+                                <h3 id="welcomeName">{{ user.first_name }}</h3>
+                                <p class="welcome-bio" id="welcomeBio">Ready to learn more about the cloud today?</p>
                             </div>
                         </div>
                         <div class="welcome-art">
@@ -168,14 +221,14 @@
             <div class="tab-panel" id="tab-workshops">
                 <div class="workshops-header">
                     <h3>My Workshops</h3>
-                    <a href="events.html" class="btn btn-outline btn-small">Browse More</a>
+                    <a href="{% url 'events' %}" class="btn btn-outline btn-small">Browse More</a>
                 </div>
                 <div class="enrolled-grid" id="enrolledGrid">
                     <div class="enrolled-empty">
                         <i class="fa-solid fa-book-open"></i>
                         <h4>No workshops yet</h4>
                         <p>Browse events and enroll in a workshop to see it here.</p>
-                        <a href="events.html" class="btn btn-primary">Explore Workshops</a>
+                        <a href="{% url 'events' %}" class="btn btn-primary">Explore Workshops</a>
                     </div>
                 </div>
             </div>
@@ -186,7 +239,8 @@
 
                     <div class="edit-group">
                         <label for="editBio">Bio</label>
-                        <textarea id="editBio" placeholder="Tell the community a bit about yourself..." rows="3" style="resize:vertical;"></textarea>
+                        <textarea id="editBio" placeholder="Tell the community a bit about yourself..." rows="3"
+                            style="resize:vertical;"></textarea>
                     </div>
 
                     <div class="edit-divider"></div>
@@ -194,35 +248,35 @@
                     <div class="edit-row">
                         <div class="edit-group">
                             <label for="editFirstName">First Name</label>
-                            <input type="text" id="editFirstName" placeholder="First name">
+                            <input type="text" id="editFirstName" placeholder="First name" value="{{ user.first_name }}">
                         </div>
                         <div class="edit-group">
                             <label for="editLastName">Last Name</label>
-                            <input type="text" id="editLastName" placeholder="Last name">
+                            <input type="text" id="editLastName" placeholder="Last name" value="{{ user.last_name }}">
                         </div>
                     </div>
                     <div class="edit-group">
                         <label for="editEmail">Email</label>
-                        <input type="email" id="editEmail" placeholder="Your email">
+                        <input type="email" id="editEmail" placeholder="Your email" value="{{ user.email }}">
                     </div>
                     <div class="edit-row">
                         <div class="edit-group">
                             <label for="editCourse">Course</label>
                             <select id="editCourse">
                                 <option value="">Select course...</option>
-                                <option>Information Technology (IT)</option>
-                                <option>Computer Science (CS)</option>
-                                <option>Other</option>
+                                <option value="IT" {% if user.course == 'IT' %}selected{% endif %}>Information Technology (IT)</option>
+                                <option value="CS" {% if user.course == 'CS' %}selected{% endif %}>Computer Science (CS)</option>
+                                <option value="Other" {% if user.course == 'Other' %}selected{% endif %}>Other</option>
                             </select>
                         </div>
                         <div class="edit-group">
                             <label for="editYear">Year Level</label>
                             <select id="editYear">
                                 <option value="">Select year...</option>
-                                <option>1st Year</option>
-                                <option>2nd Year</option>
-                                <option>3rd Year</option>
-                                <option>4th Year</option>
+                                <option value="1st" {% if user.year_level == '1st' %}selected{% endif %}>1st Year</option>
+                                <option value="2nd" {% if user.year_level == '2nd' %}selected{% endif %}>2nd Year</option>
+                                <option value="3rd" {% if user.year_level == '3rd' %}selected{% endif %}>3rd Year</option>
+                                <option value="4th" {% if user.year_level == '4th' %}selected{% endif %}>4th Year</option>
                             </select>
                         </div>
                     </div>
@@ -267,6 +321,21 @@
                 </form>
             </div>
 
+            <div class="tab-panel" id="tab-feedback">
+                <h3 class="edit-title">Feedback & Testimonials</h3>
+                <p style="margin-bottom: 2rem; color: var(--text-muted);">Share your experience with the Flurry community! Submitted testimonials will be reviewed and may be featured on our homepage.</p>
+                <form class="edit-form" action="{% url 'submit-testimonial' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="edit-group">
+                        <label for="testimonialQuote">Your Testimonial</label>
+                        <textarea id="testimonialQuote" name="quote" placeholder="Write your testimonial here..." rows="5" style="resize:vertical;" required></textarea>
+                    </div>
+                    <div class="edit-actions" style="margin-top: 2rem;">
+                        <button type="submit" class="btn btn-primary">Submit Testimonial</button>
+                    </div>
+                </form>
+            </div>
+
         </main>
     </div>
 
@@ -282,7 +351,7 @@
         </div>
     </div>
 
-    <script type="module" src="../static/js/main.js"></script>
-    <script type="module" src="../static/js/modules/profile.js"></script>
+    <script type="module" src="{% static 'js/main.js' %}"></script>
 </body>
+
 </html>

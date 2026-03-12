@@ -377,7 +377,7 @@
     .page-hero {padding: 6rem 1rem 2.5rem;}
     .about-section, .learn-section, .events-section, .testimonials-section, .cta-section,
     .mv-section, .story-section, .officers-section, .contact-section, .facts-section,
-    .faq-section, .events-page-section, .roadmap-section {padding-left: 1rem; padding-right: 1re}
+    .faq-section, .events-page-section, .roadmap-section {padding-left: 1rem; padding-right: 1rem;}
     .footer-container {padding-left: 1rem; padding-right: 1rem;}
     .profile-page {padding: 4.5rem 1rem 2rem;}
     .facts-grid {grid-template-columns: 1fr;}

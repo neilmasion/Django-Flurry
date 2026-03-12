@@ -1,93 +1,136 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry | Get Started</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="../static/images/logo.png">
-    <link rel="stylesheet" href="../static/css/root.css">
-    <link rel="stylesheet" href="../static/css/main.css">
-    <link rel="stylesheet" href="../static/css/account.css">
-    <link rel="stylesheet" href="../static/css/query.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/root.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/account.css' %}">
+    <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
-<body>
+
+<body data-email="{{ user.email|default:'' }}">
+    <!-- Skeleton Loading Screen -->
+    <div id="skeleton-loader">
+        <div class="skeleton-header skeleton-shimmer"></div>
+        <div class="skeleton-hero skeleton-shimmer"></div>
+        <div class="skeleton-title skeleton-shimmer"></div>
+        <div class="skeleton-text skeleton-shimmer"></div>
+        <div class="skeleton-text skeleton-shimmer"></div>
+        <div class="skeleton-grid">
+            <div class="skeleton-card skeleton-shimmer"></div>
+            <div class="skeleton-card skeleton-shimmer"></div>
+            <div class="skeleton-card skeleton-shimmer"></div>
+        </div>
+    </div>
+
     <div class="container">
-        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+        <a href="{% url 'index' %}" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
         <div class="account-container">
-            <div id="registerPanel" class="form-panel active">
+            <div id="registerPanel" class="form-panel {% if panel == 'register' %}active{% endif %}">
                 <div class="account-header">
                     <h1>Get Started with Flurry</h1>
                     <p>Create your account to get started</p>
                 </div>
 
-                <form class="demo-form" id="registerForm" novalidate>
+                <form class="demo-form" id="registerForm" action="{% url 'register' %}" method="POST">
+                    {% csrf_token %}
+                    {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                    {% endif %}
                     <div class="form-group">
-                        <label for="workEmail">Email*</label>
-                        <input type="email" id="workEmail" placeholder="neilmasion@example.com">
-                        <span class="error-msg" id="regEmailError"></span>
+                        <label for="id_username">Username*</label>
+                        <input type="text" name="username" id="id_username" placeholder="neilmasion"
+                            value="{{ register_form.username.value|default:'' }}">
+                        {% if register_form.username.errors %}
+                        <span class="error-msg" style="display:block;">{{ register_form.username.errors.0 }}</span>
+                        {% endif %}
                     </div>
                     <div class="form-row">
                         <div class="form-group half">
-                            <label for="firstName">First Name*</label>
-                            <input type="text" id="firstName" placeholder="Neil" required>
+                            <label for="id_first_name">First Name*</label>
+                            <input type="text" name="first_name" id="id_first_name" placeholder="Neil" required
+                                value="{{ register_form.first_name.value|default:'' }}">
+                            {% if register_form.first_name.errors %}
+                            <span class="error-msg" style="display:block;">{{ register_form.first_name.errors.0
+                                }}</span>
+                            {% endif %}
                         </div>
                         <div class="form-group half">
-                            <label for="lastName">Last Name*</label>
-                            <input type="text" id="lastName" placeholder="Masion" required>
+                            <label for="id_last_name">Last Name*</label>
+                            <input type="text" name="last_name" id="id_last_name" placeholder="Masion" required
+                                value="{{ register_form.last_name.value|default:'' }}">
+                            {% if register_form.last_name.errors %}
+                            <span class="error-msg" style="display:block;">{{ register_form.last_name.errors.0 }}</span>
+                            {% endif %}
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_email">Email*</label>
+                        <input type="email" name="email" id="id_email" placeholder="neilmasion@example.com"
+                            value="{{ register_form.email.value|default:'' }}">
+                        {% if register_form.email.errors %}
+                        <span class="error-msg" style="display:block;">{{ register_form.email.errors.0 }}</span>
+                        {% endif %}
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="course">Course*</label>
-                            <select id="course">
-                                <option value="">Select an option...</option>
-                                <option>Information Technology (IT)</option>
-                                <option>Computer Science (CS)</option>
-                                <option>Other</option>
-                            </select>
-                            <span class="error-msg" id="regCourseError"></span>
+                            <label for="id_course">Course*</label>
+                            {{ register_form.course }}
+                            {% if register_form.course.errors %}
+                            <span class="error-msg" style="display:block;">{{ register_form.course.errors.0 }}</span>
+                            {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="yearLevel">Year*</label>
-                            <select id="yearLevel">
-                                <option value="">Select an option...</option>
-                                <option>1st Year</option>
-                                <option>2nd Year</option>
-                                <option>3rd Year</option>
-                                <option>4th Year</option>
-                            </select>
-                            <span class="error-msg" id="regYearError"></span>
+                            <label for="id_year_level">Year*</label>
+                            {{ register_form.year_level }}
+                            {% if register_form.year_level.errors %}
+                            <span class="error-msg" style="display:block;">{{ register_form.year_level.errors.0
+                                }}</span>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="regPassword">Password*</label>
+                        <label for="id_password1">Password*</label>
                         <div class="input-wrapper">
-                            <input type="password" id="regPassword" placeholder="Enter your password">
-                            <button type="button" class="toggle-password" data-target="regPassword" aria-label="Show password">
+                            <input type="password" name="password1" id="id_password1" placeholder="Enter your password" oninput="checkPasswordStrength(this.value)">
+                            <button type="button" class="toggle-password" data-target="id_password1"
+                                aria-label="Show password">
                                 <i class="fa-solid fa-eye-slash"></i>
                             </button>
                         </div>
-                        <span class="error-msg" id="regPasswordError"></span>
+                        <small id="password-strength-label" style="font-size:0.75rem; color:#888; margin-top:0.3rem; display:block;"></small>
+                        {% if register_form.password1.errors %}
+                        <span class="error-msg" style="display:block;">{{ register_form.password1.errors.0 }}</span>
+                        {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="regConfirmPassword">Confirm Password*</label>
+                        <label for="id_password2">Confirm Password*</label>
                         <div class="input-wrapper">
-                            <input type="password" id="regConfirmPassword" placeholder="Enter your password again">
-                            <button type="button" class="toggle-password" data-target="regConfirmPassword" aria-label="Show password">
+                            <input type="password" name="password2" id="id_password2"
+                                placeholder="Enter your password again">
+                            <button type="button" class="toggle-password" data-target="id_password2"
+                                aria-label="Show password">
                                 <i class="fa-solid fa-eye-slash"></i>
                             </button>
                         </div>
-                        <span class="error-msg" id="regConfirmError"></span>
+                        {% if register_form.password2.errors %}
+                        <span class="error-msg" style="display:block;">{{ register_form.password2.errors.0 }}</span>
+                        {% endif %}
                     </div>
 
-                    <p>We want you to know exactly how our community works and why we need your details. Please confirm that you have read, understood and accept the terms and conditions.</p>
+                    <p>We want you to know exactly how our community works and why we need your details. Please confirm
+                        that you have read, understood and accept the terms and conditions.</p>
                     <div class="form-group">
                         <label class="checkbox-container">
-                            <input type="checkbox" id="regTerms">
+                            <input type="checkbox" id="regTerms" required>
                             <span>I have read, understood and accept the terms and conditions.</span>
                         </label>
-                        <span class="error-msg" id="regTermsError"></span>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block">Create Account</button>
@@ -98,27 +141,41 @@
                 </form>
             </div>
 
-            <div id="loginPanel" class="form-panel">
+            <div id="loginPanel" class="form-panel {% if panel == 'login' %}active{% endif %}">
                 <div class="account-header">
                     <h1>Welcome Back</h1>
                     <p>Log in to your Flurry account</p>
                 </div>
 
-                <form class="demo-form" id="loginForm" novalidate>
+                <form class="demo-form" id="loginForm" action="{% url 'login' %}" method="POST">
+                    {% csrf_token %}
+                    {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                    {% endif %}
                     <div class="form-group">
-                        <label for="loginEmail">Email*</label>
-                        <input type="email" id="loginEmail" placeholder="neilmasion@example.com">
-                        <span class="error-msg" id="loginEmailError"></span>
+                        <label for="id_email_login">Email*</label>
+                        <input type="email" name="email" id="id_email_login" placeholder="neilmasion@example.com"
+                            value="{{ login_form.email.value|default:'' }}">
+                        {% if login_form.email.errors %}
+                        <span class="error-msg" style="display:block;">{{ login_form.email.errors.0 }}</span>
+                        {% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="loginPassword">Password*</label>
+                        <label for="id_password_login">Password*</label>
                         <div class="input-wrapper">
-                            <input type="password" id="loginPassword" placeholder="Enter your password">
-                            <button type="button" class="toggle-password" data-target="loginPassword" aria-label="Show password">
+                            <input type="password" name="password" id="id_password_login"
+                                placeholder="Enter your password">
+                            <button type="button" class="toggle-password" data-target="id_password_login"
+                                aria-label="Show password">
                                 <i class="fa-solid fa-eye-slash"></i>
                             </button>
                         </div>
-                        <span class="error-msg" id="loginPasswordError"></span>
+                        {% if login_form.password.errors %}
+                        <span class="error-msg" style="display:block;">{{ login_form.password.errors.0 }}</span>
+                        {% endif %}
+                        {% if login_form.non_field_errors %}
+                        <span class="error-msg" style="display:block;">{{ login_form.non_field_errors.0 }}</span>
+                        {% endif %}
                     </div>
 
                     <div class="login-options">
@@ -145,6 +202,29 @@
         </div>
     </div>
 
-    <script type="module" src="../static/js/main.js" defer></script>
+    <script type="module" src="{% static 'js/main.js' %}" defer></script>
+    <script>
+    function checkPasswordStrength(val) {
+        var label = document.getElementById('password-strength-label');
+        var strength = 0;
+        if (val.length >= 6) strength++;
+        if (val.length >= 10) strength++;
+        if (/[A-Z]/.test(val)) strength++;
+        if (/[0-9]/.test(val)) strength++;
+        if (/[^A-Za-z0-9]/.test(val)) strength++;
+        var levels = [
+            { color: '#888',    text: '' },
+            { color: '#e74c3c', text: 'Weak' },
+            { color: '#e67e22', text: 'Fair' },
+            { color: '#f1c40f', text: 'Good' },
+            { color: '#2ecc71', text: 'Strong' },
+            { color: '#27ae60', text: 'Very Strong' },
+        ];
+        var lvl = levels[Math.min(strength, 5)];
+        label.textContent = val.length === 0 ? '' : lvl.text;
+        label.style.color = lvl.color;
+    }
+    </script>
 </body>
+
 </html>

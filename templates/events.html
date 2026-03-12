@@ -1,64 +1,92 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry | Events</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="../static/images/logo.png">
-    <link rel="stylesheet" href="../static/css/root.css">
-    <link rel="stylesheet" href="../static/css/main.css">
-    <link rel="stylesheet" href="../static/css/profile.css">
-    <link rel="stylesheet" href="../static/css/events.css">
-    <link rel="stylesheet" href="../static/css/query.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/root.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/events.css' %}">
+    <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
-<body>
+
+<body data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}" data-email="{{ user.email|default:'' }}">
+    <!-- Skeleton Loading Screen -->
+    <div id="skeleton-loader">
+        <div class="skeleton-header skeleton-shimmer"></div>
+        <div class="skeleton-hero skeleton-shimmer"></div>
+        <div class="skeleton-title skeleton-shimmer"></div>
+        <div class="skeleton-text skeleton-shimmer"></div>
+        <div class="skeleton-text skeleton-shimmer"></div>
+        <div class="skeleton-grid">
+            <div class="skeleton-card skeleton-shimmer"></div>
+            <div class="skeleton-card skeleton-shimmer"></div>
+            <div class="skeleton-card skeleton-shimmer"></div>
+        </div>
+    </div>
+
     <canvas id="cloudCanvas"></canvas>
 
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <img src="../static/images/logo.png" class="logo-icon" alt="Flurry Logo">
+                <img src="{% static 'images/logo.png' %}" class="logo-icon" alt="Flurry Logo">
                 <span class="logo-text">Flurry</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="about.html" class="nav-link">About</a></li>
-                <li><a href="events.html" class="nav-link active">Events</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+                <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                <li><a href="{% url 'events' %}" class="nav-link active">Events</a></li>
+                <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
                 <li class="nav-theme desktop-theme">
                     <button class="btn theme-toggle" aria-label="Toggle theme">
-                        <img class="theme-icon" src="../static/images/theme.png" alt="Theme">
+                        <img class="theme-icon" src="{% static 'images/theme.png' %}" alt="Theme">
                     </button>
                 </li>
-                                <li class="nav-auth">
-                    <button id="loginBtn" class="btn btn-outline btn-small">Login</button>
-                    <div class="user-menu" id="userMenu" style="display:none;">
+                <li class="nav-auth">
+                    {% if user.is_authenticated %}
+                    <div class="user-menu" id="userMenu">
                         <button class="user-menu-btn" id="userMenuBtn">
-                            <div class="user-avatar-sm" id="userAvatarNav"></div>
-                            <span id="userName"></span>
+                            <div class="user-avatar-sm" id="userAvatarNav">{{ user.username|slice:":1"|upper }}</div>
+                            <span id="userName">{{ user.first_name|default:user.username }}</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div class="user-dropdown" id="userDropdown">
-                            <a href="profile.html" class="dropdown-item">
+                            <a href="{% url 'profile' %}" class="dropdown-item">
                                 <i class="fa-solid fa-user"></i> My Profile
                             </a>
+                            {% if user.is_staff %}
+                            <a href="{% url 'admin-dashboard' %}" class="dropdown-item">
+                                <i class="fa-solid fa-shield-halved"></i> {% if user.role == 'admin' or user.is_superuser %}Admin Dashboard{% else %}Dashboard{% endif %}
+                            </a>
+                            {% endif %}
                             <div class="dropdown-divider"></div>
-                            <button class="dropdown-item dropdown-item--danger" id="logoutBtn">
-                                <i class="fa-solid fa-right-from-bracket"></i> Logout
-                            </button>
+                            <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item dropdown-item--danger">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                </button>
+                            </form>
                         </div>
                     </div>
+                    {% else %}
+                    <a href="{% url 'account' %}" class="btn btn-outline btn-small">Login</a>
+                    {% endif %}
                 </li>
             </ul>
             <div class="nav-right-controls">
                 <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
-                <img src="../static/images/theme.png" alt="Theme" class="theme-icon">
-            </button>
+                    <img src="{% static 'images/theme.png' %}" alt="Theme" class="theme-icon">
+                </button>
                 <div class="hamburger">
-                <i class="fa-solid fa-bars open-icon"></i>
-                <i class="fa-solid fa-xmark close-icon"></i>
-            </div>
+                    <i class="fa-solid fa-bars open-icon"></i>
+                    <i class="fa-solid fa-xmark close-icon"></i>
+                </div>
             </div>
         </div>
     </nav>
@@ -67,7 +95,8 @@
         <div class="page-hero-content">
             <span class="section-eyebrow">Events & Learning</span>
             <h1>Workshops, Events<br>& Resources</h1>
-            <p>Everything happening in Flurry — from hands-on workshops and bootcamps to study resources and certification roadmaps. All in one place.</p>
+            <p>Everything happening in Flurry — from hands-on workshops and bootcamps to study resources and
+                certification roadmaps. All in one place.</p>
         </div>
     </section>
 
@@ -78,74 +107,49 @@
             <p>Register early — seats are limited for all workshops.</p>
         </div>
         <div class="events-grid">
+            {% for event in featured_events %}
             <div class="event-card event-card--featured">
                 <div class="event-tag">Featured</div>
                 <div class="event-date-badge">
-                    <span class="event-day">15</span>
-                    <span class="event-month">Mar</span>
+                    <span class="event-day">{{ event.day }}</span>
+                    <span class="event-month">{{ event.month }}</span>
                 </div>
-                <h3>AWS Cloud Practitioner Bootcamp</h3>
-                <p>A full-day intensive prep session for students aiming for the AWS Certified Cloud Practitioner exam. Covers all domains with practice questions and mock exams.</p>
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.description }}</p>
                 <div class="event-meta">
-                    <span><i class="fa-regular fa-clock"></i> 9:00 AM – 5:00 PM</span>
-                    <span><i class="fa-solid fa-location-dot"></i> Room 401, IT Building</span>
+                    <span><i class="fa-regular fa-clock"></i> {{ event.time_range }}</span>
+                    <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>
                 </div>
                 <div class="event-footer">
-                    <span class="event-spots">24 spots left</span>
-                    <button class="btn btn-primary enroll-btn" data-title="AWS Cloud Practitioner Bootcamp" data-date="Mar 15" data-time="9:00 AM – 5:00 PM">Register Now</button>
+                    <span class="event-spots">{{ event.spots_left }}</span>
+                    <button class="btn btn-primary enroll-btn" data-title="{{ event.title }}"
+                        data-date="{{ event.month }} {{ event.day }}" data-time="{{ event.time_range }}">Register
+                        Now</button>
                 </div>
             </div>
+            {% endfor %}
+
+            {% for event in other_events %}
             <div class="event-card">
-                <div class="event-tag event-tag--workshop">Workshop</div>
+                <div class="event-tag event-tag--{{ event.event_type|lower }}">{{ event.get_event_type_display }}</div>
                 <div class="event-date-badge">
-                    <span class="event-day">22</span>
-                    <span class="event-month">Mar</span>
+                    <span class="event-day">{{ event.day }}</span>
+                    <span class="event-month">{{ event.month }}</span>
                 </div>
-                <h3>Building Serverless APIs with Lambda</h3>
-                <p>Deploy a real REST API using AWS Lambda, API Gateway, and DynamoDB from scratch.</p>
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.description }}</p>
                 <div class="event-meta">
-                    <span><i class="fa-regular fa-clock"></i> 2:00 PM – 5:00 PM</span>
-                    <span><i class="fa-solid fa-location-dot"></i> CS Lab 3</span>
+                    <span><i class="fa-regular fa-clock"></i> {{ event.time_range }}</span>
+                    <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>
                 </div>
                 <div class="event-footer">
-                    <span class="event-spots">12 spots left</span>
-                    <button class="btn btn-outline enroll-btn" data-title="Building Serverless APIs with Lambda" data-date="Mar 22" data-time="2:00 PM – 5:00 PM">Register</button>
+                    <span class="event-spots">{{ event.spots_left }}</span>
+                    <button class="btn btn-outline enroll-btn" data-title="{{ event.title }}"
+                        data-date="{{ event.month }} {{ event.day }}"
+                        data-time="{{ event.time_range }}">Register</button>
                 </div>
             </div>
-            <div class="event-card">
-                <div class="event-tag event-tag--talk">Tech Talk</div>
-                <div class="event-date-badge">
-                    <span class="event-day">05</span>
-                    <span class="event-month">Apr</span>
-                </div>
-                <h3>Cloud Careers: From Student to AWS Engineer</h3>
-                <p>Industry professionals share their journey into cloud engineering and how to land your first cloud role.</p>
-                <div class="event-meta">
-                    <span><i class="fa-regular fa-clock"></i> 3:00 PM – 5:00 PM</span>
-                    <span><i class="fa-solid fa-location-dot"></i> Auditorium B</span>
-                </div>
-                <div class="event-footer">
-                    <span class="event-spots">Open seats</span>
-                    <button class="btn btn-outline enroll-btn" data-title="Cloud Careers: From Student to AWS Engineer" data-date="Apr 05" data-time="3:00 PM – 5:00 PM">Register</button>
-                </div>
-            </div>
-            <div class="event-card">
-                <div class="event-tag event-tag--workshop">Workshop</div>
-                <div class="event-date-badge">
-                    <span class="event-day">19</span>
-                    <span class="event-month">Apr</span>
-                </div>
-                <h3>IAM & Security Deep Dive</h3>
-                <p>Understand AWS Identity and Access Management — roles, policies, and least-privilege security in practice.</p>
-                <div class="event-meta">
-                    <span><i class="fa-regular fa-clock"></i> 1:00 PM – 4:00 PM</span>
-                    <span><i class="fa-solid fa-location-dot"></i> IT Lab 2</span>
-                </div>
-                <div class="event-footer">
-                    <span class="event-spots">18 spots left</span>
-                    <button class="btn btn-outline enroll-btn" data-title="IAM & Security Deep Dive" data-date="Apr 19" data-time="1:00 PM – 4:00 PM">Register</button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </section>
 
@@ -157,84 +161,23 @@
             <p>All the AWS topics Flurry has run workshops on — from beginner to advanced.</p>
         </div>
         <div class="workshops-grid">
+            {% for workshop in workshops %}
             <div class="workshop-item">
-                <div class="workshop-item-icon"><i class="fa-solid fa-bucket"></i></div>
+                <div class="workshop-item-icon"><i class="{{ workshop.icon_class }}"></i></div>
                 <div class="workshop-item-meta">
-                    <span class="ws-tag ws-tag--beginner">Beginner</span>
-                    <span class="ws-tag">Storage</span>
+                    <span class="ws-tag ws-tag--{{ workshop.level|lower }}">{{ workshop.get_level_display }}</span>
+                    <span class="ws-tag">{{ workshop.category }}</span>
                 </div>
-                <h4>S3 & Static Website Hosting</h4>
-                <p>Learn to create S3 buckets, set permissions, upload files, and host a static website — all from the AWS Console.</p>
+                <h4>{{ workshop.title }}</h4>
+                <p>{{ workshop.description }}</p>
                 <div class="workshop-item-footer">
-                    <span><i class="fa-regular fa-clock"></i> 3 hrs</span>
-                    <span><i class="fa-solid fa-users"></i> 45 attended</span>
+                    <span><i class="fa-regular fa-clock"></i> {{ workshop.duration }}</span>
+                    <span><i class="fa-solid fa-users"></i> {{ workshop.attendance_count }} attended</span>
                 </div>
             </div>
-            <div class="workshop-item">
-                <div class="workshop-item-icon"><i class="fa-solid fa-server"></i></div>
-                <div class="workshop-item-meta">
-                    <span class="ws-tag ws-tag--intermediate">Intermediate</span>
-                    <span class="ws-tag">Compute</span>
-                </div>
-                <h4>EC2 Fundamentals & Auto Scaling</h4>
-                <p>Launch virtual servers, configure security groups, and set up auto-scaling groups with load balancers.</p>
-                <div class="workshop-item-footer">
-                    <span><i class="fa-regular fa-clock"></i> 4 hrs</span>
-                    <span><i class="fa-solid fa-users"></i> 38 attended</span>
-                </div>
-            </div>
-            <div class="workshop-item">
-                <div class="workshop-item-icon"><i class="fa-solid fa-bolt"></i></div>
-                <div class="workshop-item-meta">
-                    <span class="ws-tag ws-tag--intermediate">Intermediate</span>
-                    <span class="ws-tag">Serverless</span>
-                </div>
-                <h4>Lambda & Serverless Functions</h4>
-                <p>Build event-driven functions, connect them to API Gateway, and trigger from S3 events or schedules.</p>
-                <div class="workshop-item-footer">
-                    <span><i class="fa-regular fa-clock"></i> 3 hrs</span>
-                    <span><i class="fa-solid fa-users"></i> 42 attended</span>
-                </div>
-            </div>
-            <div class="workshop-item">
-                <div class="workshop-item-icon"><i class="fa-solid fa-database"></i></div>
-                <div class="workshop-item-meta">
-                    <span class="ws-tag ws-tag--intermediate">Intermediate</span>
-                    <span class="ws-tag">Database</span>
-                </div>
-                <h4>DynamoDB & NoSQL Patterns</h4>
-                <p>Design tables, query with GSIs, and integrate DynamoDB with Lambda for serverless backends.</p>
-                <div class="workshop-item-footer">
-                    <span><i class="fa-regular fa-clock"></i> 3.5 hrs</span>
-                    <span><i class="fa-solid fa-users"></i> 30 attended</span>
-                </div>
-            </div>
-            <div class="workshop-item">
-                <div class="workshop-item-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                <div class="workshop-item-meta">
-                    <span class="ws-tag ws-tag--intermediate">Intermediate</span>
-                    <span class="ws-tag">Security</span>
-                </div>
-                <h4>IAM Roles, Policies & Best Practices</h4>
-                <p>Manage users, groups, and roles with least-privilege access. Set up MFA and service-linked roles.</p>
-                <div class="workshop-item-footer">
-                    <span><i class="fa-regular fa-clock"></i> 3 hrs</span>
-                    <span><i class="fa-solid fa-users"></i> 35 attended</span>
-                </div>
-            </div>
-            <div class="workshop-item">
-                <div class="workshop-item-icon"><i class="fa-solid fa-network-wired"></i></div>
-                <div class="workshop-item-meta">
-                    <span class="ws-tag ws-tag--advanced">Advanced</span>
-                    <span class="ws-tag">Networking</span>
-                </div>
-                <h4>VPC Design & Networking</h4>
-                <p>Build secure cloud networks with custom VPCs, public/private subnets, NAT gateways, and security groups.</p>
-                <div class="workshop-item-footer">
-                    <span><i class="fa-regular fa-clock"></i> 4 hrs</span>
-                    <span><i class="fa-solid fa-users"></i> 28 attended</span>
-                </div>
-            </div>
+            {% empty %}
+            <p>No workshops cataloged yet.</p>
+            {% endfor %}
         </div>
     </section>
 
@@ -310,7 +253,8 @@
                 <div class="resource-icon"><i class="fa-brands fa-aws"></i></div>
                 <div class="resource-body">
                     <h4>AWS Free Tier</h4>
-                    <p>Get hands-on with 100+ AWS products for free. Perfect for practicing after workshops — no credit card surprises if you stay within limits.</p>
+                    <p>Get hands-on with 100+ AWS products for free. Perfect for practicing after workshops — no credit
+                        card surprises if you stay within limits.</p>
                     <a href="https://aws.amazon.com/free/" target="_blank">Visit AWS Free Tier →</a>
                 </div>
             </div>
@@ -318,7 +262,8 @@
                 <div class="resource-icon"><i class="fa-solid fa-book-open"></i></div>
                 <div class="resource-body">
                     <h4>AWS Skill Builder</h4>
-                    <p>Official AWS learning platform with free digital courses, labs, and exam prep. Start with the Cloud Practitioner Essentials course.</p>
+                    <p>Official AWS learning platform with free digital courses, labs, and exam prep. Start with the
+                        Cloud Practitioner Essentials course.</p>
                     <a href="https://skillbuilder.aws/" target="_blank">Open Skill Builder →</a>
                 </div>
             </div>
@@ -326,7 +271,8 @@
                 <div class="resource-icon"><i class="fa-solid fa-graduation-cap"></i></div>
                 <div class="resource-body">
                     <h4>AWS Certification Prep</h4>
-                    <p>Official exam guides, sample questions, and practice exams directly from AWS. The best starting point before any certification attempt.</p>
+                    <p>Official exam guides, sample questions, and practice exams directly from AWS. The best starting
+                        point before any certification attempt.</p>
                     <a href="https://aws.amazon.com/certification/" target="_blank">Browse Certifications →</a>
                 </div>
             </div>
@@ -334,7 +280,8 @@
                 <div class="resource-icon"><i class="fa-solid fa-flask"></i></div>
                 <div class="resource-body">
                     <h4>AWS Workshops (workshops.aws)</h4>
-                    <p>Hands-on workshop content built by AWS teams. Great for self-paced practice on specific services like EKS, Lambda, and more.</p>
+                    <p>Hands-on workshop content built by AWS teams. Great for self-paced practice on specific services
+                        like EKS, Lambda, and more.</p>
                     <a href="https://workshops.aws/" target="_blank">Explore Workshops →</a>
                 </div>
             </div>
@@ -342,7 +289,8 @@
                 <div class="resource-icon"><i class="fa-brands fa-youtube"></i></div>
                 <div class="resource-body">
                     <h4>YouTube: freeCodeCamp AWS Course</h4>
-                    <p>Full-length free AWS Cloud Practitioner and Solutions Architect courses on YouTube. Highly recommended for visual learners.</p>
+                    <p>Full-length free AWS Cloud Practitioner and Solutions Architect courses on YouTube. Highly
+                        recommended for visual learners.</p>
                     <a href="https://www.youtube.com/@freecodecamp" target="_blank">Watch on YouTube →</a>
                 </div>
             </div>
@@ -350,7 +298,8 @@
                 <div class="resource-icon"><i class="fa-solid fa-clipboard-question"></i></div>
                 <div class="resource-body">
                     <h4>ExamTopics Practice Questions</h4>
-                    <p>Community-sourced practice questions for AWS exams. Use this alongside official materials for exam simulation and gap identification.</p>
+                    <p>Community-sourced practice questions for AWS exams. Use this alongside official materials for
+                        exam simulation and gap identification.</p>
                     <a href="https://www.examtopics.com/exams/amazon/" target="_blank">Practice Questions →</a>
                 </div>
             </div>
@@ -362,16 +311,17 @@
         <div class="footer-container">
             <div class="footer-description">
                 <h3>Flurry</h3>
-                <p>An official AWS Cloud Club chapter dedicated to empowering students through cloud education, community, and hands-on learning.</p>
+                <p>An official AWS Cloud Club chapter dedicated to empowering students through cloud education,
+                    community, and hands-on learning.</p>
             </div>
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Navigate</h4>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="events.html">Events</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="{% url 'about' %}">About</a></li>
+                        <li><a href="{% url 'events' %}">Events</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -386,7 +336,9 @@
                 <div class="footer-section">
                     <h4>Connect</h4>
                     <ul>
-                        <li><a href="#"><span class="__cf_email__" data-cfemail="c6a0aab3b4b4bf86a7b1b5a5a5e8a5a9ab">[email&#160;protected]</span></a></li>
+                        <li><a href="#"><span class="__cf_email__"
+                                    data-cfemail="c6a0aab3b4b4bf86a7b1b5a5a5e8a5a9ab">[email&#160;protected]</span></a>
+                        </li>
                         <li><a href="#">Discord</a></li>
                         <li><a href="#">Instagram</a></li>
                         <li><a href="#">Facebook</a></li>
@@ -403,11 +355,13 @@
         <i class="fa-solid fa-chevron-up"></i>
     </button>
 
-    <script type="module" src="../static/js/main.js" defer></script>
+    <script type="module" src="{% static 'js/main.js' %}" defer></script>
 
-    <div id="enrollToast" style="display:none;position:fixed;bottom:2rem;right:2rem;z-index:4000;background:rgba(13,36,144,0.85);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.2);border-radius:0.75rem;padding:1rem 1.5rem;color:#fff;font-size:0.85rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.4);align-items:center;gap:0.75rem;max-width:320px;">
+    <div id="enrollToast"
+        style="display:none;position:fixed;bottom:2rem;right:2rem;z-index:4000;background:rgba(13,36,144,0.85);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.2);border-radius:0.75rem;padding:1rem 1.5rem;color:#fff;font-size:0.85rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.4);align-items:center;gap:0.75rem;max-width:320px;">
         <i id="enrollToastIcon" class="fa-solid fa-circle-check" style="color:#86efac;font-size:1rem;"></i>
         <span id="enrollToastMsg"></span>
     </div>
 </body>
+
 </html>

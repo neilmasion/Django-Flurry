@@ -1,64 +1,92 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry | About</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="../static/images/logo.png">
-    <link rel="stylesheet" href="../static/css/root.css">
-    <link rel="stylesheet" href="../static/css/main.css">
-    <link rel="stylesheet" href="../static/css/profile.css">
-    <link rel="stylesheet" href="../static/css/about.css">
-    <link rel="stylesheet" href="../static/css/query.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/root.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
-<body>
+
+<body data-email="{{ user.email|default:'' }}">
+    <!-- Skeleton Loading Screen -->
+    <div id="skeleton-loader">
+        <div class="skeleton-header skeleton-shimmer"></div>
+        <div class="skeleton-hero skeleton-shimmer"></div>
+        <div class="skeleton-title skeleton-shimmer"></div>
+        <div class="skeleton-text skeleton-shimmer"></div>
+        <div class="skeleton-text skeleton-shimmer"></div>
+        <div class="skeleton-grid">
+            <div class="skeleton-card skeleton-shimmer"></div>
+            <div class="skeleton-card skeleton-shimmer"></div>
+            <div class="skeleton-card skeleton-shimmer"></div>
+        </div>
+    </div>
+
     <canvas id="cloudCanvas"></canvas>
 
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <img src="../static/images/logo.png" class="logo-icon" alt="Flurry Logo">
+                <img src="{% static 'images/logo.png' %}" class="logo-icon" alt="Flurry Logo">
                 <span class="logo-text">Flurry</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="about.html" class="nav-link active">About</a></li>
-                <li><a href="events.html" class="nav-link">Events</a></li>
-                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+                <li><a href="{% url 'about' %}" class="nav-link active">About</a></li>
+                <li><a href="{% url 'events' %}" class="nav-link">Events</a></li>
+                <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
                 <li class="nav-theme desktop-theme">
                     <button class="btn theme-toggle" aria-label="Toggle theme">
-                        <img class="theme-icon" src="../static/images/theme.png" alt="Theme">
+                        <img class="theme-icon" src="{% static 'images/theme.png' %}" alt="Theme">
                     </button>
                 </li>
-                                <li class="nav-auth">
-                    <button id="loginBtn" class="btn btn-outline btn-small">Login</button>
-                    <div class="user-menu" id="userMenu" style="display:none;">
+                <li class="nav-auth">
+                    {% if user.is_authenticated %}
+                    <div class="user-menu" id="userMenu">
                         <button class="user-menu-btn" id="userMenuBtn">
-                            <div class="user-avatar-sm" id="userAvatarNav"></div>
-                            <span id="userName"></span>
+                            <div class="user-avatar-sm" id="userAvatarNav">{{ user.username|slice:":1"|upper }}</div>
+                            <span id="userName">{{ user.first_name|default:user.username }}</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div class="user-dropdown" id="userDropdown">
-                            <a href="profile.html" class="dropdown-item">
+                            <a href="{% url 'profile' %}" class="dropdown-item">
                                 <i class="fa-solid fa-user"></i> My Profile
                             </a>
+                            {% if user.is_staff %}
+                            <a href="{% url 'admin-dashboard' %}" class="dropdown-item">
+                                <i class="fa-solid fa-shield-halved"></i> {% if user.role == 'admin' or user.is_superuser %}Admin Dashboard{% else %}Dashboard{% endif %}
+                            </a>
+                            {% endif %}
                             <div class="dropdown-divider"></div>
-                            <button class="dropdown-item dropdown-item--danger" id="logoutBtn">
-                                <i class="fa-solid fa-right-from-bracket"></i> Logout
-                            </button>
+                            <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item dropdown-item--danger">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                </button>
+                            </form>
                         </div>
                     </div>
+                    {% else %}
+                    <a href="{% url 'account' %}" class="btn btn-outline btn-small">Login</a>
+                    {% endif %}
                 </li>
             </ul>
             <div class="nav-right-controls">
                 <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
-                <img src="../static/images/theme.png" alt="Theme" class="theme-icon">
-            </button>
+                    <img src="{% static 'images/theme.png' %}" alt="Theme" class="theme-icon">
+                </button>
                 <div class="hamburger">
-                <i class="fa-solid fa-bars open-icon"></i>
-                <i class="fa-solid fa-xmark close-icon"></i>
-            </div>
+                    <i class="fa-solid fa-bars open-icon"></i>
+                    <i class="fa-solid fa-xmark close-icon"></i>
+                </div>
             </div>
         </div>
     </nav>
@@ -67,7 +95,8 @@
         <div class="page-hero-content">
             <span class="section-eyebrow">Who We Are</span>
             <h1>Built by students,<br>powered by the cloud.</h1>
-            <p>AWS Cloud Club - Flurry is an official AWS Cloud Club chapter dedicated to equipping students with real-world cloud skills through workshops, community, and certification support.</p>
+            <p>AWS Cloud Club - Flurry is an official AWS Cloud Club chapter dedicated to equipping students with
+                real-world cloud skills through workshops, community, and certification support.</p>
         </div>
     </section>
 
@@ -76,22 +105,27 @@
             <div class="mv-card">
                 <div class="mv-card-icon"><i class="fa-solid fa-bullseye"></i></div>
                 <h3>Our Mission</h3>
-                <p>To empower students with hands-on AWS cloud skills, foster a collaborative learning community, and guide members toward earning industry-recognized certifications that open real career opportunities.</p>
+                <p>To empower students with hands-on AWS cloud skills, foster a collaborative learning community, and
+                    guide members toward earning industry-recognized certifications that open real career opportunities.
+                </p>
             </div>
             <div class="mv-card">
                 <div class="mv-card-icon"><i class="fa-solid fa-eye"></i></div>
                 <h3>Our Vision</h3>
-                <p>To be the leading student cloud community in the region — where every member leaves with the skills, certifications, and network to thrive in the cloud industry.</p>
+                <p>To be the leading student cloud community in the region — where every member leaves with the skills,
+                    certifications, and network to thrive in the cloud industry.</p>
             </div>
             <div class="mv-card">
                 <div class="mv-card-icon"><i class="fa-solid fa-handshake"></i></div>
                 <h3>Our Values</h3>
-                <p>Community over competition. Hands-on over passive learning. Openness to beginners. Collaboration across chapters. And a genuine drive to help every member grow.</p>
+                <p>Community over competition. Hands-on over passive learning. Openness to beginners. Collaboration
+                    across chapters. And a genuine drive to help every member grow.</p>
             </div>
             <div class="mv-card">
                 <div class="mv-card-icon"><i class="fa-brands fa-aws"></i></div>
                 <h3>AWS Official Chapter</h3>
-                <p>Recognized and supported by AWS, we are part of a national network of AWS Cloud Clubs — connected to resources, mentors, and opportunities that individual students rarely get access to.</p>
+                <p>Recognized and supported by AWS, we are part of a national network of AWS Cloud Clubs — connected to
+                    resources, mentors, and opportunities that individual students rarely get access to.</p>
             </div>
         </div>
     </section>
@@ -100,10 +134,14 @@
         <div class="story-inner">
             <div class="story-text">
                 <span class="section-eyebrow">Our Story</span>
-                <img src="../static/images/journey.jpg" alt="journey">
+                <img src="{% static 'images/journey.jpg' %}" alt="journey">
                 <h2>How Flurry started</h2>
-                <p>Flurry began as a small group of IT and CS students who wanted more than what the classroom offered. Frustrated by the gap between academic theory and real-world cloud skills, a handful of students decided to build a community around learning AWS — properly, hands-on.</p>
-                <p>What started as informal study sessions quickly grew into a full AWS Cloud Club chapter, officially recognized by Amazon Web Services. Today, Flurry runs structured workshops, exam prep bootcamps, and inter-chapter collaborations — and we're just getting started.</p>
+                <p>Flurry began as a small group of IT and CS students who wanted more than what the classroom offered.
+                    Frustrated by the gap between academic theory and real-world cloud skills, a handful of students
+                    decided to build a community around learning AWS — properly, hands-on.</p>
+                <p>What started as informal study sessions quickly grew into a full AWS Cloud Club chapter, officially
+                    recognized by Amazon Web Services. Today, Flurry runs structured workshops, exam prep bootcamps, and
+                    inter-chapter collaborations — and we're just getting started.</p>
             </div>
             <div class="story-milestones">
                 <span class="section-eyebrow">Milestones</span>
@@ -111,35 +149,40 @@
                     <span class="milestone-year">2023</span>
                     <div class="milestone-body">
                         <h4>Founded</h4>
-                        <p>Flurry was established by a group of students passionate about cloud computing and AWS technologies.</p>
+                        <p>Flurry was established by a group of students passionate about cloud computing and AWS
+                            technologies.</p>
                     </div>
                 </div>
                 <div class="milestone">
                     <span class="milestone-year">2023</span>
                     <div class="milestone-body">
                         <h4>First Workshop</h4>
-                        <p>Hosted our inaugural AWS S3 & Static Hosting workshop — 30 attendees, zero experience required.</p>
+                        <p>Hosted our inaugural AWS S3 & Static Hosting workshop — 30 attendees, zero experience
+                            required.</p>
                     </div>
                 </div>
                 <div class="milestone">
                     <span class="milestone-year">2024</span>
                     <div class="milestone-body">
                         <h4>AWS Official Recognition</h4>
-                        <p>Officially recognized as an AWS Cloud Club chapter, unlocking resources, credits, and national network access.</p>
+                        <p>Officially recognized as an AWS Cloud Club chapter, unlocking resources, credits, and
+                            national network access.</p>
                     </div>
                 </div>
                 <div class="milestone">
                     <span class="milestone-year">2024</span>
                     <div class="milestone-body">
                         <h4>50+ Certs Earned</h4>
-                        <p>Members collectively earned over 50 AWS certifications across Cloud Practitioner and Associate levels.</p>
+                        <p>Members collectively earned over 50 AWS certifications across Cloud Practitioner and
+                            Associate levels.</p>
                     </div>
                 </div>
                 <div class="milestone">
                     <span class="milestone-year">2025</span>
                     <div class="milestone-body">
                         <h4>120+ Members</h4>
-                        <p>Grew to 120+ active members and began collaborating with sister chapters across the region.</p>
+                        <p>Grew to 120+ active members and began collaborating with sister chapters across the region.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -150,45 +193,47 @@
         <div class="officers-header">
             <span class="section-eyebrow">Core Team</span>
             <h2>Meet the Officers</h2>
-            <p>The people who keep Flurry running — building workshops, organizing events, and growing the community.</p>
+            <p>The people who keep Flurry running — building workshops, organizing events, and growing the community.
+            </p>
         </div>
 
         <div class="deck-section">
             <div class="officer-deck" id="officerDeck">
                 <div class="deck-card" data-pos="0" data-index="0">
-                    <img src="../static/images/man.jpg" alt="team">
+                    <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="1" data-index="1">
-                    <img src="../static/images/woman.jpg" alt="team">
+                    <img src="{% static 'images/woman.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="2" data-index="2">
-                    <img src="../static/images/man.jpg" alt="team">
+                    <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="3" data-index="3">
-                    <img src="../static/images/woman.jpg" alt="team">
+                    <img src="{% static 'images/woman.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="4" data-index="4">
-                    <img src="../static/images/man.jpg" alt="team">
+                    <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="5" data-index="5">
-                    <img src="../static/images/man.jpg" alt="team">
+                    <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="6" data-index="6">
-                    <img src="../static/images/man.jpg" alt="team">
+                    <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="7" data-index="7">
-                    <img src="../static/images/man.jpg" alt="team">
+                    <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="8" data-index="8">
-                    <img src="../static/images/man.jpg" alt="team">
+                    <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
                 <div class="deck-card" data-pos="9" data-index="9">
-                    <img src="../static/images/man.jpg" alt="team">
+                    <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
             </div>
 
             <div class="deck-info">
-                <div class="deck-hint"><i class="fa-solid fa-hand-pointer"></i> Click the deck to cycle through officers</div>
+                <div class="deck-hint"><i class="fa-solid fa-hand-pointer"></i> Click the deck to cycle through officers
+                </div>
                 <div class="deck-name" id="deckName">Aldwin Tumulak</div>
                 <div class="deck-role" id="deckRole">Captain</div>
                 <div class="deck-course" id="deckCourse">BS Information Technology, 3rd Year</div>
@@ -205,16 +250,17 @@
         <div class="footer-container">
             <div class="footer-description">
                 <h3>Flurry</h3>
-                <p>An official AWS Cloud Club chapter dedicated to empowering students through cloud education, community, and hands-on learning.</p>
+                <p>An official AWS Cloud Club chapter dedicated to empowering students through cloud education,
+                    community, and hands-on learning.</p>
             </div>
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Navigate</h4>
                     <ul>
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About</a></li>
-                        <li><a href="events.html">Events</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="{% url 'about' %}">About</a></li>
+                        <li><a href="{% url 'events' %}">Events</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -229,7 +275,9 @@
                 <div class="footer-section">
                     <h4>Connect</h4>
                     <ul>
-                        <li><a href="#"><span class="__cf_email__" data-cfemail="60060c151212192001171303034e030f0d">[email&#160;protected]</span></a></li>
+                        <li><a href="#"><span class="__cf_email__"
+                                    data-cfemail="60060c151212192001171303034e030f0d">[email&#160;protected]</span></a>
+                        </li>
                         <li><a href="#">Discord</a></li>
                         <li><a href="#">Instagram</a></li>
                         <li><a href="#">Facebook</a></li>
@@ -247,6 +295,7 @@
         <i class="fa-solid fa-chevron-up"></i>
     </button>
 
-    <script type="module" src="../static/js/main.js" defer></script>
+    <script type="module" src="{% static 'js/main.js' %}" defer></script>
 </body>
+
 </html>

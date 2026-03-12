@@ -11,11 +11,8 @@
 .admin-login-box {
     width: 100%;
     max-width: 440px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: var(--radius-xl);
+    background: transparent;
+    border: none;
     padding: 2.5rem 2.5rem 2rem;
     display: flex;
     flex-direction: column;
@@ -362,6 +359,73 @@
 .dash-row-badge { font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); white-space: nowrap; flex-shrink: 0; }
 .dash-row-meta  { font-size: 0.7rem; color: rgba(255,255,255,0.4); flex-shrink: 0; white-space: nowrap; }
 .dash-empty     { padding: 2rem; text-align: center; font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+
+/* Recent Registrations */
+.recent-regs-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-reg-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background var(--transition-fast);
+}
+
+.recent-reg-item:last-child {
+    border-bottom: none;
+}
+
+.recent-reg-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.reg-avatar {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a3a8f, #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.reg-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.reg-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reg-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.reg-meta i {
+    font-size: 0.65rem;
+}
 .admin-toolbar { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; }
 .admin-search-wrap {
     position: relative;
