@@ -13,6 +13,7 @@ import { setupAccount } from './modules/account.js';
 import { setupContactForm } from './modules/contact.js';
 import { setupEventEnroll } from './modules/events.js';
 import { setupProfile } from './modules/profile.js';
+import { syncLocalEnrollments } from './modules/sync.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupOfficerDeck();
     setupEventEnroll();
     setupProfile();
+    syncLocalEnrollments();
 
     if (document.getElementById('workshopsList')) displayWorkshops();
 

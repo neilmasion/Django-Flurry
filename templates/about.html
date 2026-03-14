@@ -44,6 +44,41 @@
                 <li><a href="{% url 'events' %}" class="nav-link">Events</a></li>
                 <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
                 <li class="nav-theme desktop-theme">
+                    {% if user.is_authenticated %}
+                    <div class="notif-wrapper" id="notifWrapper">
+                        <button class="nav-notif-btn" id="notifToggle" title="Notifications">
+                            <i class="fa-solid fa-bell"></i>
+                            {% if unread_notifications_count > 0 %}
+                            <span class="notif-badge">{{ unread_notifications_count }}</span>
+                            {% endif %}
+                        </button>
+                        <div class="notif-dropdown" id="notifDropdown">
+                            <div class="notif-dropdown-header">
+                                <span>Notifications</span>
+                                {% if unread_notifications_count > 0 %}
+                                <span class="notif-count">{{ unread_notifications_count }} New</span>
+                                {% endif %}
+                            </div>
+                            <div class="notif-dropdown-content">
+                                {% for n in unread_notifications %}
+                                <a href="{% url 'mark-notification-read' n.id %}" class="notif-dropdown-item" style="text-decoration: none; display: block;">
+                                    <p>{{ n.message }}</p>
+                                    <small>{{ n.created_at|timesince }} ago</small>
+                                </a>
+                                {% empty %}
+                                <div class="notif-empty">
+                                    <i class="fa-solid fa-bell-slash"></i>
+                                    <p>No new notifications</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 0.5rem;">
+                                <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: var(--primary-light); font-weight: 600;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
+                                <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     <button class="btn theme-toggle" aria-label="Toggle theme">
                         <img class="theme-icon" src="{% static 'images/theme.png' %}" alt="Theme">
                     </button>
@@ -80,6 +115,35 @@
                 </li>
             </ul>
             <div class="nav-right-controls">
+                {% if user.is_authenticated %}
+                <div class="mobile-notif-wrapper" id="mobileNotifWrapper">
+                    <button class="mobile-notif-btn" id="mobileNotifToggle" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        {% if unread_notifications_count > 0 %}
+                        <span class="notif-badge">{{ unread_notifications_count }}</span>
+                        {% endif %}
+                    </button>
+                    <div class="notif-dropdown mobile-notif-dropdown" id="mobileNotifDropdown">
+                        <div class="notif-dropdown-header">
+                            <span>Notifications</span>
+                        </div>
+                        <div class="notif-dropdown-content">
+                            {% for n in unread_notifications %}
+                            <a href="{% url 'mark-notification-read' n.id %}" class="notif-dropdown-item" style="text-decoration: none; display: block;">
+                                <p>{{ n.message }}</p>
+                                <small>{{ n.created_at|timesince }} ago</small>
+                            </a>
+                            {% empty %}
+                            <p class="notif-empty">No new notifications</p>
+                            {% endfor %}
+                        </div>
+                        <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 0.5rem;">
+                            <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: var(--primary-light); font-weight: 600;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
+                            <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
                 <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
                     <img src="{% static 'images/theme.png' %}" alt="Theme" class="theme-icon">
                 </button>
@@ -208,40 +272,180 @@
                 <div class="deck-card" data-pos="2" data-index="2">
                     <img src="{% static 'images/man.jpg' %}" alt="team">
                 </div>
-                <div class="deck-card" data-pos="3" data-index="3">
-                    <img src="{% static 'images/woman.jpg' %}" alt="team">
-                </div>
-                <div class="deck-card" data-pos="4" data-index="4">
-                    <img src="{% static 'images/man.jpg' %}" alt="team">
-                </div>
-                <div class="deck-card" data-pos="5" data-index="5">
-                    <img src="{% static 'images/man.jpg' %}" alt="team">
-                </div>
-                <div class="deck-card" data-pos="6" data-index="6">
-                    <img src="{% static 'images/man.jpg' %}" alt="team">
-                </div>
-                <div class="deck-card" data-pos="7" data-index="7">
-                    <img src="{% static 'images/man.jpg' %}" alt="team">
-                </div>
-                <div class="deck-card" data-pos="8" data-index="8">
-                    <img src="{% static 'images/man.jpg' %}" alt="team">
-                </div>
-                <div class="deck-card" data-pos="9" data-index="9">
-                    <img src="{% static 'images/man.jpg' %}" alt="team">
-                </div>
             </div>
 
             <div class="deck-info">
                 <div class="deck-hint"><i class="fa-solid fa-hand-pointer"></i> Click the deck to cycle through officers
                 </div>
-                <div class="deck-name" id="deckName">Aldwin Tumulak</div>
+                <div class="deck-name" id="deckName">Neil Francis Masion</div>
                 <div class="deck-role" id="deckRole">Captain</div>
                 <div class="deck-course" id="deckCourse">BS Information Technology, 3rd Year</div>
                 <div class="deck-links" id="deckLinks">
                     <a href="#"><i class="fa-brands fa-linkedin"></i></a>
                     <a href="#"><i class="fa-brands fa-github"></i></a>
                 </div>
-                <div class="deck-counter"><span id="deckCurrent">1</span> / <span id="deckTotal">10</span></div>
+                <div class="deck-counter"><span id="deckCurrent">1</span> / <span id="deckTotal">3</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hierarchy-section" data-animate>
+        <div class="officers-header" style="text-align: center; margin-bottom: 4rem;">
+            <span class="section-eyebrow">Organization Structure</span>
+            <h2>Club Hierarchy & Roles</h2>
+            <p>Every role in Flurry is designed to provide hands-on leadership experience while serving the community.</p>
+        </div>
+
+        <div class="hierarchy-grid">
+            <!-- Captain -->
+            <div class="dept-card">
+                <div class="dept-header">
+                    <div class="dept-icon"><i class="fa-solid fa-anchor"></i></div>
+                    <h3>Captain</h3>
+                </div>
+                <div class="dept-roles">
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Secretary</p>
+                            <p class="role-desc">Manages documentation, schedules, and club communications.</p>
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Assistant Secretary</p>
+                            <p class="role-desc">Supports the Secretary in administrative tasks and records.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marketing -->
+            <div class="dept-card">
+                <div class="dept-header">
+                    <div class="dept-icon"><i class="fa-solid fa-palette"></i></div>
+                    <h3>Marketing & Creatives</h3>
+                </div>
+                <div class="dept-roles">
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Graphic Multimedia Officer</p>
+                            <p class="role-desc">Creates visual assets, branding, and promotional materials.</p>
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Social Media Content Officer</p>
+                            <p class="role-desc">Manages social platforms and engages with the online community.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Relations -->
+            <div class="dept-card">
+                <div class="dept-header">
+                    <div class="dept-icon"><i class="fa-solid fa-users-gear"></i></div>
+                    <h3>Relations</h3>
+                </div>
+                <div class="dept-roles">
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Human Resource Officer</p>
+                            <p class="role-desc">Focuses on inner-club culture, recruitment, and member welfare.</p>
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Membership Officer</p>
+                            <p class="role-desc">Handles member database, renewals, and onboarding.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Finance -->
+            <div class="dept-card">
+                <div class="dept-header">
+                    <div class="dept-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <h3>Finance</h3>
+                </div>
+                <div class="dept-roles">
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Treasurer</p>
+                            <p class="role-desc">Manages budgets, expenses, and financial reporting.</p>
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Auditor</p>
+                            <p class="role-desc">Reviews financial records and ensures transparency.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logistics -->
+            <div class="dept-card">
+                <div class="dept-header">
+                    <div class="dept-icon"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                    <h3>Logistic & Operations</h3>
+                </div>
+                <div class="dept-roles">
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Event Coordinator</p>
+                            <p class="role-desc">Plans and executes workshops and large-scale events.</p>
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Operation Assistant</p>
+                            <p class="role-desc">Manages physical resources and day-of-event logistics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical -->
+            <div class="dept-card">
+                <div class="dept-header">
+                    <div class="dept-icon"><i class="fa-solid fa-microchip"></i></div>
+                    <h3>Technical</h3>
+                </div>
+                <div class="dept-roles">
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Cloud Solution Officer</p>
+                            <p class="role-desc">Leads technical workshops and architecture demonstrations.</p>
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">Technical Content Officer</p>
+                            <p class="role-desc">Creates technical blogs, tutorials, and documentation.</p>
+                        </div>
+                    </div>
+                    <div class="role-item">
+                        <div class="role-dot"></div>
+                        <div class="role-info">
+                            <p class="role-title">BuildHers+ Ambassador</p>
+                            <p class="role-desc">Promotes diversity in tech and leads initiatives for women in cloud.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

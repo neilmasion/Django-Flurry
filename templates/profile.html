@@ -43,6 +43,41 @@
                 <li><a href="{% url 'events' %}" class="nav-link">Events</a></li>
                 <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
                 <li class="nav-theme desktop-theme">
+                    {% if user.is_authenticated %}
+                    <div class="notif-wrapper" id="notifWrapper">
+                        <button class="nav-notif-btn" id="notifToggle" title="Notifications">
+                            <i class="fa-solid fa-bell"></i>
+                            {% if unread_notifications_count > 0 %}
+                            <span class="notif-badge">{{ unread_notifications_count }}</span>
+                            {% endif %}
+                        </button>
+                        <div class="notif-dropdown" id="notifDropdown">
+                            <div class="notif-dropdown-header">
+                                <span>Notifications</span>
+                                {% if unread_notifications_count > 0 %}
+                                <span class="notif-count">{{ unread_notifications_count }} New</span>
+                                {% endif %}
+                            </div>
+                            <div class="notif-dropdown-content">
+                                {% for n in all_notifications %}
+                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                                    <p>{{ n.message }}</p>
+                                    <small>{{ n.created_at|timesince }} ago</small>
+                                </div>
+                                {% empty %}
+                                <div class="notif-empty">
+                                    <i class="fa-solid fa-bell-slash"></i>
+                                    <p>No new notifications</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 0.5rem;">
+                                <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: var(--primary-light); font-weight: 600;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
+                                <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     <button class="btn theme-toggle" aria-label="Toggle theme">
                         <img class="theme-icon" src="{% static 'images/theme.png' %}" alt="Theme">
                     </button>
@@ -79,6 +114,35 @@
                 </li>
             </ul>
             <div class="nav-right-controls">
+                {% if user.is_authenticated %}
+                <div class="mobile-notif-wrapper" id="mobileNotifWrapper">
+                    <button class="mobile-notif-btn" id="mobileNotifToggle" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        {% if unread_notifications_count > 0 %}
+                        <span class="notif-badge">{{ unread_notifications_count }}</span>
+                        {% endif %}
+                    </button>
+                    <div class="notif-dropdown mobile-notif-dropdown" id="mobileNotifDropdown">
+                        <div class="notif-dropdown-header">
+                            <span>Notifications</span>
+                        </div>
+                        <div class="notif-dropdown-content">
+                            {% for n in all_notifications %}
+                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                                <p>{{ n.message }}</p>
+                                <small>{{ n.created_at|timesince }} ago</small>
+                            </div>
+                            {% empty %}
+                            <p class="notif-empty">No new notifications</p>
+                            {% endfor %}
+                        </div>
+                        <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 0.5rem;">
+                            <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: var(--primary-light); font-weight: 600;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
+                            <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
                 <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
                     <img src="{% static 'images/theme.png' %}" alt="Theme" class="theme-icon">
                 </button>
@@ -193,7 +257,7 @@
                             <div class="combined-stat-item">
                                 <div class="combined-stat-icon"><i class="fa-solid fa-book-open"></i></div>
                                 <div class="combined-stat-body">
-                                    <div class="combined-stat-num" id="statEnrolled">0</div>
+                                    <div class="combined-stat-num" id="statEnrolled">{{ enrolled_events|length }}</div>
                                     <div class="combined-stat-label">Enrolled</div>
                                 </div>
                             </div>
@@ -224,12 +288,29 @@
                     <a href="{% url 'events' %}" class="btn btn-outline btn-small">Browse More</a>
                 </div>
                 <div class="enrolled-grid" id="enrolledGrid">
-                    <div class="enrolled-empty">
-                        <i class="fa-solid fa-book-open"></i>
-                        <h4>No workshops yet</h4>
-                        <p>Browse events and enroll in a workshop to see it here.</p>
-                        <a href="{% url 'events' %}" class="btn btn-primary">Explore Workshops</a>
-                    </div>
+                    {% if enrolled_events %}
+                        <div class="enrolled-table-header">
+                            <span>Workshop</span>
+                            <span>Date</span>
+                            <span>Time</span>
+                            <span>Status</span>
+                        </div>
+                        {% for enrollment in enrolled_events %}
+                        <div class="enrolled-card">
+                            <h4>{{ enrollment.event.title }}</h4>
+                            <div class="enrolled-card-date"><i class="fa-regular fa-calendar"></i> {{ enrollment.event.month }} {{ enrollment.event.day }}</div>
+                            <div class="enrolled-card-time"><i class="fa-regular fa-clock"></i> {{ enrollment.event.time_range }}</div>
+                            <div class="enrolled-card-status">Enrolled</div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="enrolled-empty">
+                            <i class="fa-solid fa-book-open"></i>
+                            <h4>No workshops yet</h4>
+                            <p>Browse events and enroll in a workshop to see it here.</p>
+                            <a href="{% url 'events' %}" class="btn btn-primary">Explore Workshops</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -352,6 +433,44 @@
     </div>
 
     <script type="module" src="{% static 'js/main.js' %}"></script>
+    <script>
+    const CSRF_TOKEN = '{{ csrf_token }}';
+    function markNotifRead(el, notifId) {
+        if (el.classList.contains('notif-read')) return;
+        fetch(`/notification-read/${notifId}/`, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                el.classList.add('notif-read');
+                // Update all badge counts on the page
+                document.querySelectorAll('.notif-badge').forEach(b => {
+                    if (data.unread_count > 0) {
+                        b.textContent = data.unread_count;
+                        b.style.display = '';
+                    } else {
+                        b.style.display = 'none';
+                    }
+                });
+                document.querySelectorAll('.notif-count').forEach(c => {
+                    if (data.unread_count > 0) {
+                        c.textContent = data.unread_count + ' New';
+                        c.style.display = '';
+                    } else {
+                        c.style.display = 'none';
+                    }
+                });
+                // Mirror the read state to the mobile dropdown item for same notification
+                document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => {
+                    item.classList.add('notif-read');
+                });
+            }
+        })
+        .catch(() => {});
+    }
+    </script>
 </body>
 
 </html>

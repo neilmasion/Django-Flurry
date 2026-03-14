@@ -14,18 +14,20 @@ A comprehensive Django-based web application designed to manage community events
 *   **Event Management:** Admins can manage events and workshops (including deleting old ones).
 *   **Login Error Handling:** An invalid login on the admin page correctly displays an on-page error message instead of redirecting the user away.
 *   **"Back to Site" Navigation:** Admins have a convenient button to quickly return to the main public-facing website.
+*   **Officer Hierarchy:** The About page features a premium, animated organizational structure for club departments and roles.
 
 ### 3. Events & Workshop Catalog
 *   **Diverse Event Types:** The system supports Featured Events, Workshops, and Tech Talks.
 *   **Event Details:** Displays scheduling (day, month, time), location, dynamic "spots left" tracking, and skill levels (Beginner, Intermediate, Advanced).
-*   **Workshop Registration:** Members can register for workshops, and their registrations properly sync and display on their personal User Profile page.
+*   **Workshop Registration:** Members can register for workshops, and their registrations properly sync across the Home and Events pages, providing a consistent "Enrolled ✓" status.
+*   **Profile Sync:** Registered workshops are also displayed on the user's personal User Profile page.
 
 ### 4. Testimonial System
 *   **User Submissions:** Members can write and submit testimonials about their experiences.
 *   **Moderation Workflow:** Testimonials don't go live immediately. Admins have a dashboard to review, approve, or delete pending testimonials before they appear on the site.
 
 ### 5. Public Pages & Interactivity
-*   **Working Contact Form:** The public contact form correctly captures messages, subjects, and emails, saving them securely to the database.
+*   **Working Contact Form:** The contact page is public for all visitors, but form submission is restricted to logged-in users to ensure verified inquiries and prevent spam. It correctly captures messages, subjects, and emails, saving them securely to the database.
 *   **Dynamic Analytics/Stats:** A dedicated model handles community statistics (like 120+ members, 30+ workshops, etc.) so they can be easily updated via the admin panel.
 
 ---

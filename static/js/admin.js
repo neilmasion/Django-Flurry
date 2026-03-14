@@ -107,13 +107,13 @@ function initApp() {
         location.reload();
     });
 
-    if (!localStorage.getItem('flurryEvents')) saveEvents(DEFAULT_EVENTS);
+    // Event management logic is now handled by Django
+    // if (!localStorage.getItem('flurryEvents')) saveEvents(DEFAULT_EVENTS);
 
     // renderDashboard();
     // renderUsers();
     // renderEvents();
     // renderEnrollments();
-    setupDjangoListeners();
 }
 
 function renderDashboard() {
@@ -202,87 +202,62 @@ document.getElementById('userSearch')?.addEventListener('input', e => {
     filterTable('usersTableBody', e.target.value);
 });
 
-function renderEvents() {
-    const evs = getEvents();
-    const enrolls = getUserEnrollments();
-    const grid = document.getElementById('eventsAdminGrid');
-    const empty = document.getElementById('eventsEmpty');
-
-    // document.getElementById('eventCount').textContent = `${evs.length} event${evs.length !== 1 ? 's' : ''}`;
-
-    if (!evs.length) {
-        grid.innerHTML = '';
-        empty.style.display = 'flex';
-        return;
-    }
-    empty.style.display = 'none';
-
-    grid.innerHTML = evs.map(ev => {
-        const count = enrolls.filter(e => e.title === ev.title).length;
-        return `<div class="event-admin-card" data-ev-id="${escHtml(ev.id)}">
-            <div class="event-admin-card-header">
-                <h4>${escHtml(ev.title)}</h4>
-                <span class="admin-tag">${escHtml(ev.tag)}</span>
-            </div>
-            <div class="event-admin-meta">
-                <span><i class="fa-regular fa-calendar"></i>${escHtml(ev.date)}</span>
-                <span><i class="fa-regular fa-clock"></i>${escHtml(ev.time)}</span>
-                ${ev.location ? `<span><i class="fa-solid fa-location-dot"></i>${escHtml(ev.location)}</span>` : ''}
-            </div>
-            <div class="event-admin-footer">
-                <span class="event-enroll-count"><i class="fa-solid fa-users"></i> ${count} enrolled</span>
-                <div class="admin-actions">
-                    <button class="admin-btn-icon" title="Edit" data-edit-ev="${escHtml(ev.id)}">
-                        <i class="fa-solid fa-pen"></i>
-                    </button>
-                    <button class="admin-btn-icon admin-btn-icon--danger" title="Delete" data-delete-ev="${escHtml(ev.id)}">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        </div>`;
-    }).join('');
-
-    grid.querySelectorAll('[data-edit-ev]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const ev = getEvents().find(e => e.id === btn.dataset.editEv);
-            if (ev) openEventModal(ev);
-        });
-    });
-
+    /* Local storage rendering removed in favor of Django templates
     grid.querySelectorAll('[data-delete-ev]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = btn.dataset.deleteEv;
-            const ev = getEvents().find(e => e.id === id);
-            openDeleteModal('Delete Event?', `Remove "${ev?.title}"? This cannot be undone.`, () => {
-                saveEvents(getEvents().filter(e => e.id !== id));
-                renderEvents();
-                renderDashboard();
-                showToast('Event deleted.');
-            });
-        });
+        ...
     });
+    */
+
+function showEventStep(step) {
+    currentEventStep = step;
+    
+    // Update steps visibility
+    document.querySelectorAll('.modal-step').forEach(el => el.classList.remove('active'));
+    document.getElementById(`step${step}`).classList.add('active');
+    
+    // Update stepper UI
+    document.querySelectorAll('.stepper-item').forEach(item => {
+        const s = parseInt(item.dataset.step);
+        item.classList.remove('active', 'completed');
+        if (s === step) item.classList.add('active');
+        if (s < step) item.classList.add('completed');
+    });
+    
+    // Update footer buttons
+    document.getElementById('prevStep').style.display = step === 1 ? 'none' : 'block';
+    document.getElementById('nextStep').style.display = step === 3 ? 'none' : 'block';
+    document.getElementById('finishStep').style.display = step === 3 ? 'block' : 'none';
 }
 
-function openEventModal(ev = null) {
+function openEventModal(data = null) {
     const modal = document.getElementById('eventModalOverlay');
     const titleEl = document.getElementById('eventModalTitle');
-    const idInput = document.getElementById('eventId');
-    ['evTitleErr', 'evDateErr', 'evTimeErr'].forEach(id => document.getElementById(id).textContent = '');
+    const form = document.getElementById('eventForm');
 
-    if (ev) {
+    showEventStep(1);
+
+    if (data) {
         titleEl.textContent = 'Edit Event';
-        idInput.value = ev.id;
-        document.getElementById('evTitle').value = ev.title;
-        document.getElementById('evDate').value = ev.date;
-        document.getElementById('evTime').value = ev.time;
-        document.getElementById('evTag').value = ev.tag;
-        document.getElementById('evLocation').value = ev.location || '';
-        document.getElementById('evDesc').value = ev.desc || '';
+        form.action = `/edit-event/${data.id}/`;
+        document.getElementById('evTitle').value = data.title;
+        document.getElementById('evMonth').value = data.month;
+        document.getElementById('evDay').value = data.day;
+        document.getElementById('evDate').value = data.date || '';
+        document.getElementById('evStartTime').value = data.starttime || '';
+        document.getElementById('evEndTime').value = data.endtime || '';
+        document.getElementById('evTimeRange').value = data.timerange;
+        document.getElementById('evLocation').value = data.location;
+        document.getElementById('evType').value = data.type;
+        // Extract only numbers from "X spots left"
+        const numericSpots = data.spots ? data.spots.replace(/[^0-9]/g, '') : '';
+        document.getElementById('evSpots').value = numericSpots;
+        document.getElementById('evDescription').value = data.description;
+        document.getElementById('evIsFeatured').checked = data.featured === 'true';
     } else {
-        titleEl.textContent = 'Add Event';
-        document.getElementById('eventForm').reset();
-        idInput.value = 'ev' + Date.now();
+        titleEl.textContent = 'Add New Event';
+        form.action = '/create-event/';
+        form.reset();
+        document.getElementById('evIsFeatured').checked = false;
     }
 
     modal.style.display = 'flex';
@@ -299,44 +274,29 @@ document.getElementById('eventModalOverlay')?.addEventListener('click', e => {
     if (e.target === e.currentTarget) e.currentTarget.style.display = 'none';
 });
 
-document.getElementById('eventForm')?.addEventListener('submit', e => {
-    e.preventDefault();
-    const title = document.getElementById('evTitle').value.trim();
-    const date = document.getElementById('evDate').value.trim();
-    const time = document.getElementById('evTime').value.trim();
-    let ok = true;
-
-    document.getElementById('evTitleErr').textContent = '';
-    document.getElementById('evDateErr').textContent = '';
-    document.getElementById('evTimeErr').textContent = '';
-
-    if (!title) { document.getElementById('evTitleErr').textContent = 'Title is required'; ok = false; }
-    if (!date) { document.getElementById('evDateErr').textContent = 'Date is required'; ok = false; }
-    if (!time) { document.getElementById('evTimeErr').textContent = 'Time is required'; ok = false; }
-    if (!ok) return;
-
-    const id = document.getElementById('eventId').value;
-    const evs = getEvents();
-    const idx = evs.findIndex(e => e.id === id);
-
-    const updated = {
-        id,
-        title,
-        date,
-        time,
-        tag: document.getElementById('evTag').value,
-        location: document.getElementById('evLocation').value.trim(),
-        desc: document.getElementById('evDesc').value.trim(),
-    };
-
-    if (idx >= 0) evs[idx] = updated;
-    else evs.push(updated);
-
-    saveEvents(evs);
-    document.getElementById('eventModalOverlay').style.display = 'none';
-    renderEvents();
-    renderDashboard();
-    showToast(idx >= 0 ? 'Event updated.' : 'Event added.');
+// Event form now submits normally to Django backend
+document.addEventListener('click', e => {
+    const editBtn = e.target.closest('[data-edit-ev]');
+    if (editBtn) {
+        const card = editBtn.closest('.event-admin-card');
+        if (card) {
+            openEventModal({
+                id: card.dataset.evId,
+                title: card.dataset.evTitle,
+                description: card.dataset.evDescription,
+                day: card.dataset.evDay,
+                month: card.dataset.evMonth,
+                timerange: card.dataset.evTimerange,
+                location: card.dataset.evLocation,
+                spots: card.dataset.evSpots,
+                date: card.dataset.evDate,
+                starttime: card.dataset.evStarttime,
+                endtime: card.dataset.evEndtime,
+                type: card.dataset.evType,
+                featured: card.dataset.evFeatured
+            });
+        }
+    }
 });
 
 function setupEnrollmentFilters() {
@@ -367,6 +327,67 @@ function setupEnrollmentFilters() {
     sel?.addEventListener('change', handleInput);
 }
 
+function setupModalHandlers() {
+    // Handle Delete Forms
+    document.addEventListener('submit', e => {
+        const form = e.target.closest('.delete-form');
+        if (form && !form.dataset.confirmed) {
+            e.preventDefault();
+            const title = form.dataset.title || 'Are you sure?';
+            const confirmMsg = form.dataset.confirm || 'This action cannot be undone.';
+            openDeleteModal(title, confirmMsg, () => {
+                form.dataset.confirmed = 'true';
+                form.submit();
+            });
+        }
+    });
+
+    // Handle View Message Buttons
+    document.addEventListener('click', e => {
+        const btn = e.target.closest('.view-msg-btn');
+        if (btn) {
+            const { name, email, subject, message } = btn.dataset;
+            document.getElementById('msgModalName').textContent = name;
+            document.getElementById('msgModalEmail').textContent = email;
+            document.getElementById('msgModalSubject').textContent = subject;
+            document.getElementById('msgModalBody').textContent = message;
+            document.getElementById('messageModalOverlay').style.display = 'flex';
+        }
+    });
+
+    // Message Modal Close
+    document.getElementById('messageModalClose')?.addEventListener('click', () => {
+        document.getElementById('messageModalOverlay').style.display = 'none';
+    });
+    document.getElementById('messageModalOverlay')?.addEventListener('click', e => {
+        if (e.target === e.currentTarget) e.currentTarget.style.display = 'none';
+    });
+
+    // Step navigation buttons
+    document.getElementById('nextStep')?.addEventListener('click', () => {
+        if (currentEventStep < 3) {
+            // Validate current step before proceeding
+            const currentStepEl = document.getElementById(`step${currentEventStep}`);
+            const inputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+            let allValid = true;
+            
+            for (const input of inputs) {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                    allValid = false;
+                    break;
+                }
+            }
+            
+            if (allValid) showEventStep(currentEventStep + 1);
+        }
+    });
+
+    document.getElementById('prevStep')?.addEventListener('click', () => {
+        if (currentEventStep > 1) showEventStep(currentEventStep - 1);
+    });
+}
+
 let _deleteCallback = null;
 
 function openDeleteModal(title, desc, onConfirm) {
@@ -391,6 +412,8 @@ document.getElementById('deleteModalOverlay')?.addEventListener('click', e => {
     }
 });
 
+let currentEventStep = 1;
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
 
@@ -403,6 +426,58 @@ document.addEventListener('DOMContentLoaded', () => {
     if (adminApp) {
         initApp();
         setupEnrollmentFilters();
+        setupModalHandlers();
+        
+        // Auto-populate Month and Day from Date input
+        const dateInput = document.getElementById('evDate');
+        const monthInput = document.getElementById('evMonth');
+        const dayInput = document.getElementById('evDay');
+        
+        dateInput?.addEventListener('change', () => {
+            if (!dateInput.value) return;
+            
+            const dateObj = new Date(dateInput.value);
+            // Get 3-letter month (e.g., MAR)
+            const month = dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+            // Get day number
+            const day = dateObj.getDate();
+            
+            monthInput.value = month;
+            dayInput.value = day;
+            
+            // Trigger change events if necessary for validation
+            monthInput.dispatchEvent(new Event('input'));
+            dayInput.dispatchEvent(new Event('input'));
+        });
+
+        // Auto-format Time Range from Start/End Time
+        const startTimeInput = document.getElementById('evStartTime');
+        const endTimeInput = document.getElementById('evEndTime');
+        const timeRangeInput = document.getElementById('evTimeRange');
+
+        const formatTime = (timeStr) => {
+            if (!timeStr) return '';
+            const [hours, minutes] = timeStr.split(':');
+            let h = parseInt(hours);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            return `${h}:${minutes} ${ampm}`;
+        };
+
+        const updateTimeRange = () => {
+            const startStr = formatTime(startTimeInput.value);
+            const endStr = formatTime(endTimeInput.value);
+            if (startStr && endStr) {
+                timeRangeInput.value = `${startStr} – ${endStr}`;
+            } else if (startStr) {
+                timeRangeInput.value = startStr;
+            } else {
+                timeRangeInput.value = '';
+            }
+        };
+
+        startTimeInput?.addEventListener('change', updateTimeRange);
+        endTimeInput?.addEventListener('change', updateTimeRange);
     }
 
     // Hide skeleton loader after initialization

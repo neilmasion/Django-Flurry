@@ -23,6 +23,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
 
 class ContactMessage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contact_messages', null=True, blank=True)
     name = models.CharField(max_length=100)
     email = models.EmailField()
     subject = models.CharField(max_length=200)
@@ -56,6 +57,9 @@ class Event(models.Model):
     time_range = models.CharField(max_length=100) 
     location = models.CharField(max_length=200)
     spots_left = models.CharField(max_length=50)
+    date = models.DateField(null=True, blank=True)
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
     event_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='workshop')
     is_featured = models.BooleanField(default=False)
     
@@ -88,3 +92,46 @@ class Testimonial(models.Model):
     
     def __str__(self):
         return self.author_name
+
+class OfficerApplication(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('denied', 'Denied'),
+    ]
+    DEPARTMENT_CHOICES = [
+        ('tech', 'Technical'),
+        ('marketing', 'Marketing & Creatives'),
+        ('logistics_ops', 'Logistics & Operations'),
+        ('finance', 'Finance'),
+        ('relations', 'Relations'),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='officer_applications')
+    reason = models.TextField()
+    department = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES, default='tech')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.department} - {self.status}"
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}"
+
+class Enrollment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='enrollments')
+    enrolled_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'event')
+
+    def __str__(self):
+        return f"{self.user.username} enrolled in {self.event.title}"

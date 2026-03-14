@@ -361,3 +361,219 @@
     color: rgba(255, 255, 255, 0.7);
     font-weight: 600;
 }
+
+/* Recruitment Section - Minimal Layout */
+.recruitment-section {
+    padding: 0 9rem 8rem;
+    position: relative;
+    z-index: 1;
+}
+
+.recruitment-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 5rem;
+}
+
+.recruitment-card {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 5rem;
+    box-shadow: none;
+    transition: none;
+}
+
+.recruitment-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.recruitment-card::before {
+    display: none;
+}
+
+.recruitment-content {
+    flex: 1;
+    max-width: 600px;
+}
+
+.recruitment-content h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0.5rem 0 1rem;
+    line-height: 1.2;
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: initial;
+}
+
+.recruitment-content p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+}
+
+.recruitment-art {
+    font-size: 8rem;
+    color: rgba(255, 255, 255, 0.03);
+    flex-shrink: 0;
+    filter: none;
+}
+
+.recruitment-card:hover .recruitment-art {
+    transform: none;
+}
+
+.app-form textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    color: #fff;
+}
+
+.app-form .btn-primary {
+    box-shadow: none;
+}
+
+/* Officer Hierarchy Section */
+.hierarchy-section {
+    padding: 2rem 9rem 8rem;
+    position: relative;
+    z-index: 1;
+}
+
+.hierarchy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dept-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    transition: transform var(--transition-medium), border-color var(--transition-fast), background var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.dept-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.dept-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.dept-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-light);
+    font-size: 1rem;
+}
+
+.dept-header h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+}
+
+.dept-roles {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.role-item {
+    display: flex;
+    gap: 0.85rem;
+}
+
+.role-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    margin-top: 0.4rem;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px var(--primary-light);
+}
+
+.role-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.role-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+
+.role-desc {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 1200px) {
+    .hierarchy-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 800px) {
+    .hierarchy-section {
+        padding: 2rem 2rem 5rem;
+    }
+    .hierarchy-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1024px) {
+    .recruitment-section {
+        padding: 0 2rem 5rem;
+    }
+    .recruitment-card {
+        flex-direction: column;
+        gap: 3rem;
+    }
+    .recruitment-art {
+        display: none;
+    }
+}

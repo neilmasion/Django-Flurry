@@ -1,10 +1,3 @@
-const EVENT_INFO = {
-    'AWS Cloud Practitioner Bootcamp':          { date: 'March 15, 2026',  time: '9:00 AM – 5:00 PM' },
-    'Building Serverless APIs with Lambda':     { date: 'March 22, 2026',  time: '2:00 PM – 5:00 PM' },
-    'Cloud Careers: From Student to AWS Engineer': { date: 'April 5, 2026', time: '3:00 PM – 5:00 PM' },
-    'IAM & Security Deep Dive':                 { date: 'April 19, 2026',  time: '1:00 PM – 4:00 PM' },
-};
-
 function isLoggedIn() {
     return document.body.dataset.authenticated === 'true';
 }
@@ -26,63 +19,79 @@ function showToast(msg, success = true) {
     toast._timer = setTimeout(() => { toast.style.display = 'none'; }, 3500);
 }
 
-function getEnrolledKey() {
-    const email = document.body.dataset.email || 'guest';
-    return `enrolledWorkshops_${email}`;
-}
-
-function getEnrolled() {
-    return JSON.parse(localStorage.getItem(getEnrolledKey()) || '[]');
-}
-
-function saveEnrolled(list) {
-    localStorage.setItem(getEnrolledKey(), JSON.stringify(list));
-}
-
-function handleEnroll(btn) {
+async function handleEnroll(btn) {
     if (!isLoggedIn()) {
-        window.location.href = '/account/?next=/events/';
+        const nextUrl = encodeURIComponent(window.location.pathname);
+        window.location.href = `/account/?next=${nextUrl}`;
         return;
     }
 
+    const eventId = btn.dataset.id;
     const title   = btn.dataset.title;
-    const info    = EVENT_INFO[title] || {};
-    const enrolled = getEnrolled();
-    const already  = enrolled.some(e => (e.title || e) === title);
-
-    if (already) {
-        showToast('You\'re already enrolled in this event!', false);
+    
+    if (!eventId) {
+        console.error('No event ID found on button');
         return;
     }
 
-    enrolled.push({
-        title,
-        date:       info.date || btn.dataset.date || '—',
-        time:       info.time || btn.dataset.time || '—',
-        enrolledAt: new Date().toISOString()
-    });
-    saveEnrolled(enrolled);
+    // Visual feedback
+    const originalText = btn.textContent;
+    btn.textContent = 'Enrolling...';
+    btn.disabled = true;
 
-    btn.textContent   = 'Enrolled ✓';
-    btn.disabled      = true;
-    btn.style.opacity = '0.65';
+    try {
+        const response = await fetch(`/enroll-event/${eventId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            btn.textContent   = 'Enrolled ✓';
+            btn.disabled      = true;
+            btn.style.opacity = '0.65';
+            showToast(data.message || `Enrolled in "${title}" successfully!`);
+        } else {
+            btn.textContent = originalText;
+            btn.disabled = false;
+            showToast(data.message || 'Enrollment failed.', false);
+        }
+    } catch (err) {
+        console.error('Enrollment error:', err);
+        btn.textContent = originalText;
+        btn.disabled = false;
+        showToast('An error occurred. Please try again.', false);
+    }
+}
 
-    showToast(`Enrolled in "${title}" successfully!`);
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
 export function setupEventEnroll() {
     const btns = document.querySelectorAll('.enroll-btn');
-    if (!btns.length) return;
-
-    const enrolled = getEnrolled();
-
     btns.forEach(btn => {
-        const already = enrolled.some(e => (e.title || e) === btn.dataset.title);
-        if (already) {
-            btn.textContent   = 'Enrolled ✓';
-            btn.disabled      = true;
-            btn.style.opacity = '0.65';
+        // Only add listener if button is not already disabled (by server)
+        if (!btn.disabled) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                handleEnroll(btn);
+            });
         }
-        btn.addEventListener('click', () => handleEnroll(btn));
     });
 }

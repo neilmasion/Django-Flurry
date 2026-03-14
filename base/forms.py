@@ -24,10 +24,8 @@ class StudentLoginForm(forms.Form):
 class ContactForm(forms.ModelForm):
     class Meta:
         model = ContactMessage
-        fields = ['name', 'email', 'subject', 'message']
+        fields = ['subject', 'message']
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Juan dela Cruz'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'juan@example.com'}),
             'subject': forms.Select(choices=[
                 ('', 'Select a topic...'),
                 ('General Inquiry', 'General Inquiry'),

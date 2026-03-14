@@ -44,6 +44,41 @@
                 <li><a href="{% url 'events' %}" class="nav-link active">Events</a></li>
                 <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
                 <li class="nav-theme desktop-theme">
+                    {% if user.is_authenticated %}
+                    <div class="notif-wrapper" id="notifWrapper">
+                        <button class="nav-notif-btn" id="notifToggle" title="Notifications">
+                            <i class="fa-solid fa-bell"></i>
+                            {% if unread_notifications_count > 0 %}
+                            <span class="notif-badge">{{ unread_notifications_count }}</span>
+                            {% endif %}
+                        </button>
+                        <div class="notif-dropdown" id="notifDropdown">
+                            <div class="notif-dropdown-header">
+                                <span>Notifications</span>
+                                {% if unread_notifications_count > 0 %}
+                                <span class="notif-count">{{ unread_notifications_count }} New</span>
+                                {% endif %}
+                            </div>
+                            <div class="notif-dropdown-content">
+                                {% for n in all_notifications %}
+                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                                    <p>{{ n.message }}</p>
+                                    <small>{{ n.created_at|timesince }} ago</small>
+                                </div>
+                                {% empty %}
+                                <div class="notif-empty">
+                                    <i class="fa-solid fa-bell-slash"></i>
+                                    <p>No new notifications</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 0.5rem;">
+                                <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: var(--primary-light); font-weight: 600;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
+                                <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     <button class="btn theme-toggle" aria-label="Toggle theme">
                         <img class="theme-icon" src="{% static 'images/theme.png' %}" alt="Theme">
                     </button>
@@ -80,6 +115,35 @@
                 </li>
             </ul>
             <div class="nav-right-controls">
+                {% if user.is_authenticated %}
+                <div class="mobile-notif-wrapper" id="mobileNotifWrapper">
+                    <button class="mobile-notif-btn" id="mobileNotifToggle" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        {% if unread_notifications_count > 0 %}
+                        <span class="notif-badge">{{ unread_notifications_count }}</span>
+                        {% endif %}
+                    </button>
+                    <div class="notif-dropdown mobile-notif-dropdown" id="mobileNotifDropdown">
+                        <div class="notif-dropdown-header">
+                            <span>Notifications</span>
+                        </div>
+                        <div class="notif-dropdown-content">
+                            {% for n in all_notifications %}
+                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                                <p>{{ n.message }}</p>
+                                <small>{{ n.created_at|timesince }} ago</small>
+                            </div>
+                            {% empty %}
+                            <p class="notif-empty">No new notifications</p>
+                            {% endfor %}
+                        </div>
+                        <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 0.5rem;">
+                            <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: var(--primary-light); font-weight: 600;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
+                            <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
                 <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
                     <img src="{% static 'images/theme.png' %}" alt="Theme" class="theme-icon">
                 </button>
@@ -111,8 +175,8 @@
             <div class="event-card event-card--featured">
                 <div class="event-tag">Featured</div>
                 <div class="event-date-badge">
-                    <span class="event-day">{{ event.day }}</span>
-                    <span class="event-month">{{ event.month }}</span>
+                    <span class="event-day">{{ event.date|date:"d" }}</span>
+                    <span class="event-month">{{ event.date|date:"M" }}</span>
                 </div>
                 <h3>{{ event.title }}</h3>
                 <p>{{ event.description }}</p>
@@ -122,9 +186,13 @@
                 </div>
                 <div class="event-footer">
                     <span class="event-spots">{{ event.spots_left }}</span>
-                    <button class="btn btn-primary enroll-btn" data-title="{{ event.title }}"
+                    {% if event.id in user_enrollments %}
+                    <button class="btn btn-primary enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}" disabled style="opacity: 0.65;">Enrolled ✓</button>
+                    {% else %}
+                    <button class="btn btn-primary enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}"
                         data-date="{{ event.month }} {{ event.day }}" data-time="{{ event.time_range }}">Register
                         Now</button>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -133,8 +201,8 @@
             <div class="event-card">
                 <div class="event-tag event-tag--{{ event.event_type|lower }}">{{ event.get_event_type_display }}</div>
                 <div class="event-date-badge">
-                    <span class="event-day">{{ event.day }}</span>
-                    <span class="event-month">{{ event.month }}</span>
+                    <span class="event-day">{{ event.date|date:"d" }}</span>
+                    <span class="event-month">{{ event.date|date:"M" }}</span>
                 </div>
                 <h3>{{ event.title }}</h3>
                 <p>{{ event.description }}</p>
@@ -144,9 +212,13 @@
                 </div>
                 <div class="event-footer">
                     <span class="event-spots">{{ event.spots_left }}</span>
-                    <button class="btn btn-outline enroll-btn" data-title="{{ event.title }}"
+                    {% if event.id in user_enrollments %}
+                    <button class="btn btn-outline enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}" disabled style="opacity: 0.65;">Enrolled ✓</button>
+                    {% else %}
+                    <button class="btn btn-outline enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}"
                         data-date="{{ event.month }} {{ event.day }}"
                         data-time="{{ event.time_range }}">Register</button>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -161,6 +233,22 @@
             <p>All the AWS topics Flurry has run workshops on — from beginner to advanced.</p>
         </div>
         <div class="workshops-grid">
+            {% for event in past_events %}
+            <div class="workshop-item">
+                <div class="workshop-item-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                <div class="workshop-item-meta">
+                    <span class="ws-tag ws-tag--advanced">Completed</span>
+                    <span class="ws-tag">{{ event.get_event_type_display }}</span>
+                </div>
+                <h4>{{ event.title }}</h4>
+                <p>{{ event.description }}</p>
+                <div class="workshop-item-footer">
+                    <span><i class="fa-regular fa-calendar"></i> {{ event.date|date:"M d, Y" }}</span>
+                    <span><i class="fa-solid fa-users"></i> {{ event.enrollments.count }} attended</span>
+                </div>
+            </div>
+            {% endfor %}
+
             {% for workshop in workshops %}
             <div class="workshop-item">
                 <div class="workshop-item-icon"><i class="{{ workshop.icon_class }}"></i></div>
@@ -176,7 +264,9 @@
                 </div>
             </div>
             {% empty %}
-            <p>No workshops cataloged yet.</p>
+                {% if not past_events %}
+                <p>No workshops cataloged yet.</p>
+                {% endif %}
             {% endfor %}
         </div>
     </section>
@@ -356,6 +446,32 @@
     </button>
 
     <script type="module" src="{% static 'js/main.js' %}" defer></script>
+    <script>
+    function markNotifRead(el, notifId) {
+        if (el.classList.contains('notif-read')) return;
+        fetch(`/notification-read/${notifId}/`, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => {
+                    item.classList.add('notif-read');
+                });
+                document.querySelectorAll('.notif-badge').forEach(b => {
+                    if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
+                    else { b.style.display = 'none'; }
+                });
+                document.querySelectorAll('.notif-count').forEach(c => {
+                    if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
+                    else { c.style.display = 'none'; }
+                });
+            }
+        })
+        .catch(() => {});
+    }
+    </script>
 
     <div id="enrollToast"
         style="display:none;position:fixed;bottom:2rem;right:2rem;z-index:4000;background:rgba(13,36,144,0.85);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.2);border-radius:0.75rem;padding:1rem 1.5rem;color:#fff;font-size:0.85rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.4);align-items:center;gap:0.75rem;max-width:320px;">

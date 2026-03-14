@@ -61,10 +61,17 @@
     margin-bottom: 1rem;
 }
 
-.aform-group label {
+.edit-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.aform-group label,
+.edit-group label {
     font-size: 0.75rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    color: var(--text-secondary);
     margin: 0;
 }
 
@@ -466,9 +473,7 @@
     cursor: pointer;
 }
 
-.admin-filter-select option, #evTag option { background: #1a3a8f; color: #fff; }
-[data-theme="dark"] .admin-filter-select option,
-[data-theme="dark"] #evTag option { background: #1e1e1e; color: #fff; }
+
 
 .admin-theme-btn {
     background: none; border: none;
@@ -618,13 +623,25 @@
     animation: fadeUp 0.2s ease;
 }
 
+/* Hide number input spinners */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 .admin-modal {
-    background: rgba(13,36,144,0.65);
+    background: var(--bg-tertiary);
     backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(255,255,255,0.18);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
-    padding: 2rem; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    padding: 1.25rem 1.5rem; width: 100%; max-width: 540px; 
+    max-height: 88vh; overflow-y: auto;
+    box-shadow: var(--shadow-lg);
     animation: dialog-pop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -636,8 +653,8 @@
     gap: 0.65rem;
 }
 
-.admin-modal--sm h3 { font-size: 1rem; color: #fff; margin: 0; }
-.admin-modal--sm p  { font-size: 0.8rem; color: rgba(255,255,255,0.55); margin: 0 0 0.5rem; }
+.admin-modal--sm h3 { font-size: 1rem; color: var(--text-primary); margin: 0; }
+.admin-modal--sm p  { font-size: 0.8rem; color: var(--text-tertiary); margin: 0 0 0.5rem; }
 .admin-modal-icon {
     width: 3rem; height: 3rem; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -650,17 +667,48 @@
     color: #f87171; 
 }
 
-.admin-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-.admin-modal-header h3 { font-size: 1rem; font-weight: 700; color: #fff; margin: 0; }
+.admin-modal-icon.info {
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.3);
+    color: #60a5fa;
+}
+
+.admin-modal-actions {
+    display: flex; gap: 0.75rem; margin-top: 0.5rem; width: 100%;
+}
+
+.admin-modal-actions .btn { flex: 1; padding: 0.65rem; font-size: 0.8rem; }
+
+/* View Message Modal specific */
+.admin-modal-header {
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 1rem; margin-bottom: 1.25rem;
+}
+
+.admin-modal-header h3 { font-size: 1.1rem; color: var(--text-primary); margin: 0; }
+
+.modal-info-grid { display: flex; flex-direction: column; gap: 1rem; }
+.modal-info-item { display: flex; flex-direction: column; gap: 0.25rem; }
+.modal-info-label { font-size: 0.7rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+.modal-info-value { font-size: 0.88rem; color: var(--text-primary); line-height: 1.5; }
+
+.view-msg-content {
+    background: rgba(0,0,0,0.1);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 1rem; margin-top: 0.5rem;
+    white-space: pre-wrap;
+    color: var(--text-secondary);
+}
+.admin-modal-header h3 { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0; }
 .admin-modal-close {
     width: 1.8rem; height: 1.8rem; border-radius: 50%;
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
-    color: rgba(255,255,255,0.6); font-size: 0.75rem; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-secondary); border: 1px solid var(--border-light);
+    color: var(--text-tertiary); font-size: 0.75rem; cursor: pointer;
     transition: all var(--transition-fast); flex-shrink: 0;
 }
 
-.admin-modal-close:hover { background: rgba(255,255,255,0.2); color: #fff; }
+.admin-modal-close:hover { background: var(--bg-hover); color: var(--text-primary); }
 .admin-modal-actions { display: flex; gap: 0.65rem; justify-content: flex-end; margin-top: 1.25rem; }
 .admin-modal--sm .admin-modal-actions { justify-content: center; width: 100%; }
 .admin-modal-actions .btn { font-size: 0.82rem; padding: 0.55rem 1.25rem; }
@@ -668,11 +716,11 @@
     position: fixed; bottom: 2rem; right: 2rem;
     display: flex; align-items: center; gap: 0.65rem;
     padding: 0.85rem 1.25rem;
-    background: rgba(13,36,144,0.85);
+    background: var(--bg-tertiary);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.18);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    font-size: 0.82rem; color: #fff; z-index: 9999;
+    font-size: 0.82rem; color: var(--text-primary); z-index: 9999;
     box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     animation: slideInRight 0.3s ease;
     max-width: 320px;
@@ -790,3 +838,151 @@
     .admin-table td { padding: 0.45rem 0.75rem; }
     .admin-table td::before { min-width: 58px; }
 }
+
+/* New styles for admin subsections and badges */
+.admin-subsection {
+    margin-bottom: 2rem;
+}
+
+.admin-subsection h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-subsection h3 i {
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+}
+
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.admin-badge--small {
+    font-size: 0.6rem;
+    padding: 0.05rem 0.3rem;
+}
+
+.admin-btn-icon--success:hover {
+    background: rgba(134, 239, 172, 0.15);
+    border-color: rgba(134, 239, 172, 0.4);
+    color: #86efac;
+}
+
+.admin-modal--wide {
+    max-width: 700px;
+}
+
+/* Modal Stepper */
+.modal-stepper {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background: var(--bg-hover);
+    border-bottom: 1px solid var(--border-light);
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.modal-stepper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 4rem;
+    right: 4rem;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.stepper-item {
+    position: relative;
+    z-index: 2;
+    background: var(--bg-tertiary);
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    border: 2px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.stepper-item.active {
+    background: var(--primary-color);
+    color: var(--bg-primary); /* Dark text on white/primary background */
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.stepper-item.completed {
+    background: #10b981;
+    color: #fff;
+    border-color: #10b981;
+}
+
+.stepper-item span {
+    position: absolute;
+    top: calc(100% + 8px);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    color: var(--text-tertiary);
+}
+
+.stepper-item.active span {
+    color: var(--text-primary);
+}
+
+/* Modal Steps */
+.modal-step {
+    display: none;
+    animation: fadeInStep 0.4s ease forwards;
+}
+
+.modal-step.active {
+    display: block;
+}
+
+@keyframes fadeInStep {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.modal-step-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed var(--border-light);
+}
+
+.modal-step-header h4 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.modal-step-header p {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+}

@@ -694,64 +694,6 @@
     display: block;
 }
 
-.user-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    right: 0;
-    min-width: 160px;
-    background: rgba(13, 36, 144, 0.75);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: var(--radius-lg);
-    padding: 0.4rem;
-    z-index: 2000;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-    animation: fadeUp 0.15s ease;
-}
-
-.user-menu.open .user-dropdown {
-    display: block;
-}
-
-.dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    width: 100%;
-    padding: 0.6rem 0.75rem;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.85);
-    background: none;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    text-decoration: none;
-    transition: background var(--transition-fast), color var(--transition-fast);
-}
-
-.dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
-}
-
-.dropdown-item--danger {
-    color: #fca5a5;
-}
-
-.dropdown-item--danger:hover {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-}
-
-.dropdown-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 0.3rem 0;
-}
-
 @media (max-width: 1024px) {
     .profile-page {
         padding: 6rem 2rem 3rem;
@@ -854,4 +796,129 @@
     background: rgba(239, 68, 68, 0.35);
     border-color: rgba(239, 68, 68, 0.7);
     color: #fca5a5;
+}
+
+/* New styles for notifications and officer applications */
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.admin-badge--small {
+    font-size: 0.6rem;
+    padding: 0.05rem 0.3rem;
+}
+
+.profile-notifications {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.profile-notifications h4 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.notification-body p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 0.25rem;
+}
+
+.notification-body small {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: color 0.2s;
+}
+
+.notification-close:hover {
+    color: #86efac;
+}
+
+.officer-app-card {
+    background: rgba(0, 85, 255, 0.1);
+    border: 1px solid rgba(0, 85, 255, 0.2);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.officer-app-card h4 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.officer-app-card p {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1rem;
+}
+
+.app-form textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    color: #fff;
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+    resize: vertical;
+}
+
+.app-status.pending {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 171, 0, 0.1);
+    border: 1px solid rgba(255, 171, 0, 0.25);
+    border-radius: var(--radius-lg);
+    color: #ffab00;
+    font-size: 0.8rem;
 }

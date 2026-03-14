@@ -16,9 +16,34 @@ export function updateUIAfterLogin() {
         menuBtn.addEventListener('click', e => {
             e.stopPropagation();
             userMenu.classList.toggle('open');
-        });
-        document.addEventListener('click', () => {
-            userMenu.classList.remove('open');
+            document.getElementById('notifDropdown')?.classList.remove('active');
         });
     }
+
+    const notifToggle = document.getElementById('notifToggle');
+    const notifDropdown = document.getElementById('notifDropdown');
+    
+    if (notifToggle && notifDropdown) {
+        notifToggle.addEventListener('click', e => {
+            e.stopPropagation();
+            notifDropdown.classList.toggle('active');
+            userMenu?.classList.remove('open');
+        });
+    }
+
+    const mobileNotifToggle = document.getElementById('mobileNotifToggle');
+    const mobileNotifDropdown = document.getElementById('mobileNotifDropdown');
+
+    if (mobileNotifToggle && mobileNotifDropdown) {
+        mobileNotifToggle.addEventListener('click', e => {
+            e.stopPropagation();
+            mobileNotifDropdown.classList.toggle('active');
+        });
+    }
+
+    document.addEventListener('click', () => {
+        userMenu?.classList.remove('open');
+        notifDropdown?.classList.remove('active');
+        mobileNotifDropdown?.classList.remove('active');
+    });
 }

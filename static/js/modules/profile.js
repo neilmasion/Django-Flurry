@@ -1,6 +1,5 @@
 const userEmail = document.body.dataset.email || 'guest';
 const PHOTO_KEY = `flurryUserPhoto_${userEmail}`;
-const ENROLLED_KEY = `enrolledWorkshops_${userEmail}`;
 
 function getPhoto() {
     return localStorage.getItem(PHOTO_KEY) || null;
@@ -123,67 +122,9 @@ function setupPhotoUpload() {
     updateAvatarActionBtn();
 }
 
-function renderEnrolledWorkshops() {
-    if (!document.body.dataset.authenticated || document.body.dataset.authenticated === 'false') {
-        const grid = document.getElementById('enrolledGrid');
-        if (grid) {
-             grid.innerHTML = `
-                <div class="enrolled-empty">
-                    <i class="fa-solid fa-book-open"></i>
-                    <h4>Please Login</h4>
-                    <p>You must be logged in to view enrolled workshops.</p>
-                </div>
-            `;
-        }
-        return;
-    }
-    const enrolled = JSON.parse(localStorage.getItem(ENROLLED_KEY) || '[]');
-    const grid = document.getElementById('enrolledGrid');
-    const statEnrolled = document.getElementById('statEnrolled');
-    
-    if (statEnrolled) {
-        statEnrolled.textContent = enrolled.length;
-    }
-    
-    if (!grid) return;
-    
-    if (enrolled.length === 0) {
-        grid.innerHTML = `
-            <div class="enrolled-empty">
-                <i class="fa-solid fa-book-open"></i>
-                <h4>No workshops yet</h4>
-                <p>Browse events and enroll in a workshop to see it here.</p>
-                <a href="/events/" class="btn btn-primary">Explore Workshops</a>
-            </div>
-        `;
-        return;
-    }
-    
-    const headerHtml = `
-        <div class="enrolled-table-header">
-            <span>Workshop</span>
-            <span>Date</span>
-            <span>Time</span>
-            <span>Status</span>
-        </div>
-    `;
-
-    const cardsHtml = enrolled.map(w => `
-        <div class="enrolled-card">
-            <h4>${w.title}</h4>
-            <div class="enrolled-card-date"><i class="fa-regular fa-calendar"></i> ${w.date}</div>
-            <div class="enrolled-card-time"><i class="fa-regular fa-clock"></i> ${w.time}</div>
-            <div class="enrolled-card-status">Enrolled</div>
-        </div>
-    `).join('');
-
-    grid.innerHTML = headerHtml + cardsHtml;
-}
-
 export function setupProfile() {
     setupTabs();
     loadProfileData();
     setupPhotoUpload();
-    renderEnrolledWorkshops();
-    // Note: user menu dropdown is handled by ui.js via main.js — no duplicate setup here
+    // Enrollment is now handled server-side in profile.html
 }

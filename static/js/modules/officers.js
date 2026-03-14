@@ -3,16 +3,9 @@ export function setupOfficerDeck() {
     if (!deck) return;
 
     const officers = [
-        { initials:'AT',  name:'Aldwin Tumulak',         role:'Captain',                           course:'BS Information Technology, 3th Year',   links:['linkedin','github'] },
-        { initials:'KKE', name:'Klycie Kerth Er-er',     role:'Executive Secretary',               course:'BS Information Technology, 2nd Year',   links:['linkedin','github'] },
-        { initials:'AA',  name:'Alex Aristotle',         role:'Chief of Finance',                  course:'BS Information Technology, 2nd Year',   links:['linkedin','github'] },
-        { initials:'TB',  name:'Trixie Batucan',         role:'Treasurer',                         course:'BS Information Technology, 2nd Year',   links:['linkedin','github'] },
-        { initials:'JG',  name:'Jhuly Godinez',          role:'Chief of Marketing & Creatives',    course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
-        { initials:'NM',  name:'Neil Masion',            role:'Graphic Designer',                  course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
-        { initials:'KCT', name:'Kenth Carlo Timan',      role:'Social Media Manager',              course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
-        { initials:'JLG', name:'John Lloyd Gabrillo',    role:'Chief of Relations',                course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
-        { initials:'JA',  name:'Junas Amanence',         role:'Chief of Logistics and Operations', course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
-        { initials:'MA',  name:'Mike Alinghawa',         role:'Chief of Technical',                course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] }
+        { initials:'NFM', name:'Neil Francis Masion',         role:'Captain',                           course:'BS Information Technology, 3th Year',   links:['linkedin','github'] },
+        { initials:'CJS', name:'Carla Jen Sayson',            role:'Executive Secretary',               course:'BS Information Technology, 2nd Year',   links:['linkedin','github'] },
+        { initials:'ES',  name:'Emmanuel Solayao',            role:'Chief of Finance',                  course:'BS Information Technology, 2nd Year',   links:['linkedin','github'] }
     ];
 
     const cards    = Array.from(deck.querySelectorAll('.deck-card'));
