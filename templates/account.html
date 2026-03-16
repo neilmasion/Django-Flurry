@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry | Get Started</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/root.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -183,12 +183,7 @@
                             <input type="checkbox" id="rememberMe">
                             <span>Remember me</span>
                         </label>
-                        <a href="#" class="forgot-link" id="forgotPassword">Forgot password?</a>
-                    </div>
-
-                    <div id="forgotMsg" class="forgot-msg" style="display:none;">
-                        <i class="fa-solid fa-circle-info"></i>
-                        Please contact support or re-register to reset your password.
+                        <a href="{% url 'password_reset' %}" class="forgot-link">Forgot password?</a>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block">Log In</button>

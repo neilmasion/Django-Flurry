@@ -230,8 +230,9 @@ a:hover {
 }
 
 .nav-notif-btn:hover, .mobile-notif-btn:hover {
-    color: var(--primary-color);
+    color: var(--accent-color);
     transform: scale(1.1);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .notif-badge {

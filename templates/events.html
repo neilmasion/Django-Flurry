@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry | Events</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/root.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -426,12 +426,10 @@
                 <div class="footer-section">
                     <h4>Connect</h4>
                     <ul>
-                        <li><a href="#"><span class="__cf_email__"
-                                    data-cfemail="c6a0aab3b4b4bf86a7b1b5a5a5e8a5a9ab">[email&#160;protected]</span></a>
-                        </li>
-                        <li><a href="#">Discord</a></li>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Facebook</a></li>
+                        <li><a href="mailto:awscloudclub.cec@gmail.com">Email</a></li>
+                        <li><a href="https://discord.gg/QehGmeT3" target="_blank">Discord</a></li>
+                        <li><a href="https://www.meetup.com/aws-cloud-club-at-cebu-eastern-college/?eventOrigin=home_groups_you_are_in" target="_blank">Meetup</a></li>
+                        <li><a href="https://web.facebook.com/profile.php?id=61583698383385" target="_blank">Facebook</a></li>
                     </ul>
                 </div>
             </div>
@@ -473,11 +471,8 @@
     }
     </script>
 
-    <div id="enrollToast"
-        style="display:none;position:fixed;bottom:2rem;right:2rem;z-index:4000;background:rgba(13,36,144,0.85);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.2);border-radius:0.75rem;padding:1rem 1.5rem;color:#fff;font-size:0.85rem;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.4);align-items:center;gap:0.75rem;max-width:320px;">
-        <i id="enrollToastIcon" class="fa-solid fa-circle-check" style="color:#86efac;font-size:1rem;"></i>
-        <span id="enrollToastMsg"></span>
-    </div>
+    {% include 'includes/enroll_toast.html' %}
+    {% include 'includes/verification_modal.html' %}
 </body>
 
 </html>

@@ -39,13 +39,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('workshopsList')) displayWorkshops();
 
     const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) loginBtn.addEventListener('click', () => { window.location.href = '/account/'; });
+    if (loginBtn) loginBtn.addEventListener('click', () => { window.location.href = '/account/?panel=login'; });
 
     const ctaSignup = document.getElementById('ctaSignup');
     if (ctaSignup) ctaSignup.addEventListener('click', () => { window.location.href = '/account/'; });
 
     const joinBtn = document.getElementById('joinCommunityBtn');
-    if (joinBtn) joinBtn.addEventListener('click', () => { window.location.href = '/account/'; });
+    if (joinBtn) {
+        joinBtn.addEventListener('click', () => {
+            const emailInput = document.getElementById('heroEmail');
+            const email = emailInput ? emailInput.value : '';
+            window.location.href = `/account/?panel=register&email=${encodeURIComponent(email)}`;
+        });
+    }
 
     // Hide skeleton loader after initialization
     const loader = document.getElementById('skeleton-loader');

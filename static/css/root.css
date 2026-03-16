@@ -320,3 +320,42 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover,
 input[type="time"]::-webkit-calendar-picker-indicator:hover {
     opacity: 1;
 }
+
+/* Admin & Verification Modals */
+.admin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: fadeIn 0.3s ease;
+}
+
+.admin-modal {
+    background: rgba(13, 36, 144, 0.95);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 540px;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
+    animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #fff;
+}
+
+[data-theme="dark"] .admin-modal {
+    background: rgba(30, 30, 30, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes modalPop { 
+    from { transform: scale(0.9) translateY(20px); opacity: 0; } 
+    to { transform: scale(1) translateY(0); opacity: 1; } 
+}

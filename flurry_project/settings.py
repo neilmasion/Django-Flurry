@@ -78,3 +78,11 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'base.User'
 LOGIN_URL = '/account/'
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'neilmasion2@gmail.com'  # Gmail address
+EMAIL_HOST_PASSWORD = 'wopn cyqk plwr mhqn'   # Gmail App Password
+DEFAULT_FROM_EMAIL = 'Flurry <neilmasion2@gmail.com>'

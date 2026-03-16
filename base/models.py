@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -21,6 +22,21 @@ class User(AbstractUser):
     course = models.CharField(max_length=50, choices=COURSE_CHOICES, blank=True, null=True)
     year_level = models.CharField(max_length=20, choices=YEAR_CHOICES, blank=True, null=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
+    email = models.EmailField(unique=True)
+    
+    # Allow duplicate usernames by making email the primary identifier
+    username = models.CharField(max_length=150, unique=False)
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+    
+    # Email Verification Fields
+    is_email_verified = models.BooleanField(default=False)
+    email_verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    
+    # Username edit cooldown
+    last_username_update = models.DateTimeField(null=True, blank=True)
+    bio = models.TextField(max_length=500, blank=True, null=True)
 
 class ContactMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contact_messages', null=True, blank=True)

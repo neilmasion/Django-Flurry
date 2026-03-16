@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/root.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -15,60 +15,6 @@
     <link rel="stylesheet" href="{% static 'css/events.css' %}">
     <link rel="stylesheet" href="{% static 'css/query.css' %}">
     <style>
-        /* Officer Application Modal Styles */
-        .admin-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .admin-modal {
-            background: rgba(13, 36, 144, 0.95);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            width: 100%;
-            max-width: 540px;
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
-            animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            color: #fff;
-        }
-
-        [data-theme="dark"] .admin-modal {
-            background: rgba(30, 30, 30, 0.95);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes modalPop { from { transform: scale(0.9) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-
-        .edit-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 0.5rem;
-        }
-
-        [data-theme="dark"] .edit-group label {
-            color: var(--text-secondary);
-        }
-
-        .edit-group select:focus, .edit-group textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            background: rgba(0, 0, 0, 0.3);
-        }
     </style>
 </head>
 
@@ -166,7 +112,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <a href="{% url 'account' %}" class="btn btn-outline btn-small">Login</a>
+                    <a href="{% url 'account' %}?panel=login" class="btn btn-outline btn-small" id="loginBtn">Login</a>
                     {% endif %}
                 </li>
             </ul>
@@ -249,7 +195,9 @@
                 </div>
                 {% else %}
                 <div class="hero-buttons" style="margin-top: 2rem;">
-                    <button class="btn btn-primary btn-large" id="openApplyModal"><i class="fa-solid fa-user-shield"></i> Apply to become an Officer</button>
+                    <button class="btn btn-primary btn-large" id="openApplyModal" data-verified="{{ user.is_email_verified|yesno:'true,false' }}">
+                        <i class="fa-solid fa-user-shield"></i> Apply to become an Officer
+                    </button>
                 </div>
                 {% endif %}
             {% elif not user.is_authenticated %}
@@ -594,12 +542,10 @@
                 <div class="footer-section">
                     <h4>Connect</h4>
                     <ul>
-                        <li><a href="#"><span class="__cf_email__"
-                                    data-cfemail="9af2fff6f6f5dafcf6efe8e8e3b4f9f6f5effe">[email&#160;protected]</span></a>
-                        </li>
-                        <li><a href="#">Discord</a></li>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Facebook</a></li>
+                        <li><a href="mailto:awscloudclub.cec@gmail.com">Email</a></li>
+                        <li><a href="https://discord.gg/QehGmeT3" target="_blank">Discord</a></li>
+                        <li><a href="https://www.meetup.com/aws-cloud-club-at-cebu-eastern-college/?eventOrigin=home_groups_you_are_in" target="_blank">Meetup</a></li>
+                        <li><a href="https://web.facebook.com/profile.php?id=61583698383385" target="_blank">Facebook</a></li>
                     </ul>
                 </div>
             </div>
@@ -650,20 +596,34 @@
             </form>
         </div>
     </div>
+
+    <!-- Email Verification Required Modal -->
+    {% include 'includes/verification_modal.html' %}
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const openBtn = document.getElementById('openApplyModal');
             const closeBtn = document.getElementById('closeApplyModal');
             const overlay = document.getElementById('applyModalOverlay');
+            const verifyOverlay = document.getElementById('verificationModalOverlay');
+            const closeVerifyBtn = document.getElementById('closeVerificationModal');
 
             if (openBtn && overlay) {
                 openBtn.addEventListener('click', (e) => {
                     e.preventDefault();
+                    
+                    const isVerified = openBtn.getAttribute('data-verified') === 'true';
+                    if (!isVerified) {
+                        toggleVerificationModal(true);
+                        return;
+                    }
+                    
                     overlay.style.display = 'flex';
                     document.body.style.overflow = 'hidden';
                 });
             }
 
+            // Apply Modal closing (Verification modal is handled by standard ID/Function)
             if (closeBtn && overlay) {
                 closeBtn.addEventListener('click', () => {
                     overlay.style.display = 'none';
@@ -710,6 +670,8 @@
         .catch(() => {});
     }
     </script>
+    {% include 'includes/enroll_toast.html' %}
+    {% include 'includes/verification_modal.html' %}
 </body>
 
 </html>

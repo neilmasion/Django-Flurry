@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry | Contact</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/root.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -173,41 +173,41 @@
                         question — we're always open.</p>
                 </div>
                 <div class="contact-channels">
-                    <a href="/cdn-cgi/l/email-protection#e583899097979ca58492968686cb868a88" class="contact-channel">
+                    <a href="mailto:awscloudclub.cec@gmail.com" class="contact-channel">
                         <div class="contact-channel-icon"><i class="fa-solid fa-envelope"></i></div>
                         <div class="contact-channel-body">
                             <strong>Email</strong>
-                            <span><span class="__cf_email__"
-                                    data-cfemail="94f2f8e1e6e6edd4f5e3e7f7f7baf7fbf9">[email&#160;protected]</span></span>
+                            <span>awscloudclub.cec@gmail.com</span>
                         </div>
                     </a>
-                    <a href="#" class="contact-channel">
+                    <a href="https://discord.gg/QehGmeT3" class="contact-channel" target="_blank">
                         <div class="contact-channel-icon"><i class="fa-brands fa-discord"></i></div>
                         <div class="contact-channel-body">
                             <strong>Discord</strong>
                             <span>Join our community server</span>
                         </div>
                     </a>
-                    <a href="#" class="contact-channel">
+                    <a href="https://web.facebook.com/profile.php?id=61583698383385" class="contact-channel" target="_blank">
                         <div class="contact-channel-icon"><i class="fa-brands fa-facebook"></i></div>
                         <div class="contact-channel-body">
                             <strong>Facebook</strong>
                             <span>AWS Cloud Club - Flurry</span>
                         </div>
                     </a>
-                    <a href="#" class="contact-channel">
-                        <div class="contact-channel-icon"><i class="fa-brands fa-instagram"></i></div>
+                    <a href="https://www.meetup.com/aws-cloud-club-at-cebu-eastern-college/?eventOrigin=home_groups_you_are_in" class="contact-channel" target="_blank">
+                        <div class="contact-channel-icon"><i class="fa-brands fa-meetup"></i></div>
                         <div class="contact-channel-body">
-                            <strong>Instagram</strong>
-                            <span>@awscc.flurry</span>
+                            <strong>Meetup</strong>
+                            <span>AWS Cloud Club - Cebu</span>
                         </div>
                     </a>
                 </div>
             </div>
 
             <div class="contact-form-wrap">
+                <h3>Send a Message</h3>
+                
                 {% if user.is_authenticated %}
-                    <h3>Send a Message</h3>
                     <div class="user-greeting" style="background: rgba(13, 36, 144, 0.1); border: 1px solid rgba(13, 36, 144, 0.2); border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
                         <div class="user-avatar-sm" style="width: 32px; height: 32px; font-size: 0.8rem;">{{ user.username|slice:":1"|upper }}</div>
                         <div style="font-size: 0.9rem; color: var(--text-primary);">
@@ -215,46 +215,49 @@
                             <p style="margin: 0.2rem 0 0; color: var(--text-secondary); font-size: 0.8rem;">We'll use your registered email ({{ user.email }}) to get back to you.</p>
                         </div>
                     </div>
-                    <form class="contact-form" id="contactForm" action="{% url 'contact' %}" method="POST">
-                        {% csrf_token %}
-                        <div class="cf-group">
-                            <label for="id_subject">Subject*</label>
-                            {{ form.subject }}
-                            {% if form.subject.errors %}
-                            <span class="error-msg" style="display:block;">{{ form.subject.errors.0 }}</span>
-                            {% endif %}
-                        </div>
-                        <div class="cf-group">
-                            <label for="id_message">Message*</label>
-                            <textarea name="message" id="id_message"
-                                placeholder="Write your message here...">{{ form.message.value|default:'' }}</textarea>
-                            {% if form.message.errors %}
-                            <span class="error-msg" style="display:block;">{{ form.message.errors.0 }}</span>
-                            {% endif %}
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
-
-                        {% if messages %}
-                        {% for message in messages %}
-                        <div class="form-success" id="formSuccess" style="display:flex;">
-                            <i class="fa-solid fa-circle-check"></i>
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                        {% endif %}
-                    </form>
                 {% else %}
-                    <div class="login-prompt-card" style="text-align: center; padding: 3rem 2rem; background: rgba(13, 36, 144, 0.05); border: 1px dashed rgba(13, 36, 144, 0.3); border-radius: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
-                        <div style="width: 64px; height: 64px; background: rgba(13, 36, 144, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--accent-color);">
-                            <i class="fa-solid fa-lock"></i>
+                    <div class="login-info-tip" style="background: rgba(13, 36, 144, 0.05); border: 1px dashed rgba(13, 36, 144, 0.3); border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 32px; height: 32px; background: rgba(13, 36, 144, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--accent-color);">
+                            <i class="fa-solid fa-info-circle"></i>
                         </div>
-                        <div>
-                            <h3 style="margin-bottom: 0.5rem;">Want to reach us?</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.95rem;">Please log in to your account to send a message. This helps us provide personalized support.</p>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                            You'll be asked to <strong>log in</strong> before your message is sent.
                         </div>
-                        <a href="{% url 'account' %}?next={{ request.path }}" class="btn btn-primary">Login to your Account</a>
                     </div>
                 {% endif %}
+
+                <form class="contact-form" id="contactForm" action="{% url 'contact' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="cf-group">
+                        <label for="id_subject">Subject*</label>
+                        {{ form.subject }}
+                        {% if form.subject.errors %}
+                        <span class="error-msg" style="display:block;">{{ form.subject.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="cf-group">
+                        <label for="id_message">Message*</label>
+                        <textarea name="message" id="id_message"
+                            placeholder="Write your message here...">{{ form.message.value|default:'' }}</textarea>
+                        {% if form.message.errors %}
+                        <span class="error-msg" style="display:block;">{{ form.message.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        {% if user.is_authenticated %}Send Message{% else %}Login and Send{% endif %}
+                    </button>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if 'successfully' in message.message %}
+                            <div class="form-success" id="formSuccess" style="display:flex;">
+                                <i class="fa-solid fa-circle-check"></i>
+                                {{ message }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </form>
             </div>
         </div>
     </section>
@@ -419,12 +422,10 @@
                 <div class="footer-section">
                     <h4>Connect</h4>
                     <ul>
-                        <li><a href="#"><span class="__cf_email__"
-                                    data-cfemail="f2949e8780808bb29385819191dc919d9f">[email&#160;protected]</span></a>
-                        </li>
-                        <li><a href="#">Discord</a></li>
-                        <li><a href="#">Instagram</a></li>
-                        <li><a href="#">Facebook</a></li>
+                        <li><a href="mailto:awscloudclub.cec@gmail.com">Email</a></li>
+                        <li><a href="https://discord.gg/QehGmeT3" target="_blank">Discord</a></li>
+                        <li><a href="https://www.meetup.com/aws-cloud-club-at-cebu-eastern-college/?eventOrigin=home_groups_you_are_in" target="_blank">Meetup</a></li>
+                        <li><a href="https://web.facebook.com/profile.php?id=61583698383385" target="_blank">Facebook</a></li>
                     </ul>
                 </div>
             </div>

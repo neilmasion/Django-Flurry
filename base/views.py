@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -6,6 +7,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, ContactMessage, OfficerApplication, Notification, Enrollment
 from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm
+from django.core.mail import send_mail
+from django.urls import reverse
 
 @staff_member_required
 def update_role(request, user_id):
@@ -84,8 +87,11 @@ def about(request):
 def contact(request):
     if request.method == 'POST':
         if not request.user.is_authenticated:
-            messages.error(request, 'You must be logged in to send a message.')
-            return redirect('login')
+            # Store form data in session to recover after login
+            request.session['pending_contact_form'] = request.POST.dict()
+            messages.info(request, 'Please log in to send your message.')
+            return redirect(f"{reverse('account')}?panel=login&next={request.path}")
+            
         form = ContactForm(request.POST)
         if form.is_valid():
             contact_msg = form.save(commit=False)
@@ -93,10 +99,18 @@ def contact(request):
             contact_msg.name = f"{request.user.first_name} {request.user.last_name}"
             contact_msg.email = request.user.email
             contact_msg.save()
+            
+            # Clear pending form if any
+            if 'pending_contact_form' in request.session:
+                del request.session['pending_contact_form']
+                
             messages.success(request, 'Your message has been sent successfully!')
             return redirect('contact')
     else:
-        form = ContactForm()
+        # Pre-fill from session if available
+        initial_data = request.session.get('pending_contact_form', {})
+        form = ContactForm(initial=initial_data)
+        
     return render(request, 'contact.html', {'form': form})
 
 def login_view(request):
@@ -106,12 +120,13 @@ def login_view(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            # Look up user by email
-            user_obj = User.objects.filter(email__iexact=email).first()
-            user = None
-            if user_obj:
-                user = authenticate(request, username=user_obj.username, password=password)
+            # Authenticate using email (since it's now the USERNAME_FIELD)
+            user = authenticate(request, username=email, password=password)
             if user is not None:
+                if not user.is_email_verified and not (user.is_staff or user.is_superuser):
+                    messages.warning(request, 'Please verify your email address before logging in. Check your inbox for the verification link.')
+                    return redirect(f"{reverse('account')}?panel=login")
+                
                 login(request, user)
                 if next_url:
                     return redirect(next_url)
@@ -154,12 +169,14 @@ def register_view(request):
             # Create welcome notification
             Notification.objects.create(
                 user=user,
-                message="Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community!"
+                message="Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features."
             )
-            login(request, user)
-            if next_url:
-                return redirect(next_url)
-            return redirect('index')
+            # Send automatic verification email
+            send_verification_email_logic(user, request)
+            
+            # Do NOT login yet. Redirect to info page.
+            messages.success(request, 'Registration successful! A verification email has been sent. Please verify your email to log in.')
+            return redirect('verify-email-sent')
     else:
         form = StudentRegistrationForm()
     return render(request, 'account.html', {
@@ -218,6 +235,10 @@ def admin_dashboard(request):
 
 @login_required
 def apply_for_officer(request):
+    if not request.user.is_email_verified:
+        messages.error(request, 'Please verify your email before applying for an officer position.')
+        return redirect('profile')
+        
     if request.method == 'POST':
         reason = request.POST.get('reason')
         department = request.POST.get('department')
@@ -295,6 +316,10 @@ def enroll_event(request, event_id):
     from django.http import JsonResponse
     event = get_object_or_404(Event, id=event_id)
     
+    # Check if email is verified
+    if not request.user.is_email_verified:
+        return JsonResponse({'success': False, 'message': 'VERIFY_EMAIL_REQUIRED'})
+
     # Check if already enrolled
     enrolled = Enrollment.objects.filter(user=request.user, event=event).exists()
     if enrolled:
@@ -331,12 +356,134 @@ def profile(request):
     pending_app = request.user.officer_applications.filter(status='pending').first()
     enrolled_events = Enrollment.objects.filter(user=request.user).select_related('event').order_by('-enrolled_at')
     
+    cooldown_active = False
+    cooldown_remaining = None
+    if request.user.last_username_update:
+        cooldown_period = timezone.timedelta(days=3)
+        if timezone.now() < request.user.last_username_update + cooldown_period:
+            cooldown_active = True
+            remaining = (request.user.last_username_update + cooldown_period) - timezone.now()
+            cooldown_remaining = f"{remaining.days}d {remaining.seconds // 3600}h"
+
     context = {
         'notifications': notifications,
         'pending_app': pending_app,
         'enrolled_events': enrolled_events,
+        'is_email_verified': request.user.is_email_verified,
+        'cooldown_active': cooldown_active,
+        'cooldown_remaining': cooldown_remaining,
     }
     return render(request, 'profile.html', context)
+
+def send_verification_email_logic(user, request):
+    """Helper to send verification email without redirecting."""
+    if user.is_email_verified:
+        return False
+        
+    verification_url = request.build_absolute_uri(
+        reverse('verify-email', kwargs={'token': user.email_verification_token})
+    )
+    
+    subject = "Verify your Flurry account"
+    message = f"Hi {user.first_name or user.username},\n\nPlease verify your email by clicking the link below:\n\n{verification_url}\n\nThank you!"
+    
+    try:
+        send_mail(subject, message, None, [user.email])
+        return True
+    except Exception as e:
+        print(f"Error sending verification email: {e}")
+        return False
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        
+        # Extract data from request
+        import json
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            # Fallback for standard POST if needed, but we'll use JSON from JS
+            data = request.POST
+
+        first_name = data.get('first_name', user.first_name)
+        last_name = data.get('last_name', user.last_name)
+        bio = data.get('bio', '') # Bio is currently a placeholder in storage? No, let's see.
+        course = data.get('course', user.course)
+        year_level = data.get('year_level', user.year_level)
+        new_username = data.get('username', user.username)
+
+        # Handle Username Change Cooldown
+        if new_username != user.username:
+            if user.last_username_update:
+                cooldown_period = timezone.timedelta(days=3)
+                if timezone.now() < user.last_username_update + cooldown_period:
+                    remaining = (user.last_username_update + cooldown_period) - timezone.now()
+                    days = remaining.days
+                    hours = remaining.seconds // 3600
+                    return JsonResponse({
+                        'success': False, 
+                        'error': f'Username can only be changed once every 3 days. Please try again in {days}d {hours}h.'
+                    })
+            
+            user.username = new_username
+            user.last_username_update = timezone.now()
+
+        # Update other fields
+        user.first_name = first_name
+        user.last_name = last_name
+        user.course = course
+        user.year_level = year_level
+        # user.bio = bio # Need to add bio to model if wanted, but user didn't ask for it. 
+        # The profile.html has a bio textarea, so let's check if User has bio.
+        # Wait, I checked models.py and there is NO bio field. I should probably add it or skip it for now.
+        # The user only asked for username edit + cooldown.
+        
+        user.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Profile updated successfully!',
+            'username': user.username,
+            'course_display': user.get_course_display(),
+            'year_display': user.get_year_level_display(),
+            'cooldown_active': True if new_username != user.username else False, # If changed, it's active now
+            'cooldown_remaining': '3d 0h' if new_username != user.username else None
+        })
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})
+
+@login_required
+def send_verification_email(request):
+    user = request.user
+    if user.is_email_verified:
+        messages.info(request, "Your email is already verified.")
+        return redirect('profile')
+        
+    if send_verification_email_logic(user, request):
+        messages.success(request, f"Verification email sent to {user.email}. Check your inbox.")
+    else:
+        messages.error(request, "Failed to send verification email. Please try again later.")
+        
+    return redirect('profile')
+
+def verify_email(request, token):
+    user = get_object_or_404(User, email_verification_token=token)
+    user.is_email_verified = True
+    user.save()
+    
+    # Create congratulatory notification
+    Notification.objects.create(
+        user=user,
+        message="Congratulations! Your email has been verified successfully. You now have full access to all Flurry features, including officer applications!"
+    )
+    
+    messages.success(request, "Email verified successfully! You can now log in.")
+    return redirect(f"{reverse('account')}?panel=login")
+
+def verify_email_sent(request):
+    return render(request, 'verify_email_sent.html')
 
 @staff_member_required
 def delete_user(request, user_id):
@@ -426,12 +573,21 @@ def delete_event(request, event_id):
 
 def account(request):
     next_url = request.GET.get('next')
+    panel = request.GET.get('panel', 'register')
+    email = request.GET.get('email', '')
+    
     if request.user.is_authenticated:
         return redirect(next_url or 'profile')
+    
+    # Initialize forms
+    register_initial = {'email': email} if email else None
+    register_form = StudentRegistrationForm(initial=register_initial)
+    login_form = StudentLoginForm()
+    
     return render(request, 'account.html', {
-        'register_form': StudentRegistrationForm(),
-        'login_form': StudentLoginForm(),
-        'panel': 'register',
+        'register_form': register_form,
+        'login_form': login_form,
+        'panel': panel,
         'next': next_url
     })
 

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flurry | My Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/root.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
 
-<body data-first-name="{{ user.first_name }}" data-last-name="{{ user.last_name }}" data-email="{{ user.email }}" data-course="{{ user.course|default:'' }}" data-year="{{ user.year_level|default:'' }}" data-authenticated="true">
+<body data-username="{{ user.username }}" data-first-name="{{ user.first_name }}" data-last-name="{{ user.last_name }}" data-email="{{ user.email }}" data-course="{{ user.course|default:'' }}" data-year="{{ user.year_level|default:'' }}" data-authenticated="true">
     <!-- Skeleton Loading Screen -->
     <div id="skeleton-loader">
         <div class="skeleton-header skeleton-shimmer"></div>
@@ -185,7 +185,20 @@
             </div>
             <div class="profile-identity">
                 <h2 id="profileFullName">{{ user.first_name }} {{ user.last_name }}</h2>
-                <span class="profile-badge"><i class="fa-brands fa-aws"></i> Cloud Member</span>
+                <div style="margin-top: 0.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    {% if is_email_verified %}
+                        <span class="profile-badge verified" style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3);">
+                            <i class="fa-solid fa-circle-check"></i> Verified Member
+                        </span>
+                    {% else %}
+                        <span class="profile-badge unverified" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">
+                            <i class="fa-solid fa-circle-xmark"></i> Unverified
+                        </span>
+                        <a href="{% url 'send-verification-email' %}" class="btn btn-primary btn-small" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">
+                            Verify Email
+                        </a>
+                    {% endif %}
+                </div>
             </div>
             <div class="profile-meta-list">
                 <div class="profile-meta-item">
@@ -319,9 +332,20 @@
                 <form class="edit-form" id="editForm" novalidate>
 
                     <div class="edit-group">
+                        <label for="editUsername">Username</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="editUsername" placeholder="Enter username" value="{{ user.username }}">
+                            <div id="usernameCooldownMsg" style="font-size: 0.75rem; color: #fbbf24; margin-top: 0.4rem; {% if not cooldown_active %}display: none;{% endif %}">
+                                <i class="fa-solid fa-clock-rotate-left"></i> 
+                                Changed recently. Next update available in {{ cooldown_remaining|default:'3 days' }}.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="edit-group">
                         <label for="editBio">Bio</label>
                         <textarea id="editBio" placeholder="Tell the community a bit about yourself..." rows="3"
-                            style="resize:vertical;"></textarea>
+                            style="resize:vertical;">{{ user.bio|default:'' }}</textarea>
                     </div>
 
                     <div class="edit-divider"></div>
@@ -363,10 +387,16 @@
                     </div>
                     <div class="edit-divider"></div>
                     <h4 class="edit-section-title">Change Password</h4>
+                    {% if not is_email_verified %}
+                    <div style="background: rgba(234, 179, 8, 0.1); border: 1px solid rgba(234, 179, 8, 0.3); color: #fbbf24; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; display: flex; align-items: center; gap: 0.6rem;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Email verification is required to change your password.</span>
+                    </div>
+                    {% endif %}
                     <div class="edit-group">
                         <label for="editCurrentPassword">Current Password</label>
                         <div class="input-wrapper">
-                            <input type="password" id="editCurrentPassword" placeholder="Enter current password">
+                            <input type="password" id="editCurrentPassword" placeholder="Enter current password" {% if not is_email_verified %}disabled style="opacity:0.5; cursor:not-allowed;"{% endif %}>
                             <button type="button" class="toggle-password" data-target="editCurrentPassword">
                                 <i class="fa-solid fa-eye-slash"></i>
                             </button>
@@ -376,7 +406,7 @@
                         <div class="edit-group">
                             <label for="editNewPassword">New Password</label>
                             <div class="input-wrapper">
-                                <input type="password" id="editNewPassword" placeholder="New password">
+                                <input type="password" id="editNewPassword" placeholder="New password" {% if not is_email_verified %}disabled style="opacity:0.5; cursor:not-allowed;"{% endif %}>
                                 <button type="button" class="toggle-password" data-target="editNewPassword">
                                     <i class="fa-solid fa-eye-slash"></i>
                                 </button>
@@ -385,7 +415,7 @@
                         <div class="edit-group">
                             <label for="editConfirmPassword">Confirm Password</label>
                             <div class="input-wrapper">
-                                <input type="password" id="editConfirmPassword" placeholder="Confirm new password">
+                                <input type="password" id="editConfirmPassword" placeholder="Confirm new password" {% if not is_email_verified %}disabled style="opacity:0.5; cursor:not-allowed;"{% endif %}>
                                 <button type="button" class="toggle-password" data-target="editConfirmPassword">
                                     <i class="fa-solid fa-eye-slash"></i>
                                 </button>

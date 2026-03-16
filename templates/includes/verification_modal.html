@@ -1,0 +1,32 @@
+<script>
+    function toggleVerificationModal(show) {
+        const overlay = document.getElementById('verificationModalOverlay');
+        if (!overlay) return;
+        overlay.style.display = show ? 'flex' : 'none';
+        document.body.style.overflow = show ? 'hidden' : '';
+    }
+</script>
+<div class="admin-modal-overlay" id="verificationModalOverlay">
+<script>
+    // Close on click outside
+    document.getElementById('verificationModalOverlay').addEventListener('click', (e) => {
+        if (e.target.id === 'verificationModalOverlay') {
+            toggleVerificationModal(false);
+        }
+    });
+</script>
+    <div class="admin-modal">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="width: 80px; height: 80px; background: rgba(255,193,7,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <i class="fa-solid fa-envelope-circle-check" style="font-size: 2.5rem; color: #ffc107;"></i>
+            </div>
+            <h2 style="font-size: 1.8rem; margin-bottom: 1rem; background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Email Verification Required</h2>
+            <p style="color: rgba(255,255,255,0.7); line-height: 1.6;">You must verify your email address before you can access this feature. This helps us ensure your account's security.</p>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button onclick="toggleVerificationModal(false)" id="closeVerificationModal" style="flex: 1; padding: 1rem; border-radius: var(--radius-lg); border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">Maybe Later</button>
+            <a href="{% url 'profile' %}" style="flex: 1; padding: 1rem; border-radius: var(--radius-lg); background: var(--primary-color); color: var(--secondary-color); font-weight: 700; text-align: center; text-decoration: none; transition: all 0.3s ease; box-shadow: var(--shadow-md);">Verify Now</a>
+        </div>
+    </div>
+</div>

@@ -55,6 +55,14 @@ async function handleEnroll(btn) {
             btn.disabled      = true;
             btn.style.opacity = '0.65';
             showToast(data.message || `Enrolled in "${title}" successfully!`);
+        } else if (data.message === 'VERIFY_EMAIL_REQUIRED') {
+            btn.textContent = originalText;
+            btn.disabled = false;
+            if (typeof toggleVerificationModal === 'function') {
+                toggleVerificationModal(true);
+            } else {
+                showToast('Please verify your email address in your profile.', false);
+            }
         } else {
             btn.textContent = originalText;
             btn.disabled = false;

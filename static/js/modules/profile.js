@@ -122,9 +122,105 @@ function setupPhotoUpload() {
     updateAvatarActionBtn();
 }
 
+function setupProfileUpdate() {
+    const editForm = document.getElementById('editForm');
+    if (!editForm) return;
+
+    editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const saveBtn = editForm.querySelector('button[type="submit"]');
+        const successMsg = document.getElementById('editSuccess');
+        const errorMsg = document.getElementById('editError');
+        const cooldownMsg = document.getElementById('usernameCooldownMsg');
+
+        // Reset UI
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+        const payload = {
+            first_name: document.getElementById('editFirstName').value,
+            last_name: document.getElementById('editLastName').value,
+            email: document.getElementById('editEmail').value,
+            course: document.getElementById('editCourse').value,
+            year_level: document.getElementById('editYear').value,
+            bio: document.getElementById('editBio').value,
+            username: document.getElementById('editUsername').value
+        };
+
+        try {
+            const response = await fetch('/update-profile/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || (typeof CSRF_TOKEN !== 'undefined' ? CSRF_TOKEN : '')
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Update local UI
+                document.getElementById('profileFullName').textContent = `${payload.first_name} ${payload.last_name}`;
+                document.getElementById('profileEmail').textContent = payload.email;
+                document.getElementById('welcomeName').textContent = payload.first_name;
+                
+                // Update course/year labels in sidebar
+                const courseLabel = document.getElementById('profileCourse');
+                const yearLabel = document.getElementById('profileYear');
+                if (courseLabel) courseLabel.textContent = data.course_display;
+                if (yearLabel) yearLabel.textContent = data.year_display;
+                
+                // Update navigation name if exists
+                const navName = document.getElementById('userName');
+                if (navName) navName.textContent = payload.first_name || data.username;
+
+                // Update initials if username changed
+                if (data.username) {
+                    const initials = data.username.slice(0, 1).toUpperCase();
+                    refreshAllAvatars(getPhoto(), initials);
+                }
+
+                successMsg.style.display = 'block';
+                
+                if (data.cooldown_active) {
+                    cooldownMsg.querySelector('span')?.remove(); // Clean up if I add spans later
+                    cooldownMsg.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> Changed recently. Next update available in ${data.cooldown_remaining}.`;
+                    cooldownMsg.style.display = 'block';
+                } else {
+                    cooldownMsg.style.display = 'none';
+                }
+                
+                // Update body data attributes
+                document.body.dataset.firstName = payload.first_name;
+                document.body.dataset.lastName = payload.last_name;
+                document.body.dataset.username = data.username;
+
+                setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
+            } else {
+                errorMsg.textContent = data.error || 'Failed to update profile.';
+                errorMsg.style.display = 'block';
+                if (data.error && data.error.includes('Username can only be changed')) {
+                    cooldownMsg.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error('Profile update error:', error);
+            errorMsg.textContent = 'An error occurred. Please try again.';
+            errorMsg.style.display = 'block';
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Changes';
+        }
+    });
+}
+
 export function setupProfile() {
     setupTabs();
     loadProfileData();
     setupPhotoUpload();
+    setupProfileUpdate();
     // Enrollment is now handled server-side in profile.html
 }

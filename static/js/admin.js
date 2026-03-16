@@ -335,10 +335,12 @@ function setupModalHandlers() {
             e.preventDefault();
             const title = form.dataset.title || 'Are you sure?';
             const confirmMsg = form.dataset.confirm || 'This action cannot be undone.';
+            const btnText = form.dataset.btnText || 'Delete Now';
+            const icon = form.dataset.icon || 'fa-trash-can';
             openDeleteModal(title, confirmMsg, () => {
                 form.dataset.confirmed = 'true';
                 form.submit();
-            });
+            }, btnText, icon);
         }
     });
 
@@ -390,9 +392,14 @@ function setupModalHandlers() {
 
 let _deleteCallback = null;
 
-function openDeleteModal(title, desc, onConfirm) {
+function openDeleteModal(title, desc, onConfirm, btnText = 'Delete Now', icon = 'fa-trash-can') {
     document.getElementById('deleteModalTitle').textContent = title;
     document.getElementById('deleteModalDesc').textContent = desc;
+    document.getElementById('deleteConfirm').textContent = btnText;
+    const iconEl = document.querySelector('#deleteModalOverlay .admin-modal-icon i');
+    if (iconEl) {
+        iconEl.className = `fa-solid ${icon}`;
+    }
     _deleteCallback = onConfirm;
     document.getElementById('deleteModalOverlay').style.display = 'flex';
 }
