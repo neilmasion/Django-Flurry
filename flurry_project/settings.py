@@ -12,8 +12,17 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
 
 allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()]
-if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.railway.app', '.onrender.com']
+default_allowed_hosts = ['127.0.0.1', 'localhost', '.railway.app', '.onrender.com']
+for host in default_allowed_hosts:
+    if host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
+
+# Render health probes may use internal host headers. Allowing all hosts only on
+# Render avoids noisy 400 healthcheck failures while keeping local/dev strict.
+if os.getenv('RENDER', '').lower() == 'true':
+    allow_all_on_render = os.getenv('DJANGO_ALLOW_ALL_HOSTS_ON_RENDER', 'true').lower() == 'true'
+    if allow_all_on_render:
+        ALLOWED_HOSTS = ['*']
 
 csrf_trusted_origins_env = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS', '')
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in csrf_trusted_origins_env.split(',') if o.strip()]
