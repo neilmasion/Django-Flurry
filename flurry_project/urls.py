@@ -5,8 +5,9 @@ from django.conf.urls.static import static
 from base import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('admin-dashboard/', views.admin_dashboard, name='admin-dashboard'),
+    path('admin/', views.admin_dashboard, name='admin-dashboard'),
+    path('django-admin/', admin.site.urls),
+    path('admin-dashboard/', views.admin_dashboard),
     path('manager_console/', views.admin_dashboard, name='manager-console'),
     path('', include('base.urls')),
 ]

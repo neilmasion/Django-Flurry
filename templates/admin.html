@@ -37,7 +37,7 @@
 
 
     <canvas id="cloudCanvas"></canvas>
-    {% if not user.is_authenticated or not user.is_staff %}
+    {% if not user.is_authenticated or not user.is_staff and user.role != 'admin' and user.role != 'officer' and not user.is_superuser %}
     <div class="admin-login-wrap" id="adminLoginWrap">
         <div class="admin-login-box">
 
@@ -50,8 +50,8 @@
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{% url 'admin-dashboard' %}">
                 <div class="aform-group">
-                    <label for="adminEmail">Username</label>
-                    <input type="text" name="username" id="adminEmail" placeholder="admin">
+                    <label for="adminEmail">Email</label>
+                    <input type="email" name="email" id="adminEmail" placeholder="admin@example.com" required>
                 </div>
                 <div class="aform-group">
                     <label for="adminPass">Password</label>
@@ -88,7 +88,7 @@
     </script>
     {% endif %}
 
-    {% if user.is_authenticated and user.is_staff %}
+    {% if user.is_authenticated and user.is_staff or user.role == 'admin' or user.role == 'officer' or user.is_superuser %}
     <div class="admin-app" id="adminApp" style="display:flex;">
         <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
 

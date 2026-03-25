@@ -221,13 +221,20 @@ def contact(request):
 def login_view(request):
     next_url = request.POST.get('next') or request.GET.get('next')
     if request.method == 'POST':
-        form = StudentLoginForm(data=request.POST)
+        post_data = request.POST.copy()
+        # Backward compatibility for forms that still submit `username`.
+        if not post_data.get('email') and post_data.get('username'):
+            post_data['email'] = post_data.get('username')
+        form = StudentLoginForm(data=post_data)
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             # Authenticate using email (since it's now the USERNAME_FIELD)
             user = authenticate(request, username=email, password=password)
             if user is not None:
+                if user.role in ['admin', 'officer'] and not user.is_staff:
+                    user.is_staff = True
+                    user.save(update_fields=['is_staff'])
                 if not user.is_email_verified and not (user.is_staff or user.is_superuser):
                     request.session['verification_email'] = user.email
                     return redirect('verify-email-sent')
@@ -316,9 +323,17 @@ def logout_view(request):
 def admin_dashboard(request):
     if not request.user.is_authenticated:
         return render(request, 'admin.html')
-    if not request.user.is_staff:
+    can_access_admin = (
+        request.user.is_staff
+        or request.user.is_superuser
+        or request.user.role in ['admin', 'officer']
+    )
+    if not can_access_admin:
         messages.warning(request, 'Access denied. You do not have administrative privileges.')
         return redirect('index')
+    if request.user.role in ['admin', 'officer'] and not request.user.is_staff:
+        request.user.is_staff = True
+        request.user.save(update_fields=['is_staff'])
     
     from django.db.models import Count
     
