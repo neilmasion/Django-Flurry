@@ -238,7 +238,14 @@ def login_view(request):
                 return redirect('index')
             else:
                 form.add_error(None, 'Invalid email or password.')
-                if next_url and next_url in ['/admin/', '/manager_console', '/admin-dashboard']:
+                admin_next_targets = {
+                    '/admin/',
+                    '/manager_console',
+                    '/manager_console/',
+                    '/admin-dashboard',
+                    '/admin-dashboard/',
+                }
+                if next_url and next_url in admin_next_targets:
                     messages.error(request, 'Invalid email or password.')
                     total_users = User.objects.count()
                     total_events = Event.objects.count()
