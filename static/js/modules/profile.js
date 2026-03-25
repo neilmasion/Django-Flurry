@@ -2,15 +2,23 @@ const userEmail = document.body.dataset.email || 'guest';
 const PHOTO_KEY = `flurryUserPhoto_${userEmail}`;
 
 function getPhoto() {
-    return localStorage.getItem(PHOTO_KEY) || null;
+    // We now primarily use the server-side photo. 
+    // This can return the URL from data attributes if needed, or we just rely on the initial load.
+    return document.body.dataset.profilePic || null;
+}
+
+function getInitials() {
+    const username = document.body.dataset.username || 'U';
+    return username.charAt(0).toUpperCase();
 }
 
 function applyPhotoToEl(el, photo, initials) {
     if (!el) return;
+    const fallBack = initials || getInitials();
     if (photo) {
         el.innerHTML = `<img src="${photo}" alt="Profile photo">`;
     } else {
-        el.textContent = initials;
+        el.textContent = fallBack;
     }
 }
 
@@ -31,20 +39,29 @@ function refreshAllAvatars(photo, initials) {
 }
 
 function setupTabs() {
-    document.querySelectorAll('.profile-tab').forEach(tab => {
+    const tabs = document.querySelectorAll('.profile-tab');
+    tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             tab.classList.add('active');
-            document.getElementById('tab-' + tab.dataset.tab)?.classList.add('active');
+            const panel = document.getElementById('tab-' + tab.dataset.tab);
+            if (panel) panel.classList.add('active');
         });
     });
+
+    // Auto-switch tab based on URL param
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetTab = urlParams.get('tab');
+    if (targetTab) {
+        const tabBtn = document.querySelector(`.profile-tab[data-tab="${targetTab}"]`);
+        if (tabBtn) tabBtn.click();
+    }
 }
 
 function loadProfileData() {
-    const navAvatar = document.getElementById('userAvatarNav');
-    const initials  = navAvatar?.textContent?.trim() || '?';
-    const photo     = getPhoto();
+    const photo = getPhoto();
+    const initials = getInitials();
     refreshAllAvatars(photo, initials);
     updateAvatarActionBtn();
 }
@@ -59,31 +76,92 @@ function updateAvatarActionBtn() {
     btn.dataset.mode = hasPhoto ? 'remove' : 'upload';
 }
 
-function doRemovePhoto() {
-    localStorage.removeItem(PHOTO_KEY);
-    const navAvatar = document.getElementById('userAvatarNav');
-    const initials  = navAvatar?.textContent?.trim() || '?';
-    refreshAllAvatars(null, initials);
-    ['avatarInput', 'avatarInput2'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-    updateAvatarActionBtn();
+async function doRemovePhoto() {
+    const formData = new FormData();
+    formData.append('action', 'remove');
+
+    try {
+        const response = await fetch('/upload-avatar/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || (typeof CSRF_TOKEN !== 'undefined' ? CSRF_TOKEN : '')
+            },
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            document.body.dataset.profilePic = '';
+            const navAvatar = document.getElementById('userAvatarNav');
+            const initials  = navAvatar?.textContent?.trim() || '?';
+            refreshAllAvatars(null, initials);
+            ['avatarInput', 'avatarInput2'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            updateAvatarActionBtn();
+        }
+    } catch (err) {
+        console.error('Error removing photo:', err);
+    }
 }
 
 function setupPhotoUpload() {
-    function handleFile(file) {
+    let selectedFile = null;
+
+    async function handleFile(file) {
         if (!file) return;
         if (file.size > 2 * 1024 * 1024) { alert('Image must be under 2MB.'); return; }
+        
+        selectedFile = file;
+
+        // Show preview in modal
         const reader = new FileReader();
         reader.onload = e => {
-            localStorage.setItem(PHOTO_KEY, e.target.result);
-            const navAvatar = document.getElementById('userAvatarNav');
-            const initials  = navAvatar?.textContent?.trim() || '?';
-            refreshAllAvatars(e.target.result, initials);
-            updateAvatarActionBtn();
+            const previewEl = document.getElementById('savePhotoPreview');
+            if (previewEl) {
+                previewEl.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+            }
+            document.getElementById('savePhotoModal').style.display = 'flex';
         };
         reader.readAsDataURL(file);
+    }
+
+    async function uploadSelectedFile() {
+        if (!selectedFile) return;
+
+        const confirmBtn = document.getElementById('savePhotoConfirm');
+        const originalText = confirmBtn.textContent;
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+        const formData = new FormData();
+        formData.append('profile_picture', selectedFile);
+
+        try {
+            const response = await fetch('/upload-avatar/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || (typeof CSRF_TOKEN !== 'undefined' ? CSRF_TOKEN : '')
+                },
+                body: formData
+            });
+            const data = await response.json();
+            if (data.success) {
+                document.body.dataset.profilePic = data.url;
+                const navAvatar = document.getElementById('userAvatarNav');
+                const initials  = navAvatar?.textContent?.trim() || '?';
+                refreshAllAvatars(data.url, initials);
+                updateAvatarActionBtn();
+                document.getElementById('savePhotoModal').style.display = 'none';
+            }
+        } catch (err) {
+            console.error('Error uploading photo:', err);
+            alert('Failed to save photo. Please try again.');
+        } finally {
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = originalText;
+            selectedFile = null;
+        }
     }
 
     const actionBtn = document.getElementById('avatarActionBtn');
@@ -99,6 +177,16 @@ function setupPhotoUpload() {
         });
         fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
     }
+
+    document.getElementById('savePhotoConfirm')?.addEventListener('click', uploadSelectedFile);
+    document.getElementById('savePhotoCancel')?.addEventListener('click', () => {
+        document.getElementById('savePhotoModal').style.display = 'none';
+        selectedFile = null;
+        if (fileInput) fileInput.value = '';
+    });
+    document.getElementById('savePhotoModal')?.addEventListener('click', e => {
+        if (e.target === e.currentTarget) e.currentTarget.style.display = 'none';
+    });
 
     document.getElementById('removePhotoConfirm')?.addEventListener('click', () => {
         doRemovePhoto();
@@ -143,6 +231,7 @@ function setupProfileUpdate() {
             first_name: document.getElementById('editFirstName').value,
             last_name: document.getElementById('editLastName').value,
             email: document.getElementById('editEmail').value,
+            school: document.getElementById('editSchool').value,
             course: document.getElementById('editCourse').value,
             year_level: document.getElementById('editYear').value,
             bio: document.getElementById('editBio').value,
@@ -170,8 +259,10 @@ function setupProfileUpdate() {
                 // Update course/year labels in sidebar
                 const courseLabel = document.getElementById('profileCourse');
                 const yearLabel = document.getElementById('profileYear');
+                const schoolLabel = document.getElementById('profileSchool');
                 if (courseLabel) courseLabel.textContent = data.course_display;
                 if (yearLabel) yearLabel.textContent = data.year_display;
+                if (schoolLabel) schoolLabel.textContent = payload.school || 'Not specified';
                 
                 // Update navigation name if exists
                 const navName = document.getElementById('userName');
@@ -217,10 +308,129 @@ function setupProfileUpdate() {
     });
 }
 
+function setupProfileNote() {
+    const bubble = document.getElementById('profileNoteBubble');
+    const noteText = document.getElementById('profileNoteText');
+    const welcomeBio = document.getElementById('welcomeBio');
+    const bioInput = document.getElementById('editBio');
+    const editTabBtn = document.querySelector('.profile-tab[data-tab="edit"]');
+
+    if (!bubble || !bioInput) return;
+
+    // Click bubble to edit
+    bubble.addEventListener('click', () => {
+        if (editTabBtn) {
+            editTabBtn.click();
+            // Optional: smooth scroll to bio input if it's far
+            setTimeout(() => {
+                bioInput.focus();
+                bioInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+    });
+
+    // Real-time sync
+    bioInput.addEventListener('input', () => {
+        const val = bioInput.value.trim();
+        const displayVal = val || "Share a thought...";
+        const welcomeVal = val || "Ready to learn more about the cloud today?";
+
+        if (noteText) noteText.textContent = displayVal;
+        if (welcomeBio) welcomeBio.textContent = welcomeVal;
+    });
+}
+
+function setupConnections() {
+    // Handle Connect/Cancel on profile or search
+    document.querySelectorAll('.connect-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const userId = btn.dataset.userId;
+            try {
+                const res = await fetch(`/connect/${userId}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || (typeof CSRF_TOKEN !== 'undefined' ? CSRF_TOKEN : '') }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.reload();
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            } catch (e) { console.error('Connection error:', e); }
+        });
+    });
+
+    // Handle Accept/Decline
+    document.querySelectorAll('.handle-conn-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const connId = btn.dataset.connId;
+            const action = btn.dataset.action;
+            try {
+                const res = await fetch(`/handle-connection/${connId}/`, {
+                    method: 'POST',
+                    headers: { 
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || (typeof CSRF_TOKEN !== 'undefined' ? CSRF_TOKEN : ''),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action: action })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.reload();
+                }
+            } catch (e) { console.error('Handle connection error:', e); }
+        });
+    });
+
+    // Handle Remove Friend
+    let connectionUserIdToRemove = null;
+    const removeConnModal = document.getElementById('removeConnectionModal');
+    
+    document.querySelectorAll('.remove-friend-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            connectionUserIdToRemove = btn.dataset.userId;
+            if (removeConnModal) removeConnModal.style.display = 'flex';
+        });
+    });
+
+    document.getElementById('removeConnectionConfirm')?.addEventListener('click', async () => {
+        if (!connectionUserIdToRemove) return;
+        try {
+            const res = await fetch(`/remove-connection/${connectionUserIdToRemove}/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || (typeof CSRF_TOKEN !== 'undefined' ? CSRF_TOKEN : '') }
+            });
+            const data = await res.json();
+            if (data.success) {
+                window.location.reload();
+            }
+        } catch (e) { console.error('Remove connection error:', e); }
+        if (removeConnModal) removeConnModal.style.display = 'none';
+    });
+
+    document.getElementById('removeConnectionCancel')?.addEventListener('click', () => {
+        if (removeConnModal) removeConnModal.style.display = 'none';
+        connectionUserIdToRemove = null;
+    });
+
+    if (removeConnModal) {
+        removeConnModal.addEventListener('click', (e) => {
+            if (e.target === removeConnModal) {
+                removeConnModal.style.display = 'none';
+                connectionUserIdToRemove = null;
+            }
+        });
+    }
+}
+
+export { setupTabs };
+
 export function setupProfile() {
     setupTabs();
     loadProfileData();
     setupPhotoUpload();
     setupProfileUpdate();
+    setupProfileNote();
+    setupConnections();
     // Enrollment is now handled server-side in profile.html
 }

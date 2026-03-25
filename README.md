@@ -72,3 +72,36 @@ Follow these steps to run the application on your computer:
    Open your browser and navigate to `http://127.0.0.1:8000` to view the website.
 
 ---
+
+## Use Neon Postgres Locally
+
+1. Create a Neon database and copy the connection string.
+2. Add an environment file based on `.env.example`.
+3. Set `DATABASE_URL` like this:
+   - `postgresql://USER:PASSWORD@HOST/DBNAME?sslmode=require`
+4. Install dependencies and run migrations:
+   - `pip install -r requirements.txt`
+   - `python manage.py migrate`
+
+When `DATABASE_URL` is present, the project uses Postgres automatically.
+
+---
+
+## Deploy to Railway
+
+1. Push this repository to GitHub.
+2. In Railway, create a new project and choose Deploy from GitHub.
+3. Set these Railway environment variables:
+   - `DJANGO_SECRET_KEY`
+   - `DJANGO_DEBUG=False`
+   - `DJANGO_ALLOWED_HOSTS=.railway.app`
+   - `DJANGO_CSRF_TRUSTED_ORIGINS=https://YOUR-APP.up.railway.app`
+   - `DATABASE_URL` (your Neon URL with `sslmode=require`)
+   - `EMAIL_HOST_USER` and `EMAIL_HOST_PASSWORD` (optional if you use email features)
+4. Railway will run the `Procfile` command:
+   - `python manage.py migrate`
+   - `python manage.py collectstatic`
+   - `gunicorn flurry_project.wsgi`
+5. Open the Railway public URL and verify the app is live.
+
+---

@@ -14,8 +14,10 @@ import { setupContactForm } from './modules/contact.js';
 import { setupEventEnroll } from './modules/events.js';
 import { setupProfile } from './modules/profile.js';
 import { syncLocalEnrollments } from './modules/sync.js';
+import { initSearch } from './modules/search.js?v=1.5';
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSearch();
     initTheme();
     loadState();
     if (state.isAuthenticated) updateUIAfterLogin();

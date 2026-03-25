@@ -21,6 +21,7 @@ class User(AbstractUser):
     ]
     course = models.CharField(max_length=50, choices=COURSE_CHOICES, blank=True, null=True)
     year_level = models.CharField(max_length=20, choices=YEAR_CHOICES, blank=True, null=True)
+    school = models.CharField(max_length=200, blank=True, null=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
     email = models.EmailField(unique=True)
     
@@ -32,11 +33,12 @@ class User(AbstractUser):
     
     # Email Verification Fields
     is_email_verified = models.BooleanField(default=False)
-    email_verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    email_verification_code = models.CharField(max_length=6, blank=True, null=True)
     
     # Username edit cooldown
     last_username_update = models.DateTimeField(null=True, blank=True)
     bio = models.TextField(max_length=500, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
 class ContactMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contact_messages', null=True, blank=True)
@@ -79,6 +81,13 @@ class Event(models.Model):
     event_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='workshop')
     is_featured = models.BooleanField(default=False)
     
+    @property
+    def is_past(self):
+        from django.utils import timezone
+        if self.date:
+            return self.date < timezone.now().date()
+        return False
+
     def __str__(self):
         return self.title
 
@@ -135,11 +144,30 @@ class OfficerApplication(models.Model):
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     message = models.TextField()
+    link = models.CharField(max_length=500, null=True, blank=True)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Notification for {self.user.username}"
+
+class Connection(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+    ]
+    # user_from is the requester, user_to is the recipient
+    user_from = models.ForeignKey(User, related_name='connections_sent', on_delete=models.CASCADE)
+    user_to = models.ForeignKey(User, related_name='connections_received', on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user_from', 'user_to')
+
+    def __str__(self):
+        return f"{self.user_from.username} -> {self.user_to.username} ({self.status})"
 
 class Enrollment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='enrollments')
@@ -151,3 +179,41 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} enrolled in {self.event.title}"
+
+class Showcase(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='showcases')
+    title = models.CharField(max_length=200)
+    website_url = models.URLField()
+    description = models.TextField()
+    is_approved = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField(User, related_name='showcase_likes', blank=True)
+    saves = models.ManyToManyField(User, related_name='showcase_saves', blank=True)
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
+
+    @property
+    def total_saves(self):
+        return self.saves.count()
+
+class ShowcaseImage(models.Model):
+    showcase = models.ForeignKey(Showcase, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='showcase_screenshots/')
+    
+    def __str__(self):
+        return f"Image for {self.showcase.title}"
+
+class ShowcaseComment(models.Model):
+    showcase = models.ForeignKey(Showcase, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} on {self.showcase.title}'

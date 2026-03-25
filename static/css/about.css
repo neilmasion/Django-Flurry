@@ -212,6 +212,13 @@
     will-change: transform;
     user-select: none;
     filter: grayscale(.9);
+    overflow: hidden;
+}
+
+/* Hidden on mobile; shown as grid row on desktop */
+.officer-card-info {
+    display: none;
+    padding-top: 0.75rem;
 }
 
 .officer-deck .deck-card img {
@@ -575,5 +582,53 @@
     }
     .recruitment-art {
         display: none;
+    }
+}
+
+/* Officer Grid for Desktop/Tablet */
+@media (min-width: 769px) {
+    .deck-section {
+        flex-direction: column;
+        gap: 0;
+        align-items: flex-start;
+    }
+
+    /* 3 columns: cards in row 1, infos in row 2 */
+    .officer-deck {
+        display: grid;
+        grid-template-columns: repeat(3, 220px);
+        grid-template-rows: 280px auto;
+        gap: 0 2.5rem;
+        width: auto;
+        height: auto;
+        position: static;
+        margin-left: 0;
+        cursor: default;
+    }
+
+    /* Reset stacking — keep exact original card size & look */
+    .officer-deck .deck-card {
+        position: relative;
+        inset: auto;
+        width: 220px;
+        height: 280px;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: grayscale(0.9);
+        background: rgba(255, 255, 255, 0.11);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        cursor: default;
+    }
+
+    /* Show per-card info in row 2 */
+    .officer-card-info {
+        display: block;
+    }
+
+    /* Hide the shared deck-info sidebar & hint */
+    .deck-info,
+    .deck-hint {
+        display: none !important;
     }
 }

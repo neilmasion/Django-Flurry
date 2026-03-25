@@ -18,7 +18,7 @@
     </style>
 </head>
 
-<body data-email="{{ user.email|default:'' }}">
+<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     <!-- Skeleton Loading Screen -->
     <div id="skeleton-loader">
         <div class="skeleton-header skeleton-shimmer"></div>
@@ -44,6 +44,7 @@
                 <li><a href="{% url 'index' %}" class="nav-link active">Home</a></li>
                 <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                 <li><a href="{% url 'events' %}" class="nav-link">Events</a></li>
+                <li><a href="{% url 'community' %}" class="nav-link">Community</a></li>
                 <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
                 <li class="nav-theme desktop-theme">
                     {% if user.is_authenticated %}
@@ -63,7 +64,7 @@
                             </div>
                             <div class="notif-dropdown-content">
                                 {% for n in all_notifications %}
-                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
                                     <p>{{ n.message }}</p>
                                     <small>{{ n.created_at|timesince }} ago</small>
                                 </div>
@@ -89,7 +90,13 @@
                     {% if user.is_authenticated %}
                     <div class="user-menu" id="userMenu">
                         <button class="user-menu-btn" id="userMenuBtn">
-                            <div class="user-avatar-sm" id="userAvatarNav">{{ user.username|slice:":1"|upper }}</div>
+                            <div class="user-avatar-sm" id="userAvatarNav">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                {% else %}
+                                    {{ user.username|slice:":1"|upper }}
+                                {% endif %}
+                            </div>
                             <span id="userName">{{ user.first_name|default:user.username }}</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
@@ -131,7 +138,7 @@
                         </div>
                         <div class="notif-dropdown-content">
                             {% for n in all_notifications %}
-                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
                                 <p>{{ n.message }}</p>
                                 <small>{{ n.created_at|timesince }} ago</small>
                             </div>
@@ -178,6 +185,7 @@
     </style>
     {% endif %}
 
+    {% block content %}
     <section id="home" class="hero">
         <div class="hero-content">
             <h1 class="hero-title">Start Your Cloud Journey Here</h1>
@@ -316,7 +324,7 @@
                     real-world cloud skills. We run hands-on workshops, collaborate with other chapters, and help
                     members earn AWS certifications that matter.</p>
                 <p>Whether you're a complete beginner or already building on AWS, there's a place for you here.</p>
-                <a href="{% url 'about' %}" class="btn btn-outline">Meet the Team <i class="fa-solid fa-arrow-right"
+                <a href="{% url 'about' %}#officers" class="btn btn-outline">Meet the Team <i class="fa-solid fa-arrow-right"
                         style="margin-left:.4rem; font-size:.75rem;"></i></a>
             </div>
             <div class="about-cards">
@@ -459,6 +467,14 @@
                 </div>
             </div>
             {% endfor %}
+
+            {% if not featured_events and not other_events %}
+            <div class="empty-events" style="grid-column: 1 / -1; width: 100%; text-align: center; padding: 5rem 2rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-xl); border: 1px dashed rgba(255,255,255,0.1);">
+                <i class="fa-regular fa-calendar-xmark" style="font-size: 3.5rem; color: rgba(255,255,255,0.15); margin-bottom: 1.5rem;"></i>
+                <h3 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.25rem;">No upcoming events right now</h3>
+                <p style="color: rgba(255,255,255,0.5); max-width: 450px; margin: 0 auto; font-size: 0.9rem; line-height: 1.6;">We don't have any scheduled workshops at the moment. Check back soon or browse our Workshop Catalog to see what we've covered in the past!</p>
+            </div>
+            {% endif %}
         </div>
     </section>
 
@@ -512,6 +528,7 @@
             </div>
         </div>
     </section>
+    {% endblock content %}
 
     <footer class="footer">
         <div class="footer-container">
@@ -527,6 +544,7 @@
                         <li><a href="{% url 'index' %}">Home</a></li>
                         <li><a href="{% url 'about' %}">About Us</a></li>
                         <li><a href="{% url 'events' %}">Workshops</a></li>
+                        <li><a href="{% url 'community' %}">Community</a></li>
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </div>
@@ -597,9 +615,6 @@
         </div>
     </div>
 
-    <!-- Email Verification Required Modal -->
-    {% include 'includes/verification_modal.html' %}
-    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const openBtn = document.getElementById('openApplyModal');
@@ -643,31 +658,41 @@
     </script>
     {% endif %}
 
-    <script type="module" src="{% static 'js/main.js' %}" defer></script>
+    <script type="module" src="{% static 'js/main.js' %}?v=1.5" defer></script>
     <script>
-    function markNotifRead(el, notifId) {
-        if (el.classList.contains('notif-read')) return;
-        fetch(`/notification-read/${notifId}/`, {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => {
-                    item.classList.add('notif-read');
-                });
-                document.querySelectorAll('.notif-badge').forEach(b => {
-                    if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
-                    else { b.style.display = 'none'; }
-                });
-                document.querySelectorAll('.notif-count').forEach(c => {
-                    if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
-                    else { c.style.display = 'none'; }
-                });
-            }
-        })
-        .catch(() => {});
+    function markNotifRead(el, notifId, link) {
+        // Immediate UI update for responsiveness
+        if (!el.classList.contains('notif-read')) {
+            document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => {
+                item.classList.add('notif-read');
+            });
+            
+            fetch(`/notification-read/${notifId}/`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                keepalive: true
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelectorAll('.notif-badge').forEach(b => {
+                        if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
+                        else { b.style.display = 'none'; }
+                    });
+                    if (data.unread_count !== undefined) {
+                        document.querySelectorAll('.notif-count').forEach(c => {
+                            if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
+                            else { c.style.display = 'none'; }
+                        });
+                    }
+                }
+            })
+            .catch(() => {});
+        }
+
+        if (link && link !== 'None' && link !== '') {
+            window.location.href = link;
+        }
     }
     </script>
     {% include 'includes/enroll_toast.html' %}

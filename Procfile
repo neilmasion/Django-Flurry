@@ -1,0 +1,1 @@
+web: python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn flurry_project.wsgi --log-file - --workers 2 --threads 4

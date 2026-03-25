@@ -180,11 +180,12 @@
     }
 
     .logo { flex: 1; }
+    .navbar .nav-search { display: none; }
     .nav-right-controls {
         display: flex;
         flex-direction: row;
         align-items: center;
-        gap: 2rem;
+        gap: 0.75rem;
         flex-shrink: 0;
     }
     .hamburger {
@@ -208,6 +209,16 @@
 
     .mobile-theme-toggle img {
         margin-top: 0;
+    }
+
+    .mobile-notif-btn {
+        width: 2.4rem;
+        height: 2.4rem;
+        padding: 0;
+        font-size: 1.35rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .desktop-theme {display: none;}
@@ -265,10 +276,10 @@
     .story-inner {flex-direction: column; gap: 2.5rem;}
     .story-text {max-width: 100%;}
     .story-text img {width: 100%; height: 10rem;}
-    .deck-section {flex-direction: column; align-items: center; gap: 2.5rem;}
+    .deck-section {flex-direction: row; align-items: center; gap: 3.5rem; justify-content: flex-start;}
     .officer-deck {margin-left: 22px; width: 200px; height: 260px;}
     .officer-deck .deck-card {width: 200px; height: 260px;}
-    .deck-info {padding-left: 0; max-width: 100%; text-align: left;}
+    .deck-info {padding-left: 0; padding-top: 0; max-width: 180px; text-align: left; flex-shrink: 1;}
     .contact-inner {grid-template-columns: 1fr;gap: 2.5rem;}
     .facts-grid {grid-template-columns: repeat(2, 1fr);}
     .workshops-grid {grid-template-columns: 1fr;}
@@ -314,14 +325,23 @@
         align-items: start;
         width: 100%;
     }
+    .overview-activity { padding: 1.25rem; }
     .combined-stats-card { position: static; }
     .combined-stats-title { width: 100%; margin-bottom: 0; }
     .combined-stat-divider { display: none; }
     .edit-row {grid-template-columns: 1fr;}
-    .profile-tabs {flex-wrap: wrap;}
+    .profile-tabs { overflow-x: auto; flex-wrap: nowrap; }
     .enrolled-table-header {display: none;}
-    .enrolled-card {grid-template-columns: 1fr; gap: 0.4rem; padding: 1rem 1.25rem; border-bottom: 1px solid rgba(255, 255, 255, 0.07);}
+    .enrolled-card {grid-template-columns: 1fr; gap: 0.25rem; padding: 0.85rem 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.07);}
+    .connection-card, .request-card { grid-template-columns: 1fr !important; gap: 0.75rem !important; padding: 1.15rem 1.25rem !important; }
     .enrolled-card h4 {white-space: normal; overflow: visible; text-overflow: clip;}
+    
+    /* Network List Mobile */
+    .network-item { gap: 0.85rem; padding: 1rem 0.25rem; }
+    .network-avatar { width: 44px; height: 44px; }
+    .network-name { font-size: 0.95rem; }
+    .network-subtitle { font-size: 0.78rem; font-weight: 500; }
+    .network-status-tag { font-size: 0.72rem; }
     .modal-content {width: 95%; max-width: 320px; padding: var(--spacing-lg);}
     .search-box {min-width: 100% !important;}
     .filter-select {min-width: 100%;}
@@ -333,6 +353,8 @@
     :root {font-size: 13px;}
     h1 {font-size: 1.5rem;}
     h2 {font-size: 1.25rem;}
+    .deck-section {flex-direction: column; align-items: flex-start; gap: 2rem;}
+    .deck-info {padding-top: 0; max-width: 100%; margin-left: 22px;}
     .hero-stats {flex-wrap: wrap; gap: 1rem;}
     .hero-stat-divider {display: none;}
     .nav-container {padding: var(--spacing-sm) var(--spacing-md);}

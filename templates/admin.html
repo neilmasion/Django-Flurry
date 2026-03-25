@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{% static 'css/admin.css' %}">
 </head>
 
-<body id="adminApp">
+<body id="adminApp" data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     {% if messages %}
     <div class="messages" style="position: fixed; top: 1rem; right: 2rem; z-index: 5000; min-width: 300px;">
         {% for message in messages %}
@@ -128,6 +128,10 @@
                         <i class="fa-solid fa-comment-dots"></i>
                         <span>Testimonials</span>
                     </button>
+                    <button class="admin-nav-item" data-section="showcases">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>Showcase</span>
+                    </button>
                 </nav>
             </div>
             <div class="admin-sidebar-bottom">
@@ -173,7 +177,7 @@
                             </div>
                             <div class="notif-dropdown-content">
                                 {% for n in all_notifications %}
-                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;border-bottom: 1px solid rgba(255,255,255,0.05);" onclick="markNotifRead(this, {{ n.id }})">
+                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;border-bottom: 1px solid rgba(255,255,255,0.05);" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
                                     <p style="color: #fff;">{{ n.message }}</p>
                                     <small style="color: rgba(255,255,255,0.5);">{{ n.created_at|timesince }} ago</small>
                                 </div>
@@ -254,7 +258,11 @@
                             {% for r_user in recent_users %}
                             <div class="recent-reg-item">
                                 <div class="reg-avatar">
-                                    {{ r_user.username.0|upper }}
+                                    {% if r_user.profile_picture %}
+                                        <img src="{{ r_user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                    {% else %}
+                                        {{ r_user.username.0|upper }}
+                                    {% endif %}
                                 </div>
                                 <div class="reg-details">
                                     <div class="reg-name">{{ r_user.username }}</div>
@@ -358,6 +366,144 @@
                         </table>
                     </div>
                 </div>
+
+                <section id="section-testimonials" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-comment-dots"></i> Testimonials Management</h2>
+                        <p>Approve or hide user-submitted testimonials.</p>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Author</th>
+                                    <th>Status</th>
+                                    <th>Quote</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in all_testimonials %}
+                                <tr>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar-sm">
+                                                {% if t.author_photo %}
+                                                    <img src="{{ t.author_photo }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                                {% else %}
+                                                    {{ t.author_initials }}
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <strong>{{ t.author_name }}</strong>
+                                                <div class="user-email">{{ t.author_role }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if t.is_approved %}
+                                        <span class="badge badge-success">Approved</span>
+                                        {% else %}
+                                        <span class="badge badge-warning">Hidden</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><div class="truncate-text" style="max-width: 300px;">"{{ t.quote }}"</div></td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <form action="{% url 'approve-testimonial' t.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" class="action-btn action-btn-edit" title="{% if t.is_approved %}Hide{% else %}Approve{% endif %}">
+                                                    <i class="fa-solid {% if t.is_approved %}fa-eye-slash{% else %}fa-check{% endif %}"></i>
+                                                </button>
+                                            </form>
+                                            {% if user.role == 'admin' or user.is_superuser %}
+                                            <form action="{% url 'delete-testimonial' t.id %}" method="POST" onsubmit="return confirm('Delete this testimonial?')">
+                                                {% csrf_token %}
+                                                <button type="submit" class="action-btn action-btn-delete" title="Delete">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="empty-row">No testimonials found.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="section-showcases" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-globe"></i> Showcase Management</h2>
+                        <p>Approve or remove user-submitted websites.</p>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Site Info</th>
+                                    <th>Submitted By</th>
+                                    <th>Status</th>
+                                    <th>URL</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for s in all_showcases %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ s.title }}</strong>
+                                        <div class="user-email">{{ s.description|truncatechars:50 }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar-sm">
+                                                {% if s.user.profile_picture %}
+                                                    <img src="{{ s.user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                                {% else %}
+                                                    {{ s.user.username|slice:":1"|upper }}
+                                                {% endif %}
+                                            </div>
+                                            <strong>{{ s.user.username }}</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if s.is_approved %}
+                                        <span class="badge badge-success">Approved</span>
+                                        {% else %}
+                                        <span class="badge badge-warning">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><a href="{{ s.website_url }}" target="_blank" class="link-primary">{{ s.website_url|truncatechars:30 }}</a></td>
+                                    <td>
+                                        <div class="table-actions">
+                                            <form action="{% url 'approve-showcase' s.id %}" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" class="action-btn action-btn-edit" title="{% if s.is_approved %}Hide{% else %}Approve{% endif %}">
+                                                    <i class="fa-solid {% if s.is_approved %}fa-eye-slash{% else %}fa-check{% endif %}"></i>
+                                                </button>
+                                            </form>
+                                            {% if user.role == 'admin' or user.is_superuser %}
+                                            <form action="{% url 'delete-showcase' s.id %}" method="POST" onsubmit="return confirm('Delete this showcase item?')">
+                                                {% csrf_token %}
+                                                <button type="submit" class="action-btn action-btn-delete" title="Delete">
+                                                    <i class="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="5" class="empty-row">No showcase submissions yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
 
                 <div class="admin-subsection" style="margin-top: 2rem;">
                     <h3><i class="fa-solid fa-user-group"></i> Members</h3>
@@ -847,26 +993,36 @@
     </script>
     <script src="{% static 'js/admin.js' %}" defer></script>
     <script>
-    function markNotifRead(el, notifId) {
-        if (el.classList.contains('notif-read')) return;
-        fetch(`/notification-read/${notifId}/`, {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => item.classList.add('notif-read'));
-                document.querySelectorAll('.notif-badge').forEach(b => {
-                    if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
-                    else { b.style.display = 'none'; }
-                });
-                document.querySelectorAll('.notif-count').forEach(c => {
-                    if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
-                    else { c.style.display = 'none'; }
-                });
-            }
-        }).catch(() => {});
+    function markNotifRead(el, notifId, link) {
+        // Immediate UI update for responsiveness
+        if (!el.classList.contains('notif-read')) {
+            document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => item.classList.add('notif-read'));
+            
+            fetch(`/notification-read/${notifId}/`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                keepalive: true
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelectorAll('.notif-badge').forEach(b => {
+                        if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
+                        else { b.style.display = 'none'; }
+                    });
+                    if (data.unread_count !== undefined) {
+                        document.querySelectorAll('.notif-count').forEach(c => {
+                            if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
+                            else { c.style.display = 'none'; }
+                        });
+                    }
+                }
+            }).catch(() => {});
+        }
+
+        if (link && link !== 'None' && link !== '') {
+            window.location.href = link;
+        }
     }
     </script>
 

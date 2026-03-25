@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
 
-<body data-email="{{ user.email|default:'' }}">
+<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     <!-- Skeleton Loading Screen -->
     <div id="skeleton-loader">
         <div class="skeleton-header skeleton-shimmer"></div>
@@ -42,6 +42,7 @@
                 <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
                 <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                 <li><a href="{% url 'events' %}" class="nav-link">Events</a></li>
+                <li><a href="{% url 'community' %}" class="nav-link">Community</a></li>
                 <li><a href="{% url 'contact' %}" class="nav-link active">Contact</a></li>
                 <li class="nav-theme desktop-theme">
                     {% if user.is_authenticated %}
@@ -61,7 +62,7 @@
                             </div>
                             <div class="notif-dropdown-content">
                                 {% for n in all_notifications %}
-                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
                                     <p>{{ n.message }}</p>
                                     <small>{{ n.created_at|timesince }} ago</small>
                                 </div>
@@ -87,7 +88,13 @@
                     {% if user.is_authenticated %}
                     <div class="user-menu" id="userMenu">
                         <button class="user-menu-btn" id="userMenuBtn">
-                            <div class="user-avatar-sm" id="userAvatarNav">{{ user.username|slice:":1"|upper }}</div>
+                            <div class="user-avatar-sm" id="userAvatarNav">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                {% else %}
+                                    {{ user.username|slice:":1"|upper }}
+                                {% endif %}
+                            </div>
                             <span id="userName">{{ user.first_name|default:user.username }}</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
@@ -110,7 +117,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <a href="{% url 'account' %}" class="btn btn-outline btn-small">Login</a>
+                    <a href="{% url 'account' %}?panel=login" class="btn btn-outline btn-small" id="loginBtn">Login</a>
                     {% endif %}
                 </li>
             </ul>
@@ -129,7 +136,7 @@
                         </div>
                         <div class="notif-dropdown-content">
                             {% for n in all_notifications %}
-                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
                                 <p>{{ n.message }}</p>
                                 <small>{{ n.created_at|timesince }} ago</small>
                             </div>
@@ -209,7 +216,13 @@
                 
                 {% if user.is_authenticated %}
                     <div class="user-greeting" style="background: rgba(13, 36, 144, 0.1); border: 1px solid rgba(13, 36, 144, 0.2); border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
-                        <div class="user-avatar-sm" style="width: 32px; height: 32px; font-size: 0.8rem;">{{ user.username|slice:":1"|upper }}</div>
+                        <div class="user-avatar-sm" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                            {% else %}
+                                {{ user.username|slice:":1"|upper }}
+                            {% endif %}
+                        </div>
                         <div style="font-size: 0.9rem; color: var(--text-primary);">
                             Hello, <strong>{{ user.first_name|default:user.username }}</strong>!
                             <p style="margin: 0.2rem 0 0; color: var(--text-secondary); font-size: 0.8rem;">We'll use your registered email ({{ user.email }}) to get back to you.</p>
@@ -392,6 +405,19 @@
             </div>
         </div>
     </section>
+    <section class="cta-section" data-animate>
+        <div class="cta-inner">
+            <div class="cta-content">
+                <h2>Ready to start your cloud journey?</h2>
+                <p>Join AWS Cloud Club - Flurry today. It's free, it's hands-on, and it might just change your career.
+                </p>
+                <div class="cta-buttons">
+                    <a href="{% url 'account' %}" class="btn btn-primary btn-large">Get Started Free</a>
+                    <a href="{% url 'events' %}" class="btn btn-outline btn-large">View All Events</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <footer class="footer">
         <div class="footer-container">
@@ -405,8 +431,9 @@
                     <h4>Navigate</h4>
                     <ul>
                         <li><a href="{% url 'index' %}">Home</a></li>
-                        <li><a href="{% url 'about' %}">About</a></li>
-                        <li><a href="{% url 'events' %}">Events</a></li>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'events' %}">Workshops</a></li>
+                        <li><a href="{% url 'community' %}">Community</a></li>
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </div>
@@ -439,28 +466,38 @@
         <i class="fa-solid fa-chevron-up"></i>
     </button>
 
-    <script type="module" src="{% static 'js/main.js' %}" defer></script>
+    <script type="module" src="{% static 'js/main.js' %}?v=1.5" defer></script>
     <script>
-    function markNotifRead(el, notifId) {
-        if (el.classList.contains('notif-read')) return;
-        fetch(`/notification-read/${notifId}/`, {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => item.classList.add('notif-read'));
-                document.querySelectorAll('.notif-badge').forEach(b => {
-                    if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
-                    else { b.style.display = 'none'; }
-                });
-                document.querySelectorAll('.notif-count').forEach(c => {
-                    if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
-                    else { c.style.display = 'none'; }
-                });
-            }
-        }).catch(() => {});
+    function markNotifRead(el, notifId, link) {
+        // Immediate UI update for responsiveness
+        if (!el.classList.contains('notif-read')) {
+            document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => item.classList.add('notif-read'));
+            
+            fetch(`/notification-read/${notifId}/`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                keepalive: true
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelectorAll('.notif-badge').forEach(b => {
+                        if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
+                        else { b.style.display = 'none'; }
+                    });
+                    if (data.unread_count !== undefined) {
+                        document.querySelectorAll('.notif-count').forEach(c => {
+                            if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
+                            else { c.style.display = 'none'; }
+                        });
+                    }
+                }
+            }).catch(() => {});
+        }
+
+        if (link && link !== 'None' && link !== '') {
+            window.location.href = link;
+        }
     }
     </script>
 </body>

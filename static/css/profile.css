@@ -168,10 +168,18 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-xl);
     padding: 0.4rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.profile-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .profile-tab {
-    flex: 1;
+    flex: 0 0 auto;
+    white-space: nowrap;
     background: none;
     border: none;
     padding: 0.65rem 1rem;
@@ -385,7 +393,7 @@
     background: rgba(255, 255, 255, 0.07);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-xl);
-    padding: 1.75rem;
+    padding: 1.5rem;
 }
 
 .overview-activity h4 {
@@ -437,6 +445,14 @@
     overflow: hidden;
 }
 
+/* Remove nested borders/background in overview activities */
+.overview-activity .enrolled-grid {
+    background: none;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+}
+
 .enrolled-empty {
     display: flex;
     flex-direction: column;
@@ -486,11 +502,11 @@
 .enrolled-card {
     display: grid;
     grid-template-columns: 1fr 110px 160px 100px;
-    gap: 1rem;
+    gap: 1.25rem;
     align-items: center;
     padding: 0.85rem 1.25rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    transition: background var(--transition-fast);
+    transition: all var(--transition-fast);
 }
 
 .enrolled-grid .enrolled-card:last-child {
@@ -502,15 +518,34 @@
 }
 
 .enrolled-card h4 {
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: #fff;
     margin: 0;
-    line-height: 1.35;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Connection Specific Cards */
+.connection-card {
+    grid-template-columns: 1fr 140px 100px;
+}
+
+.request-card {
+    grid-template-columns: 1fr 1fr;
+}
+
+.connection-card .user-avatar-sm,
+.request-card .user-avatar-sm {
+    width: 42px;
+    height: 42px;
+    border: 2px solid rgba(255,255,255,0.1);
+}
+
+
+/* Profile Connection Tabs (Glassmorphism) */
+
 
 .enrolled-card-meta {
     font-size: 0.7rem;
@@ -922,3 +957,80 @@
     color: #ffab00;
     font-size: 0.8rem;
 }
+
+/* Instagram-style Note Bubble */
+.profile-note-bubble {
+    position: absolute;
+    top: -12px;
+    left: 55px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 14px;
+    border-radius: 18px 18px 18px 4px;
+    max-width: 150px;
+    min-width: 60px;
+    z-index: 10;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: note-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: bottom left;
+}
+
+.profile-note-bubble:hover {
+    transform: scale(1.08) translateY(-3px);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.profile-note-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 8px;
+    width: 10px;
+    height: 10px;
+    background: inherit;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transform: rotate(45deg);
+    border-radius: 0 0 0 2px;
+    z-index: -1;
+}
+
+.profile-note-text {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.35;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: left;
+}
+
+@keyframes note-pop {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 1024px) {
+    .profile-note-bubble {
+        left: 50%;
+        transform: translateX(-50%) scale(1);
+        transform-origin: bottom center;
+        border-radius: 18px;
+    }
+    .profile-note-bubble:hover {
+        transform: translateX(-50%) scale(1.05);
+    }
+    .profile-note-bubble::after {
+        left: 50%;
+        margin-left: -5px;
+    }
+}

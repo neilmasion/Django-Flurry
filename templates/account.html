@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
 
-<body data-email="{{ user.email|default:'' }}">
+<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     <!-- Skeleton Loading Screen -->
     <div id="skeleton-loader">
         <div class="skeleton-header skeleton-shimmer"></div>
@@ -33,7 +33,17 @@
         <a href="{% url 'index' %}" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
         <div class="account-container">
             <div id="registerPanel" class="form-panel {% if panel == 'register' %}active{% endif %}">
-                <div class="account-header">
+                {% if messages %}
+                <div class="django-messages" style="margin-bottom: 1.5rem;">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" style="padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; text-align: center; font-size: 0.9rem; font-weight: 500; {% if message.tags == 'success' %}background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3);{% elif message.tags == 'error' %}background-color: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3);{% elif message.tags == 'warning' %}background-color: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3);{% else %}background-color: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2);{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="account-header" style="margin-bottom: 1.5rem;">
                     <h1>Get Started with Flurry</h1>
                     <p>Create your account to get started</p>
                 </div>
@@ -76,6 +86,15 @@
                             value="{{ register_form.email.value|default:'' }}">
                         {% if register_form.email.errors %}
                         <span class="error-msg" style="display:block;">{{ register_form.email.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                        <label for="id_school">School / University*</label>
+                        <input type="text" name="school" id="id_school" placeholder="E.g., University of San Carlos" required
+                            value="{{ register_form.school.value|default:'' }}" autocomplete="off">
+                        <div id="schoolAutocomplete" class="search-results-dropdown" style="display: none; width: 100% !important; max-height: 250px; overflow-y: auto; left: 0; right: 0; top: 100%; margin-top: 5px;"></div>
+                        {% if register_form.school.errors %}
+                        <span class="error-msg" style="display:block;">{{ register_form.school.errors.0 }}</span>
                         {% endif %}
                     </div>
                     <div class="form-row">
@@ -142,7 +161,17 @@
             </div>
 
             <div id="loginPanel" class="form-panel {% if panel == 'login' %}active{% endif %}">
-                <div class="account-header">
+                {% if messages %}
+                <div class="django-messages" style="margin-bottom: 1.5rem;">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" style="padding: 0.8rem; border-radius: 8px; margin-bottom: 0.5rem; text-align: center; font-size: 0.9rem; font-weight: 500; {% if message.tags == 'success' %}background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3);{% elif message.tags == 'error' %}background-color: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3);{% elif message.tags == 'warning' %}background-color: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3);{% else %}background-color: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2);{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="account-header" style="margin-bottom: 1.5rem;">
                     <h1>Welcome Back</h1>
                     <p>Log in to your Flurry account</p>
                 </div>

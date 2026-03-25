@@ -1,0 +1,740 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Showcase - Flurry</title>
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/root.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/events.css' %}">
+    <link rel="stylesheet" href="{% static 'css/query.css' %}">
+    <link rel="stylesheet" href="{% static 'css/community.css' %}">
+</head>
+
+<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
+    <canvas id="cloudCanvas"></canvas>
+    <div style="display: none;">{% csrf_token %}</div>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="{% static 'images/logo.png' %}" class="logo-icon" alt="Flurry Logo">
+                <span class="logo-text">Flurry</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+                <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
+                <li><a href="{% url 'events' %}" class="nav-link">Events</a></li>
+                <li><a href="{% url 'community' %}" class="nav-link active">Community</a></li>
+                <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+                <li class="nav-theme desktop-theme">
+                    {% if user.is_authenticated %}
+                    <div class="notif-wrapper" id="notifWrapper">
+                        <button class="nav-notif-btn" id="notifToggle" title="Notifications">
+                            <i class="fa-solid fa-bell"></i>
+                            {% if unread_notifications_count > 0 %}
+                            <span class="notif-badge">{{ unread_notifications_count }}</span>
+                            {% endif %}
+                        </button>
+                        <!-- Notification dropdown identical to index.html -->
+                        <div class="notif-dropdown" id="notifDropdown">
+                             <div class="notif-dropdown-header">
+                                <span>Notifications</span>
+                                {% if unread_notifications_count > 0 %}
+                                <span class="notif-count">{{ unread_notifications_count }} New</span>
+                                {% endif %}
+                            </div>
+                            <div class="notif-dropdown-content">
+                                {% for n in all_notifications %}
+                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
+                                    <p>{{ n.message }}</p>
+                                    <small>{{ n.created_at|timesince }} ago</small>
+                                </div>
+                                {% empty %}
+                                <div class="notif-empty">
+                                    <i class="fa-solid fa-bell-slash"></i>
+                                    <p>No new notifications</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 0.5rem;">
+                                <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: var(--primary-light); font-weight: 600;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
+                                <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <button class="btn theme-toggle" aria-label="Toggle theme">
+                        <img class="theme-icon" src="{% static 'images/theme.png' %}" alt="Theme">
+                    </button>
+                </li>
+                <li class="nav-auth">
+                    {% if user.is_authenticated %}
+                    <div class="user-menu" id="userMenu">
+                        <button class="user-menu-btn" id="userMenuBtn">
+                            <div class="user-avatar-sm" id="userAvatarNav">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                {% else %}
+                                    {{ user.username|slice:":1"|upper }}
+                                {% endif %}
+                            </div>
+                            <span id="userName">{{ user.first_name|default:user.username }}</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                             <a href="{% url 'profile' %}" class="dropdown-item">
+                                <i class="fa-solid fa-user"></i> My Profile
+                            </a>
+                            {% if user.is_staff %}
+                            <a href="{% url 'admin-dashboard' %}" class="dropdown-item">
+                                <i class="fa-solid fa-shield-halved"></i> {% if user.role == 'admin' or user.is_superuser %}Admin Dashboard{% else %}Dashboard{% endif %}
+                            </a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item dropdown-item--danger">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'account' %}?panel=login" class="btn btn-outline btn-small" id="loginBtn">Login</a>
+                    {% endif %}
+                </li>
+            </ul>
+            <div class="nav-right-controls">
+                {% if user.is_authenticated %}
+                <div class="mobile-notif-wrapper" id="mobileNotifWrapper">
+                    <button class="mobile-notif-btn" id="mobileNotifToggle" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        {% if unread_notifications_count > 0 %}
+                        <span class="notif-badge">{{ unread_notifications_count }}</span>
+                        {% endif %}
+                    </button>
+                    <div class="notif-dropdown mobile-notif-dropdown" id="mobileNotifDropdown">
+                        <div class="notif-dropdown-header">
+                            <span>Notifications</span>
+                        </div>
+                        <div class="notif-dropdown-content">
+                            {% for n in all_notifications %}
+                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
+                                <p>{{ n.message }}</p>
+                                <small>{{ n.created_at|timesince }} ago</small>
+                            </div>
+                            {% empty %}
+                            <p class="notif-empty">No new notifications</p>
+                            {% endfor %}
+                        </div>
+                        <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; gap: 0.5rem;">
+                            <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: var(--primary-light); font-weight: 600;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
+                            <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <button class="btn btn-outline mobile-theme-toggle theme-toggle" aria-label="Toggle theme">
+                    <img src="{% static 'images/theme.png' %}" alt="Theme" class="theme-icon">
+                </button>
+                <div class="hamburger">
+                    <i class="fa-solid fa-bars open-icon"></i>
+                    <i class="fa-solid fa-xmark close-icon"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="messages" style="position: fixed; top: 5rem; right: 2rem; z-index: 5000; min-width: 300px;">
+        {% for message in messages %}
+            <div class="toast-message {{ message.tags }}" style="background: rgba(13, 36, 144, 0.9); color: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); backdrop-filter: blur(8px); display: flex; align-items: center; gap: 0.75rem; animation: slideIn 0.3s ease-out;">
+                <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <header class="community-hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <span class="section-eyebrow">Showcase Your Work</span>
+                <h1>Community Showcase</h1>
+                <p>Explore projects built by Flurry members. Got a website? Share it with the community!</p>
+            </div>
+            <div class="hero-action">
+                {% if user.is_authenticated %}
+                <button class="btn btn-primary btn-large" id="openUploadModal">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Submit Your Website
+                </button>
+                {% else %}
+                <a href="{% url 'account' %}?panel=login&next={{ request.path }}" class="btn btn-primary btn-large">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login to Submit
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="showcase-grid">
+        {% for item in showcases %}
+        <article class="showcase-card" id="showcase-{{ item.id }}">
+            <div class="showcase-image-wrapper" style="position: relative; width: 100%; height: 200px;">
+                <div class="showcase-image showcase-images-container" id="slider-{{ item.id }}">
+                    {% if item.images.all %}
+                        {% for img in item.images.all %}
+                        <img src="{{ img.image.url }}" alt="{{ item.title }}" class="showcase-img-scroll">
+                        {% endfor %}
+                    {% else %}
+                    <i class="fa-solid fa-globe"></i>
+                    {% endif %}
+                </div>
+                {% if item.images.all|length > 1 %}
+                <button class="slider-nav-btn slider-prev" onclick="moveSlider('slider-{{ item.id }}', -1)">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="slider-nav-btn slider-next" onclick="moveSlider('slider-{{ item.id }}', 1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                {% endif %}
+            </div>
+            <div class="showcase-card-author">
+                <a href="{% url 'public-profile-id' user_id=item.user.id %}" class="author-avatar" title="View Profile">
+                    {% if item.user.profile_picture %}
+                        <img src="{{ item.user.profile_picture.url }}" alt="avatar">
+                    {% else %}
+                        {{ item.user.username|slice:":1"|upper }}
+                    {% endif %}
+                </a>
+                <div class="author-meta">
+                    <a href="{% url 'public-profile-id' user_id=item.user.id %}" class="author-name" title="View Profile">{{ item.user.first_name|default:item.user.username }}</a>
+                    <span class="post-time">Posted {{ item.created_at|timesince }} ago</span>
+                </div>
+                {% if item.user == request.user %}
+                <button class="card-menu-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                {% endif %}
+            </div>
+            <div class="showcase-content">
+                <p class="showcase-description">{{ item.description|truncatewords:20 }}</p>
+            </div>
+            <div class="showcase-card-footer">
+                <div class="card-stats">
+                    <span class="engagement-btn like-btn {% if request.user in item.likes.all %}active{% endif %}" 
+                          onclick="{% if user.is_authenticated %}toggleEngagement('like', {{ item.id }}, this){% else %}window.location.href='{% url 'account' %}?panel=register&next={{ request.path }}'{% endif %}" 
+                          title="Like">
+                        <i class="{% if request.user in item.likes.all %}fa-solid{% else %}fa-regular{% endif %} fa-heart"></i> 
+                        <span class="count">{{ item.total_likes }}</span>
+                    </span>
+                    <span class="engagement-btn comment-btn" 
+                          onclick="{% if user.is_authenticated %}toggleComments({{ item.id }}){% else %}window.location.href='{% url 'account' %}?panel=register&next={{ request.path }}'{% endif %}"
+                          title="Comments">
+                        <i class="fa-regular fa-comment"></i> <span class="comment-count-{{ item.id }}">{{ item.comments.count }}</span>
+                    </span>
+                </div>
+                <div class="footer-actions">
+                    <button class="engagement-btn save-btn {% if request.user in item.saves.all %}active{% endif %}" 
+                            onclick="{% if user.is_authenticated %}toggleEngagement('save', {{ item.id }}, this){% else %}window.location.href='{% url 'account' %}?panel=register&next={{ request.path }}'{% endif %}" 
+                            title="Save">
+                        <i class="{% if request.user in item.saves.all %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark"></i>
+                    </button>
+                    <a href="{% if user.is_authenticated %}{{ item.website_url }}{% else %}#{% endif %}" 
+                       {% if user.is_authenticated %}target="_blank"{% else %}onclick="window.location.href='{% url 'account' %}?panel=register&next={{ request.path }}'; return false;"{% endif %} 
+                       class="visitor-btn">
+                        Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="comments-section" id="comments-{{ item.id }}" style="display: none;">
+                <div class="comments-header">
+                    <h3>Comments <span class="count">{{ item.comments.count }}</span></h3>
+                </div>
+                <div class="comments-list" id="comments-list-{{ item.id }}">
+                    {% for comment in item.comments.all %}
+                        {% if not comment.parent %}
+                            <div class="comment {% if comment.user == request.user %}comment--self{% endif %}" id="comment-{{ comment.id }}">
+                                <a href="{% url 'public-profile-id' user_id=comment.user.id %}" class="comment-avatar" title="View Profile">
+                                    {% if comment.user.profile_picture %}
+                                        <img src="{{ comment.user.profile_picture.url }}" alt="avatar">
+                                    {% else %}
+                                        {{ comment.user.username|slice:":1"|upper }}
+                                    {% endif %}
+                                </a>
+                                <div class="comment-body">
+                                    <div class="comment-header">
+                                        <a href="{% url 'public-profile-id' user_id=comment.user.id %}" class="comment-author" title="View Profile">{{ comment.user.first_name|default:comment.user.username }}</a>
+                                        {% if comment.user.role == 'admin' or comment.user.is_superuser %}
+                                            <span class="comment-role admin">(Admin)</span>
+                                        {% elif comment.user.role == 'officer' %}
+                                            <span class="comment-role staff">(Staff)</span>
+                                        {% endif %}
+                                        <span class="comment-date">{{ comment.created_at|timesince }} ago</span>
+                                    </div>
+                                    <div class="comment-content">{{ comment.content }}</div>
+                                    <div class="comment-actions">
+                                        {% if comment.user != request.user %}
+                                            <button class="reply-btn" onclick="showReplyForm({{ comment.id }})">Reply</button>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="replies-list" id="replies-{{ comment.id }}">
+                                        {% for reply in comment.replies.all %}
+                                            <div class="reply {% if reply.user == request.user %}comment--self{% endif %}">
+                                                <div class="comment-avatar sm">
+                                                    {% if reply.user.profile_picture %}
+                                                        <img src="{{ reply.user.profile_picture.url }}" alt="avatar">
+                                                    {% else %}
+                                                        {{ reply.user.username|slice:":1"|upper }}
+                                                    {% endif %}
+                                                </div>
+                                                <div class="comment-body">
+                                                    <div class="comment-header">
+                                                        <span class="comment-author">{{ reply.user.first_name|default:reply.user.username }}</span>
+                                                        {% if reply.user.role == 'admin' or reply.user.is_superuser %}
+                                                            <span class="comment-role admin">(Admin)</span>
+                                                        {% elif reply.user.role == 'officer' %}
+                                                            <span class="comment-role staff">(Staff)</span>
+                                                        {% endif %}
+                                                        <span class="comment-date">{{ reply.created_at|timesince }} ago</span>
+                                                    </div>
+                                                    <div class="comment-content">{{ reply.content }}</div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                <!-- Reply Form (Hidden) -->
+                                <div class="reply-form" id="reply-form-{{ comment.id }}" style="display: none;">
+                                    <textarea placeholder="Write a reply..." id="reply-text-{{ comment.id }}" oninput="autoResize(this)"></textarea>
+                                    <div class="form-actions">
+                                        <button class="cancel-reply" onclick="showReplyForm({{ comment.id }})">Cancel</button>
+                                        <button class="submit-reply" onclick="submitComment({{ item.id }}, {{ comment.id }})">Post</button>
+                                    </div>
+                                </div>
+                                </div> <!-- Close comment-body -->
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <!-- New Comment Form -->
+                <div class="add-comment-form">
+                    <textarea 
+                        placeholder="Add a comment..." 
+                        id="new-comment-text-{{ item.id }}"
+                        oninput="autoResize(this)"
+                    ></textarea>
+                    <button class="submit-comment" onclick="submitComment({{ item.id }})">Post</button>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <div style="grid-column: 1/-1; text-align: center; padding: 6rem; background: rgba(255, 255, 255, 0.05); border-radius: 1rem; border: 1px dashed rgba(255, 255, 255, 0.15); margin-top: 2rem; opacity: 0.6;">
+            <i class="fa-solid fa-folder-open" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></i>
+            <p style="margin: 0;">No websites showcased yet. Be the first to submit!</p>
+        </div>
+        {% endfor %}
+    </main>
+
+    {% if user.is_authenticated %}
+    <!-- Upload Modal Redesign -->
+    <div class="admin-modal-overlay" id="uploadModal">
+        <div class="admin-modal">
+            <button class="admin-modal-close" id="closeUploadModal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="admin-modal-header">
+                <h2>
+                    <i class="fa-solid fa-cloud-arrow-up" style="color: var(--accent-color);"></i>
+                    Submit Your Project
+                </h2>
+                <p>Fill out the details below to showcase your website on Flurry.</p>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="modal-row">
+                        <div class="edit-group">
+                            <label for="id_title">Website Title</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="edit-group">
+                            <label for="id_website_url">Website URL</label>
+                            {{ form.website_url }}
+                        </div>
+                    </div>
+                    <div class="edit-group">
+                        <label for="id_description">Description</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="edit-group">
+                        <label for="id_images" style="display:flex; align-items:center; gap:0.5rem;">
+                            Website Screenshots
+                            <span style="font-size:0.7rem; font-weight:400; color:rgba(255,255,255,0.35);">JPG, PNG</span>
+                        </label>
+                        {{ form.images }}
+                        <div id="imagePreviewContainer" class="image-preview-container"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal-cancel" id="cancelUpload">Cancel</button>
+                    <button type="submit" class="btn-modal-submit">Add to Showcase</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+    <section class="cta-section" data-animate>
+        <div class="cta-inner">
+            <div class="cta-content">
+                <h2>Ready to start your cloud journey?</h2>
+                <p>Join AWS Cloud Club - Flurry today. It's free, it's hands-on, and it might just change your career.
+                </p>
+                <div class="cta-buttons">
+                    <a href="{% url 'account' %}" class="btn btn-primary btn-large">Get Started Free</a>
+                    <a href="{% url 'events' %}" class="btn btn-outline btn-large">View All Events</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <!-- Footer identical to index.html -->
+        <div class="footer-container">
+            <div class="footer-description">
+                <h3>Flurry</h3>
+                <p>An official AWS Cloud Club chapter dedicated to empowering students through cloud education, community, and hands-on learning.</p>
+            </div>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Navigate</h4>
+                    <ul>
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="{% url 'about' %}">About Us</a></li>
+                        <li><a href="{% url 'events' %}">Workshops</a></li>
+                        <li><a href="{% url 'community' %}">Community</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                    </ul>
+                </div>
+                 <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">AWS Free Tier</a></li>
+                        <li><a href="#">Cert Roadmap</a></li>
+                        <li><a href="#">Study Materials</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="mailto:awscloudclub.cec@gmail.com">Email</a></li>
+                        <li><a href="https://discord.gg/QehGmeT3" target="_blank">Discord</a></li>
+                        <li><a href="https://web.facebook.com/profile.php?id=61583698383385" target="_blank">Facebook</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Flurry. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="{% static 'js/main.js' %}?v=1.5" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const openModalBtn = document.getElementById('openUploadModal');
+            const closeModalBtn = document.getElementById('closeUploadModal');
+            const cancelBtn = document.getElementById('cancelUpload');
+            const modal = document.getElementById('uploadModal');
+
+            const openModal = () => {
+                if (modal) {
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            };
+
+            const closeModal = () => {
+                if (modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            };
+
+            if (openModalBtn) openModalBtn.addEventListener('click', openModal);
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+            }
+
+            // Multiple images upload preview logic
+            const imagesInput = document.getElementById('id_images');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            let selectedFiles = [];
+
+            if (imagesInput && previewContainer) {
+                imagesInput.addEventListener('change', function(e) {
+                    const files = Array.from(e.target.files);
+                    files.forEach(file => {
+                        selectedFiles.push(file);
+                    });
+                    updateImagePreviews();
+                });
+            }
+
+            function updateImagePreviews() {
+                previewContainer.innerHTML = '';
+                const dt = new DataTransfer();
+                
+                // Track loaded images to ensure they are all processed
+                let loadedCount = 0;
+                
+                if (selectedFiles.length === 0) {
+                    imagesInput.files = dt.files;
+                    return;
+                }
+
+                selectedFiles.forEach((file, index) => {
+                    dt.items.add(file);
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'image-preview-item';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-img-btn';
+                        removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                        removeBtn.type = 'button';
+                        removeBtn.onclick = function() {
+                            selectedFiles.splice(index, 1);
+                            updateImagePreviews();
+                        };
+                        
+                        div.appendChild(img);
+                        div.appendChild(removeBtn);
+                        previewContainer.appendChild(div);
+                        
+                        loadedCount++;
+                    }
+                    reader.readAsDataURL(file);
+                });
+                
+                imagesInput.files = dt.files;
+            }
+
+            // Toast messages auto-hide
+            setTimeout(() => {
+                const msgs = document.querySelector('.messages');
+                if (msgs) {
+                    msgs.style.transition = 'opacity 0.5s ease';
+                    msgs.style.opacity = '0';
+                    setTimeout(() => msgs.remove(), 500);
+                }
+            }, 4000);
+        });
+
+        function moveSlider(containerId, direction) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const scrollAmount = container.clientWidth;
+            container.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        const CSRF_TOKEN = '{{ csrf_token }}';
+        function getCsrfToken() {
+            return CSRF_TOKEN;
+        }
+
+        async function toggleEngagement(type, id, element) {
+            const url = type === 'like' ? `/like-showcase/${id}/` : `/save-showcase/${id}/`;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCsrfToken(),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                if (response.status === 403) {
+                    window.location.href = "{% url 'account' %}?panel=register&next={{ request.path }}";
+                    return;
+                }
+
+                const data = await response.json();
+                
+                if (type === 'like') {
+                    const icon = element.querySelector('i');
+                    const countSpan = element.querySelector('.count');
+                    icon.className = data.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                    countSpan.innerText = data.count;
+                    element.classList.toggle('active', data.liked);
+                } else {
+                    const icon = element.querySelector('i');
+                    icon.className = data.saved ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark';
+                    element.classList.toggle('active', data.saved);
+                }
+            } catch (error) {
+                console.error('Error toggling engagement:', error);
+            }
+        }
+
+        function toggleComments(showcaseId) {
+            const section = document.getElementById(`comments-${showcaseId}`);
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showReplyForm(commentId) {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function submitComment(showcaseId, parentId = null) {
+            const textarea = parentId ? document.getElementById(`reply-text-${parentId}`) : document.getElementById(`new-comment-text-${showcaseId}`);
+            const content = textarea.value.trim();
+            if (!content) return;
+
+            const formData = new FormData();
+            formData.append('content', content);
+            formData.append('csrfmiddlewaretoken', getCsrfToken());
+            if (parentId) formData.append('parent_id', parentId);
+
+            try {
+                const response = await fetch(`/add-comment/${showcaseId}/`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (response.status === 403) {
+                    window.location.href = "{% url 'account' %}?panel=register&next={{ request.path }}";
+                    return;
+                }
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    textarea.value = '';
+                    if (parentId) {
+                        showReplyForm(parentId);
+                        renderComment(showcaseId, data, true);
+                    } else {
+                        renderComment(showcaseId, data, false);
+                    }
+                    // Update comment count
+                    const countSpan = document.querySelector(`.comment-count-${showcaseId}`);
+                    countSpan.innerText = parseInt(countSpan.innerText) + 1;
+                    
+                    // Simple feedback
+                    console.log('Comment posted successfully');
+                } else {
+                    alert('Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error submitting comment:', error);
+                alert('Connection error. Please try again.');
+            }
+        }
+
+        function renderComment(showcaseId, data, isReply) {
+            const container = isReply ? document.getElementById(`replies-${data.parent_id}`) : document.getElementById(`comments-list-${showcaseId}`);
+            
+            const roleHtml = data.user_role === 'admin' ? '<span class="comment-role admin">(Admin)</span>' : 
+                           (data.user_role === 'officer' ? '<span class="comment-role staff">(Staff)</span>' : '');
+
+            const avatarHtml = data.user_photo ? `<img src="${data.user_photo}" alt="avatar">` : data.user.charAt(0).toUpperCase();
+
+            const commentHtml = `
+                <div class="${isReply ? 'reply' : 'comment'} ${data.is_self ? 'comment--self' : ''}" id="comment-${data.id}">
+                    <div class="comment-avatar ${isReply ? 'sm' : ''}">
+                        ${avatarHtml}
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-header">
+                            <span class="comment-author">${data.user}</span>
+                            ${roleHtml}
+                            <span class="comment-date">${data.created_at}</span>
+                        </div>
+                        <div class="comment-content">${data.content}</div>
+                        ${!isReply && !data.is_self ? `
+                            <div class="comment-actions">
+                                <button class="reply-btn" onclick="showReplyForm(${data.id})">Reply</button>
+                            </div>
+                            <div class="replies-list" id="replies-${data.id}"></div>
+                            <div class="reply-form" id="reply-form-${data.id}" style="display: none;">
+                                <textarea placeholder="Write a reply..." id="reply-text-${data.id}" oninput="autoResize(this)"></textarea>
+                                <div class="form-actions">
+                                    <button class="cancel-reply" onclick="showReplyForm(${data.id})">Cancel</button>
+                                    <button class="submit-reply" onclick="submitComment(${showcaseId}, ${data.id})">Post</button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', commentHtml);
+        }
+
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+    function markNotifRead(el, notifId, link) {
+        // Immediate UI update for responsiveness
+        if (!el.classList.contains('notif-read')) {
+            document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => {
+                item.classList.add('notif-read');
+            });
+            
+            fetch(`/notification-read/${notifId}/`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                keepalive: true
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelectorAll('.notif-badge').forEach(b => {
+                        if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
+                        else { b.style.display = 'none'; }
+                    });
+                    if (data.unread_count !== undefined) {
+                        document.querySelectorAll('.notif-count').forEach(c => {
+                            if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
+                            else { c.style.display = 'none'; }
+                        });
+                    }
+                }
+            })
+            .catch(() => {});
+        }
+
+        if (link && link !== 'None' && link !== '') {
+            window.location.href = link;
+        }
+    }
+    </script>
+</body>
+
+</html>

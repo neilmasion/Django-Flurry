@@ -783,34 +783,4 @@
     background: #fff;
     transform: scale(1.3);
 }
-
-.cta-section {
-    padding: 3rem 9rem;
-    position: relative;
-    z-index: 1;
-}
-
-.cta-inner {
-    border-radius: 1.25rem;
-    text-align: center;
-}
-
-.cta-content h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 0.75rem;
-}
-
-.cta-content p {
-    font-size: 0.88rem;
-    color: rgba(255, 255, 255, 0.65);
-    margin-bottom: 2rem;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
+

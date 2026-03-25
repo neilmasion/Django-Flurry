@@ -1,0 +1,1000 @@
+/* =============================================
+   Community Page & Showcase Modal Styles
+   ============================================= */
+
+/* --- Hero --- */
+.community-hero {
+    padding: 8rem 7rem 0;
+    background: transparent;
+}
+
+
+
+.hero-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    text-align: left;
+}
+
+.hero-content {
+    flex: 1;
+}
+
+.hero-content h1 {
+    margin: 0.5rem 0 1rem;
+    color: #fff;
+}
+
+.hero-content p {
+    max-width: 600px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.6;
+}
+
+.hero-action {
+    flex-shrink: 0;
+}
+
+
+
+/* --- Showcase Grid & Cards --- */
+.showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.25rem;
+    padding: 0 7rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+
+.showcase-card {
+    background: rgba(22, 22, 22, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.showcase-card:hover {
+    transform: translateY(-12px);
+    border-color: var(--accent-color);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+    background: rgba(30, 30, 30, 0.6);
+}
+
+.showcase-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 0.75rem; /* Rounded corners for the image wrapper */
+}
+
+.showcase-image-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.6));
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.showcase-card:hover .showcase-image-wrapper::after {
+    opacity: 0.4;
+}
+
+.showcase-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(45deg, var(--primary-dark), var(--accent-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.showcase-image i {
+    transition: transform 0.5s ease;
+}
+
+.showcase-card:hover .showcase-image i {
+    transform: rotate(15deg) scale(1.2);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* --- Showcase Card Structure Redesign --- */
+.showcase-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    padding: 0.5rem; /* Internal padding for the inset look */
+}
+
+.showcase-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.showcase-card-author {
+    padding: 1rem 0.5rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+}
+
+.author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.author-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.author-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+}
+
+.post-time {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 500;
+}
+
+.author-avatar {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-menu-btn {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.card-menu-btn:hover {
+    color: #fff;
+}
+
+.showcase-content {
+    padding: 0 0.5rem 0.75rem;
+    flex-grow: 1;
+}
+
+.showcase-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.4rem;
+}
+
+.showcase-description {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.showcase-card-footer {
+    padding: 0.75rem 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+}
+
+.card-stats {
+    display: flex;
+    gap: 0.8rem;
+    color: rgba(255, 255, 255, 0.55); /* Increased opacity for better visibility */
+    font-size: 0.8rem;
+}
+
+.card-stats span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.3s;
+}
+
+.card-stats span:hover, .engagement-btn:hover {
+    color: var(--accent-color);
+}
+
+.like-btn.active i {
+    color: #ff4757;
+    filter: drop-shadow(0 0 5px rgba(255, 71, 87, 0.3));
+}
+
+.save-btn.active i {
+    color: var(--accent-color);
+}
+
+.engagement-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* --- Comments Section Styling --- */
+.comments-section {
+    padding: 0.75rem 1.25rem 1.25rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom-left-radius: 1.25rem;
+    border-bottom-right-radius: 1.25rem;
+}
+
+.comments-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    scrollbar-width: thin;
+    padding-right: 0.5rem;
+}
+
+.comments-header {
+    margin-bottom: 0.75rem;
+}
+
+.comments-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.comments-header .count {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 400;
+}
+
+.comment, .reply {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.comment--self {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1rem;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.comment--self::before {
+    content: 'YOU';
+    position: absolute;
+    top: -8px;
+    right: 1.5rem;
+    background: var(--accent-color);
+    color: #000;
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.comment-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--primary-light);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.comment-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.comment-avatar.sm {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+}
+
+.comment-body {
+    flex: 1;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.comment-author {
+    font-weight: 700;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.comment-role {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.1rem 0.4rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.comment-role.admin {
+    color: var(--accent-color);
+    background: rgba(255, 222, 102, 0.1);
+}
+
+.comment-role.staff {
+    color: var(--primary-light);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.comment-date {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.comment-content {
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.92rem;
+}
+
+.comment-actions {
+    margin-top: 0.5rem;
+}
+
+.reply-btn {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.reply-btn:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.replies-list {
+    margin-top: 1rem;
+    padding-left: 0; /* Align with parent avatar if preferred, or keep inset */
+}
+
+.reply {
+    margin-bottom: 1rem;
+}
+
+.reply:last-child {
+    margin-bottom: 0;
+}
+
+/* Forms */
+.add-comment-form {
+    position: relative;
+    margin-top: 0;
+}
+
+.add-comment-form textarea, .reply-form textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    padding-bottom: 3.5rem; /* Space for the inset button */
+    color: #fff;
+    font-size: 0.95rem;
+    resize: none;
+    min-height: 100px;
+    max-height: 300px;
+    outline: none;
+    transition: all 0.3s ease;
+    display: block;
+    overflow: hidden;
+}
+
+.add-comment-form textarea:focus, .reply-form textarea:focus {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.submit-comment {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.submit-reply {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-comment:hover, .submit-reply:hover {
+    background: #fff;
+    color: #000;
+    transform: translateY(-1px);
+}
+
+.reply-form {
+    position: relative;
+    margin-top: 1rem;
+}
+
+.reply-form textarea {
+    padding-bottom: 3.5rem;
+    min-height: 80px;
+}
+
+.reply-form .form-actions {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 11;
+}
+
+.cancel-reply {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.cancel-reply:hover {
+    color: #fff;
+}
+
+.footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.save-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6); /* Increased opacity */
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.save-btn:hover {
+    color: var(--primary-light);
+    transform: scale(1.1);
+}
+
+.visitor-btn {
+    padding: 0.55rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.08); /* Minimal background */
+    color: #ffffff; /* Solid white */
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.visitor-btn:hover {
+    background: #ffffff; /* Turn white on hover */
+    color: #000000; /* Text turns black for perfect contrast */
+    border-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: none; /* Removed the glow */
+}
+
+/* --- Upload Section --- */
+.upload-section {
+    padding: 4rem var(--site-padding);
+    text-align: center;
+}
+
+.upload-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, rgba(13, 36, 144, 0.3), rgba(67, 97, 238, 0.1));
+    border: 1px dashed var(--primary-light);
+    border-radius: 2rem;
+    padding: 3rem;
+    backdrop-filter: blur(10px);
+}
+
+/* --- Modal Overlay --- */
+.admin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    overflow-y: auto;
+}
+
+.admin-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+/* --- Modal Box --- */
+.admin-modal {
+    background: rgba(18, 18, 18, 0.95);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    padding: 3rem;
+    width: 95%;
+    max-width: 900px;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+    position: relative;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.admin-modal-overlay.active .admin-modal {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* --- Modal Header --- */
+.admin-modal-header {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.75rem;
+}
+
+.admin-modal-header h2 {
+    color: #fff;
+    font-size: 1.75rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.admin-modal-header p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+/* --- Modal Close Button --- */
+.admin-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    z-index: 10;
+}
+
+.admin-modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+/* --- Modal Body & Form Layout --- */
+.modal-body {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.modal-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .modal-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+.edit-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.edit-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    display: block;
+}
+
+/* High-specificity rule to override main.css for ALL input types inside the modal */
+.admin-modal .edit-group input[type="text"],
+.admin-modal .edit-group input[type="url"],
+.admin-modal .edit-group input[type="email"],
+.admin-modal .edit-group input[type="tel"],
+.admin-modal .edit-group input[type="search"],
+.admin-modal .edit-group input[type="password"],
+.admin-modal .edit-group textarea {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+    height: auto;
+    line-height: 1.5;
+}
+
+.admin-modal .edit-group input:hover,
+.admin-modal .edit-group textarea:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.admin-modal .edit-group input:focus,
+.admin-modal .edit-group textarea:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(41, 180, 246, 0.15);
+    outline: none;
+}
+
+.admin-modal .edit-group input[type="file"] {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+    border-radius: 1rem;
+    height: auto;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.admin-modal .edit-group input[type="file"]:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent-color);
+}
+
+.admin-modal .edit-group input[type="file"]::-webkit-file-upload-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    margin-right: 1.5rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+}
+
+.admin-modal .edit-group input[type="file"]::-webkit-file-upload-button:hover {
+    background: var(--primary-light);
+}
+
+/* --- Modal Footer & Buttons --- */
+.modal-footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.btn-modal-submit {
+    background: var(--primary-light);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 1rem;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 20px rgba(67, 97, 238, 0.2);
+}
+
+.btn-modal-submit:hover {
+    background: #5a7fff;
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(67, 97, 238, 0.4);
+}
+
+.btn-modal-cancel {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-modal-cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.btn-modal-cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Multiple Images Upload Preview --- */
+.image-preview-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.image-preview-item {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-img-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.remove-img-btn:hover {
+    background: #ef4444;
+}
+
+/* --- Showcase Multiple Images Horizontal Scroll --- */
+.showcase-images-container {
+    display: flex;
+    justify-content: flex-start; /* Ensure images start from the left for correct scrolling */
+    overflow-x: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.showcase-images-container::-webkit-scrollbar {
+    display: none;
+}
+
+.slider-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.showcase-image-wrapper:hover .slider-nav-btn {
+    opacity: 1;
+}
+
+.slider-nav-btn:hover {
+    background: var(--accent-color);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-prev { left: 1rem; }
+.slider-next { right: 1rem; }
+
+.showcase-img-scroll {
+    min-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    scroll-snap-align: center;
+}
+
+/* =============================================
+   Responsive Adjustments (Media Queries)
+   ============================================= */
+
+@media (max-width: 1200px) {
+    .community-hero { padding: 6rem 4rem 0; }
+    .showcase-grid { padding: 0 4rem 4rem; }
+}
+
+@media (max-width: 992px) {
+    .hero-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+    .hero-content p { margin: 0 auto; }
+    .hero-content h1 { font-size: 2.5rem; }
+}
+
+@media (max-width: 768px) {
+    .community-hero { padding: 4rem 2rem 0; }
+    .showcase-grid { 
+        padding: 0 2rem 3rem;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .community-hero { padding: 3rem 1.5rem 0; }
+    .showcase-grid { 
+        padding: 0 0 2rem;
+        grid-template-columns: 1fr;
+        margin-top: 1.5rem;
+    }
+    /* Reset all card hover/styling for mobile */
+    .showcase-card {
+        background: transparent !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 0 1.25rem !important;
+        transform: none !important;
+        transition: none !important;
+    }
+    .showcase-card:hover {
+        transform: none !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .showcase-image-wrapper {
+        border-radius: 0 !important;
+    }
+    .showcase-image i, .showcase-card:hover .showcase-image i {
+        transform: none !important;
+        color: rgba(255, 255, 255, 0.2) !important;
+    }
+    .showcase-card:hover .showcase-image-wrapper::after {
+        opacity: 1 !important;
+    }
+}

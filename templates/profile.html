@@ -14,7 +14,24 @@
     <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
 
-<body data-username="{{ user.username }}" data-first-name="{{ user.first_name }}" data-last-name="{{ user.last_name }}" data-email="{{ user.email }}" data-course="{{ user.course|default:'' }}" data-year="{{ user.year_level|default:'' }}" data-authenticated="true">
+<body data-username="{{ user.username }}" data-first-name="{{ user.first_name }}" data-last-name="{{ user.last_name }}" data-email="{{ user.email }}" data-course="{{ user.course|default:'' }}" data-year="{{ user.year_level|default:'' }}" data-authenticated="true" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
+    <!-- Save Photo Confirmation Modal -->
+    <div class="remove-photo-modal" id="savePhotoModal" style="display: none;">
+        <div class="remove-photo-dialog">
+            <div class="remove-photo-icon" style="background: rgba(34, 197, 94, 0.15); border-color: rgba(34, 197, 94, 0.3); color: #4ade80;">
+                <i class="fa-solid fa-camera"></i>
+            </div>
+            <h4>Save new profile photo?</h4>
+            <p>Would you like to save this photo as your new profile picture?</p>
+            <div class="profile-avatar" id="savePhotoPreview" style="margin: 0.5rem 0 1rem; width: 100px; height: 100px;"></div>
+            <div class="remove-photo-actions">
+                <button class="btn btn-outline" id="savePhotoCancel">Cancel</button>
+                <button class="btn btn-primary" id="savePhotoConfirm">Yes, Save Photo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Photo Confirmation Modal -->
     <!-- Skeleton Loading Screen -->
     <div id="skeleton-loader">
         <div class="skeleton-header skeleton-shimmer"></div>
@@ -41,6 +58,7 @@
                 <li><a href="{% url 'index' %}" class="nav-link">Home</a></li>
                 <li><a href="{% url 'about' %}" class="nav-link">About</a></li>
                 <li><a href="{% url 'events' %}" class="nav-link">Events</a></li>
+                <li><a href="{% url 'community' %}" class="nav-link">Community</a></li>
                 <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
                 <li class="nav-theme desktop-theme">
                     {% if user.is_authenticated %}
@@ -60,7 +78,7 @@
                             </div>
                             <div class="notif-dropdown-content">
                                 {% for n in all_notifications %}
-                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
                                     <p>{{ n.message }}</p>
                                     <small>{{ n.created_at|timesince }} ago</small>
                                 </div>
@@ -86,7 +104,13 @@
                     {% if user.is_authenticated %}
                     <div class="user-menu" id="userMenu">
                         <button class="user-menu-btn" id="userMenuBtn">
-                            <div class="user-avatar-sm" id="userAvatarNav">{{ user.username|slice:":1"|upper }}</div>
+                            <div class="user-avatar-sm" id="userAvatarNav">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                {% else %}
+                                    {{ user.username|slice:":1"|upper }}
+                                {% endif %}
+                            </div>
                             <span id="userName">{{ user.first_name|default:user.username }}</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
@@ -128,7 +152,7 @@
                         </div>
                         <div class="notif-dropdown-content">
                             {% for n in all_notifications %}
-                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, {{ n.id }})">
+                            <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
                                 <p>{{ n.message }}</p>
                                 <small>{{ n.created_at|timesince }} ago</small>
                             </div>
@@ -176,7 +200,17 @@
     <div class="profile-page">
         <aside class="profile-sidebar">
             <div class="profile-avatar-wrap">
-                <div class="profile-avatar" id="profileAvatar">{{ user.username|slice:":1"|upper }}</div>
+                <!-- Instagram Style Note Bubble -->
+                <div class="profile-note-bubble" id="profileNoteBubble" title="Click to update bio">
+                    <p class="profile-note-text" id="profileNoteText">{{ user.bio|default:"Share a thought..." }}</p>
+                </div>
+                <div class="profile-avatar" id="profileAvatar">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="Profile photo">
+                    {% else %}
+                        {{ user.username|slice:":1"|upper }}
+                    {% endif %}
+                </div>
                 <div class="profile-avatar-ring"></div>
                 <button type="button" class="avatar-upload-btn" id="avatarActionBtn" title="Change photo">
                     <i class="fa-solid fa-camera" id="avatarActionIcon"></i>
@@ -206,6 +240,10 @@
                     <span id="profileEmail">{{ user.email }}</span>
                 </div>
                 <div class="profile-meta-item">
+                    <i class="fa-solid fa-school"></i>
+                    <span id="profileSchool">{{ user.school|default:"Not specified" }}</span>
+                </div>
+                <div class="profile-meta-item">
                     <i class="fa-solid fa-graduation-cap"></i>
                     <span id="profileCourse">{{ user.get_course_display }}</span>
                 </div>
@@ -228,7 +266,10 @@
                     <i class="fa-solid fa-chart-simple"></i> Overview
                 </button>
                 <button class="profile-tab" data-tab="workshops">
-                    <i class="fa-solid fa-book-open"></i> Workshops
+                    <i class="fa-solid fa-flask"></i> Workshops
+                </button>
+                <button class="profile-tab" data-tab="connections">
+                    <i class="fa-solid fa-users"></i> Connections
                 </button>
                 <button class="profile-tab" data-tab="edit">
                     <i class="fa-solid fa-pen-to-square"></i> Edit Profile
@@ -242,11 +283,17 @@
                 <div class="overview-sidebar-layout">
                     <div class="overview-welcome">
                         <div class="welcome-left">
-                            <div class="welcome-avatar" id="welcomeAvatar">{{ user.username|slice:":1"|upper }}</div>
+                            <div class="welcome-avatar" id="welcomeAvatar">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" alt="Profile photo">
+                                {% else %}
+                                    {{ user.username|slice:":1"|upper }}
+                                {% endif %}
+                            </div>
                             <div class="welcome-text">
                                 <span class="section-eyebrow">Welcome back</span>
                                 <h3 id="welcomeName">{{ user.first_name }}</h3>
-                                <p class="welcome-bio" id="welcomeBio">Ready to learn more about the cloud today?</p>
+                                <p class="welcome-bio" id="welcomeBio">{{ user.bio|default:"Ready to learn more about the cloud today?" }}</p>
                             </div>
                         </div>
                         <div class="welcome-art">
@@ -255,11 +302,61 @@
                     </div>
 
                     <div class="overview-bottom">
-                        <div class="overview-activity">
-                            <h4>Recent Activity</h4>
-                            <div class="activity-empty" id="activityEmpty">
-                                <i class="fa-solid fa-inbox"></i>
-                                <p>No activity yet. Enroll in a workshop to get started!</p>
+                        <div class="overview-left" style="display: flex; flex-direction: column; gap: 1.25rem; min-width: 0;">
+                            <div class="overview-activity">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                                    <h4 style="margin:0;"><i class="fa-solid fa-user-group" style="font-size: 0.85rem; color: var(--primary-light);"></i> My Network</h4>
+                                    <button class="profile-tab-link" onclick="document.querySelector('[data-tab=connections]').click()" style="background: none; border: none; color: var(--primary-light); cursor: pointer; font-size: 0.72rem; font-weight: 600;">View All</button>
+                                </div>
+                                <div class="connections-summary" style="display: flex; align-items: center; padding-left: 10px;">
+                                    {% for friend in friends|slice:":6" %}
+                                        <a href="{% url 'public-profile-id' user_id=friend.id %}" class="connection-avatar-mini" title="{{ friend.first_name }} {{ friend.last_name }}" 
+                                           style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #000; overflow: hidden; margin-left: -10px; z-index: {{ forloop.revcounter }}; transition: transform 0.2s; display: block; background: #222;">
+                                            {% if friend.profile_picture %}
+                                                <img src="{{ friend.profile_picture.url }}" style="width:100%; height:100%; object-fit:cover;">
+                                            {% else %}
+                                                <div style="width:100%; height:100%; background: var(--border-color); display:flex; align-items:center; justify-content:center; font-size:0.8rem; color: white;">{{ friend.username|slice:":1"|upper }}</div>
+                                            {% endif %}
+                                        </a>
+                                    {% empty %}
+                                        <div class="activity-empty" style="padding: 0; text-align: left; background: none; border: none;">
+                                            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0;">No connections yet. Connect with others in the community!</p>
+                                        </div>
+                                    {% endfor %}
+                                    {% if friends|length > 6 %}
+                                        <div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid #000; background: var(--border-color); display:flex; align-items:center; justify-content:center; font-size:0.75rem; margin-left: -10px; z-index: 0; color: white; font-weight: 600;">+{{ friends|length|add:"-6" }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="overview-activity">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                                    <h4 style="margin:0;"><i class="fa-solid fa-bookmark" style="font-size: 0.85rem; color: var(--primary-light);"></i> Bookmarks</h4>
+                                </div>
+                                <div class="bookmarks-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    {% for item in saved_showcases %}
+                                        <div class="bookmark-item" style="display: flex; align-items: center; gap: 0.85rem; padding: 0.85rem; background: rgba(255, 255, 255, 0.04); border-radius: 0.6rem; border: 1px solid rgba(255, 255, 255, 0.08); transition: all 0.2s;">
+                                            <div style="width: 48px; height: 48px; border-radius: 0.4rem; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                                                {% with first_image=item.images.first %}
+                                                    {% if first_image %}
+                                                        <img src="{{ first_image.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                                    {% else %}
+                                                        <i class="fa-solid fa-globe" style="color: rgba(255,255,255,0.3); font-size: 1.2rem;"></i>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </div>
+                                            <div style="flex: 1; min-width: 0;">
+                                                <h5 style="margin: 0; font-size: 0.85rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.title }}</h5>
+                                                <p style="margin: 0.2rem 0 0; font-size: 0.7rem; color: rgba(255,255,255,0.5);">By {{ item.user.first_name|default:item.user.username }}</p>
+                                            </div>
+                                            <a href="{% url 'community' %}#showcase-{{ item.id }}" class="btn btn-outline btn-small" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; border-color: rgba(255,255,255,0.15);">View</a>
+                                        </div>
+                                    {% empty %}
+                                        <div class="activity-empty" style="padding: 1rem 0; background: none; border: none;">
+                                            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">No bookmarks yet. Save posts from the community!</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
 
@@ -313,7 +410,11 @@
                             <h4>{{ enrollment.event.title }}</h4>
                             <div class="enrolled-card-date"><i class="fa-regular fa-calendar"></i> {{ enrollment.event.month }} {{ enrollment.event.day }}</div>
                             <div class="enrolled-card-time"><i class="fa-regular fa-clock"></i> {{ enrollment.event.time_range }}</div>
-                            <div class="enrolled-card-status">Enrolled</div>
+                            {% if enrollment.event.is_past %}
+                                <div class="enrolled-card-status" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1);">Completed</div>
+                            {% else %}
+                                <div class="enrolled-card-status">Enrolled</div>
+                            {% endif %}
                         </div>
                         {% endfor %}
                     {% else %}
@@ -327,9 +428,127 @@
                 </div>
             </div>
 
+            <div class="tab-panel" id="tab-connections">
+                <!-- Global Search for connections -->
+                <div class="nav-search profile-search">
+                    {% csrf_token %}
+                    <div class="search-input-wrap">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" placeholder="Search members..." autocomplete="off">
+                    </div>
+                    <div class="search-results-dropdown" style="display: none;"></div>
+                </div>
+
+                {% if pending_received %}
+                <div style="margin-bottom: 2.5rem; padding: 0 0.5rem;">
+                    <h4 style="color: #60a5fa; font-size: 1.1rem; margin-bottom: 1.25rem;"><i class="fa-solid fa-user-clock"></i> Pending Requests</h4>
+                    <div class="network-list">
+                        {% for p in pending_received %}
+                        <div class="network-item">
+                            <div class="network-avatar">
+                                {% if p.user_from.profile_picture %}
+                                    <img src="{{ p.user_from.profile_picture.url }}" alt="">
+                                {% else %}
+                                    {{ p.user_from.username|slice:":1"|upper }}
+                                {% endif %}
+                            </div>
+                            <div class="network-info">
+                                <h4 class="network-name">{{ p.user_from.first_name }} {{ p.user_from.last_name }}</h4>
+                                <div class="network-subtitle">Sent {{ p.created_at|timesince }} ago</div>
+                            </div>
+                            <div class="network-actions">
+                                <button class="btn btn-primary btn-small handle-conn-btn" data-conn-id="{{ p.id }}" data-action="accept">Accept</button>
+                                <button class="btn btn-outline btn-small handle-conn-btn" data-conn-id="{{ p.id }}" data-action="decline" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171;">Decline</button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if pending_sent %}
+                <div style="margin-bottom: 2.5rem; padding: 0 0.5rem; opacity: 0.9;">
+                    <h4 style="font-size: 1.1rem; margin-bottom: 1.25rem;">Sent Requests</h4>
+                    <div class="network-list">
+                        {% for p in pending_sent %}
+                        <div class="network-item">
+                            <div class="network-avatar">
+                                {% if p.user_to.profile_picture %}
+                                    <img src="{{ p.user_to.profile_picture.url }}" alt="">
+                                {% else %}
+                                    {{ p.user_to.username|slice:":1"|upper }}
+                                {% endif %}
+                            </div>
+                            <div class="network-info">
+                                <h4 class="network-name">{{ p.user_to.first_name }} {{ p.user_to.last_name }}</h4>
+                                <div class="network-subtitle">
+                                    <span class="network-status-tag"><i class="fa-solid fa-circle-check"></i> Sent</span>
+                                    <span>• Waiting for response...</span>
+                                </div>
+                            </div>
+                            <div class="network-actions">
+                                <button class="btn btn-outline btn-small connect-btn" data-user-id="{{ p.user_to.id }}" style="border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.5);">Cancel</button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div style="margin-bottom: 2rem; padding: 0 0.5rem;">
+                    <h4 style="font-size: 1.1rem; margin-bottom: 1.25rem;">Connected Developers</h4>
+                    <div class="network-list">
+                        {% for friend in friends %}
+                        <div class="network-item">
+                            <a href="{% url 'public-profile-id' user_id=friend.id %}" class="network-avatar">
+                                {% if friend.profile_picture %}
+                                    <img src="{{ friend.profile_picture.url }}" alt="">
+                                {% else %}
+                                    {{ friend.username|slice:":1"|upper }}
+                                {% endif %}
+                            </a>
+                            <div class="network-info">
+                                <a href="{% url 'public-profile-id' user_id=friend.id %}" style="text-decoration: none; color: inherit;">
+                                    <h4 class="network-name">{{ friend.first_name }} {{ friend.last_name }}</h4>
+                                </a>
+                                <div class="network-subtitle">
+                                    <span>{{ friend.course|default:"Member" }}</span>
+                                    <span class="network-status-tag" style="margin-left: 0.5rem;"><i class="fa-solid fa-circle-check"></i> Connected</span>
+                                </div>
+                            </div>
+                            <div class="network-actions">
+                                <button class="btn btn-outline btn-small remove-friend-btn" data-user-id="{{ friend.id }}" style="border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.5);">Remove</button>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="enrolled-empty">
+                            <i class="fa-solid fa-user-group"></i>
+                            <h4>No connections yet</h4>
+                            <p>Explore the Community page and connect with other developers!</p>
+                            <a href="{% url 'community' %}" class="btn btn-primary">Find Developers</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+            
             <div class="tab-panel" id="tab-edit">
                 <h3 class="edit-title">Edit Profile</h3>
                 <form class="edit-form" id="editForm" novalidate>
+                    <div class="edit-group" style="align-items: center; margin-bottom: 1.5rem;">
+                        <label>Current Photo</label>
+                        <div class="profile-avatar" id="editPhotoPreview" style="margin-top: 0.5rem;">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="Profile photo">
+                            {% else %}
+                                {{ user.username|slice:":1"|upper }}
+                            {% endif %}
+                        </div>
+                        <button type="button" class="btn btn-outline btn-small" id="removePhotoBtn" style="margin-top: 0.75rem; font-size: 0.7rem;">
+                            <i class="fa-solid fa-trash"></i> Remove Photo
+                        </button>
+                    </div>
 
                     <div class="edit-group">
                         <label for="editUsername">Username</label>
@@ -363,6 +582,10 @@
                     <div class="edit-group">
                         <label for="editEmail">Email</label>
                         <input type="email" id="editEmail" placeholder="Your email" value="{{ user.email }}">
+                    </div>
+                    <div class="edit-group">
+                        <label for="editSchool">School / University</label>
+                        <input type="text" id="editSchool" placeholder="Your school" value="{{ user.school|default:'' }}">
                     </div>
                     <div class="edit-row">
                         <div class="edit-group">
@@ -462,43 +685,55 @@
         </div>
     </div>
 
-    <script type="module" src="{% static 'js/main.js' %}"></script>
+    <!-- Remove Connection Confirmation Modal -->
+    <div class="remove-photo-modal" id="removeConnectionModal" style="display:none;">
+        <div class="remove-photo-dialog">
+            <div class="remove-photo-icon"><i class="fa-solid fa-user-minus"></i></div>
+            <h4>Remove connection?</h4>
+            <p>Are you sure you want to remove this connection? You will no longer be able to see their private updates.</p>
+            <div class="remove-photo-actions">
+                <button class="btn btn-outline" id="removeConnectionCancel">Cancel</button>
+                <button class="btn remove-photo-confirm-btn" id="removeConnectionConfirm">Yes, Remove Connection</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="{% static 'js/main.js' %}?v=1.5"></script>
     <script>
     const CSRF_TOKEN = '{{ csrf_token }}';
-    function markNotifRead(el, notifId) {
-        if (el.classList.contains('notif-read')) return;
-        fetch(`/notification-read/${notifId}/`, {
-            method: 'GET',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                el.classList.add('notif-read');
-                // Update all badge counts on the page
-                document.querySelectorAll('.notif-badge').forEach(b => {
-                    if (data.unread_count > 0) {
-                        b.textContent = data.unread_count;
-                        b.style.display = '';
-                    } else {
-                        b.style.display = 'none';
+    function markNotifRead(el, notifId, link) {
+        // Immediate UI update for responsiveness
+        if (!el.classList.contains('notif-read')) {
+            document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => {
+                item.classList.add('notif-read');
+            });
+            
+            fetch(`/notification-read/${notifId}/`, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                keepalive: true
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelectorAll('.notif-badge').forEach(b => {
+                        if (data.unread_count > 0) { b.textContent = data.unread_count; b.style.display = ''; }
+                        else { b.style.display = 'none'; }
+                    });
+                    if (data.unread_count !== undefined) {
+                        document.querySelectorAll('.notif-count').forEach(c => {
+                            if (data.unread_count > 0) { c.textContent = data.unread_count + ' New'; c.style.display = ''; }
+                            else { c.style.display = 'none'; }
+                        });
                     }
-                });
-                document.querySelectorAll('.notif-count').forEach(c => {
-                    if (data.unread_count > 0) {
-                        c.textContent = data.unread_count + ' New';
-                        c.style.display = '';
-                    } else {
-                        c.style.display = 'none';
-                    }
-                });
-                // Mirror the read state to the mobile dropdown item for same notification
-                document.querySelectorAll(`.notif-dropdown-item[data-notif-id="${notifId}"]`).forEach(item => {
-                    item.classList.add('notif-read');
-                });
-            }
-        })
-        .catch(() => {});
+                }
+            })
+            .catch(() => {});
+        }
+
+        if (link && link !== 'None' && link !== '') {
+            window.location.href = link;
+        }
     }
     </script>
 </body>

@@ -30,6 +30,7 @@ export function setupOfficerDeck() {
     }
 
     deck.addEventListener('click', () => {
+        if (window.innerWidth > 768) return;
         if (animating) return;
         animating = true;
 

@@ -19,22 +19,45 @@
             <i class="fa-solid fa-arrow-left"></i> Back to Home
         </a>
         
-        <div class="auth-container">
-            <div class="auth-header">
-                <i class="fa-solid fa-paper-plane"></i>
-                <h1>Check your inbox!</h1>
-                <p>Registration successful! We've sent a verification link to your email. Please click the link to activate your account and log in.</p>
+        <div class="auth-container" style="max-width: 400px; padding: 2rem;">
+            <div class="auth-header" style="margin-bottom: 1rem;">
+                <i class="fa-solid fa-paper-plane" style="font-size: 2.5rem; margin-bottom: 0.5rem;"></i>
+                <h1 style="font-size: 1.5rem;">Verify your Email</h1>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem;">We've sent a 6-digit verification code to your email. Please enter it below to activate your account.</p>
             </div>
             
-            <div style="display: flex; flex-direction: column; gap: 1.5rem; text-align: center;">
-                <a href="{% url 'account' %}?panel=login" class="premium-btn" style="text-decoration: none;">
-                    Go to Login <i class="fa-solid fa-right-to-bracket"></i>
-                </a>
+            <form method="POST" action="{% url 'verify-email-sent' %}" style="display: flex; flex-direction: column; gap: 0.8rem; text-align: center; width: 100%;">
+                {% csrf_token %}
                 
-                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.5);">
-                    Didn't receive the email? Check your spam folder or wait a few minutes.
+                {% if messages %}
+                <div class="django-messages" style="margin-bottom: 0.8rem;">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" style="padding: 0.6rem; border-radius: 6px; margin-bottom: 0.4rem; text-align: center; font-size: 0.85rem; font-weight: 500; {% if message.tags == 'success' %}background-color: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3);{% elif message.tags == 'error' %}background-color: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3);{% elif message.tags == 'warning' %}background-color: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3);{% else %}background-color: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2);{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="input-group" style="position: relative;">
+                    <i class="fa-solid fa-envelope" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5);"></i>
+                    <input type="email" name="email" placeholder="Your Email Address" value="{{ email|default:'' }}" required {% if email %}readonly style="opacity:0.7; pointer-events:none; width: 100%; padding: 0.7rem 1rem 0.7rem 2.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; box-sizing: border-box; font-size: 0.95rem;"{% else %}style="width: 100%; padding: 0.7rem 1rem 0.7rem 2.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; box-sizing: border-box; font-size: 0.95rem;"{% endif %}>
+                </div>
+                
+                <div class="input-group" style="position: relative;">
+                    <i class="fa-solid fa-key" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5);"></i>
+                    <input type="text" name="code" placeholder="6-digit Code" required pattern="\d{6}" maxlength="6" style="width: 100%; padding: 0.7rem 1rem 0.7rem 2.8rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white; letter-spacing: 0.4rem; font-size: 1rem; font-weight: bold; box-sizing: border-box;">
+                </div>
+                
+                <button type="submit" class="premium-btn" style="width: 100%; cursor: pointer; margin-top: 0.5rem; padding: 0.7rem; font-size: 0.95rem;">
+                    Verify Account <i class="fa-solid fa-check-circle"></i>
+                </button>
+                
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+                    Didn't receive the email? <br>
+                    <a href="{% url 'send-verification-email' %}" style="color: #4a90e2; text-decoration: none; font-weight: 600; display: inline-block; margin-top: 0.3rem;">Resend Code</a>
                 </p>
-            </div>
+            </form>
         </div>
     </div>
 

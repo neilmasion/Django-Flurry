@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, ContactMessage
+from .models import User, ContactMessage, Showcase
 
 DISPOSABLE_DOMAINS = [
     'mailinator.com', 'tempmail.com', '10minutemail.com', 
@@ -12,10 +12,11 @@ class StudentRegistrationForm(UserCreationForm):
     first_name = forms.CharField(max_length=100, required=True)
     last_name = forms.CharField(max_length=100, required=True)
     email = forms.EmailField(required=True)
+    school = forms.CharField(max_length=200, required=True)
     
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'course', 'year_level')
+        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'school', 'course', 'year_level')
 
     def clean_email(self):
         email = self.cleaned_data.get('email').lower()
@@ -56,4 +57,32 @@ class ContactForm(forms.ModelForm):
                 ('Other', 'Other'),
             ]),
             'message': forms.Textarea(attrs={'placeholder': 'Write your message here...'}),
+        }
+
+class MultipleFileInput(forms.FileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = single_file_clean(data, initial)
+        return result
+
+class ShowcaseForm(forms.ModelForm):
+    images = MultipleFileField(widget=MultipleFileInput(attrs={'accept': 'image/*'}), required=False)
+    
+    class Meta:
+        model = Showcase
+        fields = ['title', 'website_url', 'description']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Enter website title'}),
+            'website_url': forms.URLInput(attrs={'placeholder': 'https://example.com'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Briefly describe your website...', 'rows': 4}),
         }

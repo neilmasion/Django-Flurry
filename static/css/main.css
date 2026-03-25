@@ -265,6 +265,8 @@ a:hover {
     top: calc(100% + 15px);
     right: -10px;
     width: 360px;
+    max-width: calc(100vw - 1rem);
+    left: auto;
     background: rgba(13, 36, 144, 0.8);
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
@@ -424,8 +426,9 @@ a:hover {
 }
 
 .mobile-notif-dropdown {
-    width: 280px;
-    right: -50px;
+    width: min(280px, calc(100vw - 1rem));
+    max-width: calc(100vw - 1rem);
+    right: 0;
 }
 
 .desktop-only {
@@ -567,9 +570,13 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="tel"],
+input[type="url"],
+input[type="search"],
 textarea,
 select {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     padding: 0.75rem 1rem;
     background-color: var(--bg-hover);
     border: 1px solid var(--border-color);
@@ -589,6 +596,8 @@ input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
 textarea:focus,
 select:focus {
     outline: none;
@@ -600,6 +609,16 @@ select:focus {
 textarea {
     resize: none;
     font-family: inherit;
+}
+
+select {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+select option {
+    white-space: normal;
 }
 
 .error-message {
@@ -958,3 +977,432 @@ textarea {
 .skeleton-text-short { width: 40%; height: 20px; }
 .skeleton-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
 .skeleton-card { height: 200px; }
+
+/* Nav Search */
+.nav-search {
+    position: relative;
+    margin-left: 1rem;
+    flex: none;
+    width: 250px;
+    transition: width 0.3s ease;
+}
+
+.nav-search:focus-within {
+    width: 320px;
+}
+
+.search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    padding: 0.2rem 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.search-input-wrap:focus-within {
+    background: rgba(13, 110, 253, 0.08);
+    border-color: var(--primary-light);
+    box-shadow: 0 0 15px rgba(13, 110, 253, 0.15);
+}
+
+.search-icon {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-right: 0.5rem;
+}
+
+#navSearchInput {
+    background: none !important;
+    border: none !important;
+    color: white !important;
+    font-size: 0.75rem;
+    outline: none !important;
+    box-shadow: none !important;
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#navSearchInput:focus {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+#navSearchInput::placeholder {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.search-results-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    background: rgba(15, 15, 20, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    overflow: hidden;
+    animation: navSearchSlideDown 0.3s ease-out;
+}
+
+@keyframes navSearchSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    color: white;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.search-result-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.result-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.result-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.result-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.result-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.result-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.search-no-results {
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* CTA Section Styles (Global) */
+.cta-section {
+    padding: 3rem 9rem;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-inner {
+    border-radius: 1.25rem;
+    text-align: center;
+}
+
+.cta-content h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.cta-content p {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 2rem;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Global Network List & Item Styles */
+.network-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.network-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all var(--transition-fast);
+}
+
+.network-item:last-child {
+    border-bottom: none;
+}
+
+.network-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.network-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.network-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.network-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.network-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+}
+
+.network-subtitle {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.45);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+}
+
+.network-status-tag {
+    font-size: 0.75rem;
+    color: var(--primary-light);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.network-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Global Search Component */
+.nav-search {
+    position: relative;
+    z-index: 1000;
+}
+
+.navbar .nav-search {
+    margin-left: 1.5rem;
+    width: 280px;
+}
+
+.search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    padding: 0.4rem 1.2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input-wrap:focus-within {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(96, 165, 250, 0.5);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.15);
+}
+
+.search-icon {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.35);
+    margin-right: 0.85rem;
+}
+
+.search-input-wrap input {
+    background: none !important;
+    border: none !important;
+    color: white !important;
+    font-size: 0.85rem;
+    outline: none !important;
+    box-shadow: none !important;
+    width: 100%;
+    padding: 0.5rem 0;
+}
+
+.search-input-wrap input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Profile-specific Search Overrides */
+.profile-search {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 2.5rem;
+    padding: 0 0.5rem;
+}
+
+.profile-search:focus-within {
+    width: 100% !important;
+}
+
+.profile-search .search-results-dropdown {
+    width: calc(100% - 1rem) !important;
+    left: 0.5rem;
+    right: 0.5rem;
+}
+
+/* Navbar Search Specific Overrides */
+.search-results-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 2000;
+    background: rgba(15, 15, 20, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    width: 320px !important;
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+.search-results-dropdown .network-item {
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    border-radius: 0.85rem;
+    border-bottom: none;
+    margin-bottom: 0.25rem;
+    transition: background 0.2s ease;
+}
+
+.search-results-dropdown .network-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.search-no-results {
+    padding: 1.5rem 1rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.82rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.search-results-dropdown .network-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-results-dropdown .network-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.search-results-dropdown .network-subtitle {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-results-dropdown .btn-primary {
+    background: white !important;
+    color: black !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.85rem !important;
+}
+
+.search-results-dropdown .btn-outline {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: white !important;
+    backdrop-filter: blur(5px);
+}
+
+.search-results-dropdown .network-status-tag {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .notif-dropdown,
+    .user-dropdown,
+    .mobile-notif-dropdown {
+        width: min(92vw, 360px);
+        max-width: calc(100vw - 1rem);
+        right: 0;
+        left: auto;
+    }
+
+    .notif-dropdown-content {
+        max-height: min(60vh, 460px);
+        min-height: 280px;
+    }
+
+    .search-results-dropdown {
+        width: min(92vw, 320px) !important;
+        max-width: calc(100vw - 1rem);
+        left: auto;
+        right: 0;
+    }
+}
