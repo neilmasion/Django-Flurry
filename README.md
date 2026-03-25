@@ -105,3 +105,25 @@ When `DATABASE_URL` is present, the project uses Postgres automatically.
 5. Open the Railway public URL and verify the app is live.
 
 ---
+
+## Deploy to Render (Recommended if Railway trial expired)
+
+This repo now includes a Render blueprint file: `render.yaml`.
+
+1. Push this repository to GitHub (already done if you're up to date).
+2. In Render, choose **New +** > **Blueprint**.
+3. Connect your GitHub repo and select this project.
+4. Render reads `render.yaml` automatically.
+5. Set required secret environment variables in Render:
+   - `DJANGO_SECRET_KEY`
+   - `DATABASE_URL` (Neon URL with `sslmode=require`)
+   - `EMAIL_HOST_USER` and `EMAIL_HOST_PASSWORD` (if email features are used)
+6. Click **Apply** to deploy.
+
+Render will run:
+- Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
+- Start: `python manage.py migrate --noinput && gunicorn flurry_project.wsgi --log-file - --workers 2 --threads 4`
+
+After deploy, open your Render URL and test login, media, and database writes.
+
+---
