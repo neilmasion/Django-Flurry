@@ -1,7 +1,7 @@
 services:
   - type: web
     name: django-flurry
-    runtime: python
+    env: python
     plan: free
     autoDeploy: true
     healthCheckPath: /
