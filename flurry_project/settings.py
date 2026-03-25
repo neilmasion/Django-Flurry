@@ -4,8 +4,11 @@ import os
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-jf5+2yss)qu*5k3qo35#^m7m#jguyt#s&ek^y)w92^8op0^i(o')
-DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    raise RuntimeError('DJANGO_SECRET_KEY is required')
+
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
 
 allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()]
