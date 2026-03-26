@@ -2,13 +2,11 @@ import os
 import django
 from django.conf import settings
 
-# Setup Django environment
 if not settings.configured:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flurry_project.settings')
     django.setup()
 
 from base.models import User
-
 from django.db.models import Count
 
 def find_duplicate_tokens():
