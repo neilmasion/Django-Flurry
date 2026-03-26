@@ -281,6 +281,11 @@ a:hover {
     overflow: hidden;
 }
 
+.notif-dropdown {
+    display: flex;
+    flex-direction: column;
+}
+
 [data-theme="dark"] .notif-dropdown, 
 [data-theme="dark"] .user-dropdown {
     background: rgba(30,30,30,0.85);
@@ -356,8 +361,8 @@ a:hover {
 }
 
 .notif-dropdown-content {
-    min-height: 400px; /* Force more height even when empty */
-    max-height: 600px;
+    height: clamp(220px, 46vh, 460px);
+    min-height: 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -378,6 +383,7 @@ a:hover {
     font-size: 0.85rem;
     color: var(--text-primary);
     line-height: 1.4;
+    word-break: break-word;
 }
 
 .notif-dropdown-item small {
@@ -1395,8 +1401,8 @@ select option {
     }
 
     .notif-dropdown-content {
-        max-height: min(60vh, 460px);
-        min-height: 280px;
+        height: clamp(200px, 52vh, 380px);
+        min-height: 0;
     }
 
     .search-results-dropdown {

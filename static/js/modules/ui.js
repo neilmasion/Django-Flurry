@@ -7,9 +7,24 @@ export function updateUIAfterLogin() {
     // Load photo from local storage
     const navAvatar = document.getElementById('userAvatarNav');
     const userEmail = document.body.dataset.email || 'guest';
-    const photo = localStorage.getItem(`flurryUserPhoto_${userEmail}`);
-    if (navAvatar && photo) {
-        navAvatar.innerHTML = `<img src="${photo}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
+    const serverPhoto = document.body.dataset.profilePic || '';
+    const cachedPhoto = localStorage.getItem(`flurryUserPhoto_${userEmail}`) || '';
+    const username = document.body.dataset.username || 'U';
+    const fallbackInitial = username.charAt(0).toUpperCase();
+
+    if (navAvatar && (serverPhoto || cachedPhoto)) {
+        const selectedPhoto = serverPhoto || cachedPhoto;
+        navAvatar.innerHTML = `<img src="${selectedPhoto}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
+
+        const avatarImg = navAvatar.querySelector('img');
+        if (avatarImg) {
+            avatarImg.addEventListener('error', () => {
+                if (cachedPhoto) {
+                    localStorage.removeItem(`flurryUserPhoto_${userEmail}`);
+                }
+                navAvatar.textContent = fallbackInitial;
+            }, { once: true });
+        }
     }
 
     if (menuBtn && userMenu) {
