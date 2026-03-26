@@ -1,4 +1,4 @@
-{% load static %}
+{% load static url_helpers %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -245,8 +245,9 @@
                             title="Save">
                         <i class="{% if request.user in item.saves.all %}fa-solid{% else %}fa-regular{% endif %} fa-bookmark"></i>
                     </button>
-                    <a href="{% if user.is_authenticated %}{{ item.website_url }}{% else %}#{% endif %}" 
+                          <a href="{% if user.is_authenticated %}{{ item.website_url|normalize_url }}{% else %}#{% endif %}" 
                        {% if user.is_authenticated %}target="_blank"{% else %}onclick="window.location.href='{% url 'account' %}?panel=register&next={{ request.path }}'; return false;"{% endif %} 
+                              {% if user.is_authenticated %}rel="noopener noreferrer"{% endif %}
                        class="visitor-btn">
                         Visit Site <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     </a>
@@ -272,6 +273,9 @@
                                 <div class="comment-body">
                                     <div class="comment-header">
                                         <a href="{% url 'public-profile-id' user_id=comment.user.id %}" class="comment-author" title="View Profile">{{ comment.user.first_name|default:comment.user.username }}</a>
+                                        {% if comment.user == request.user %}
+                                            <span class="you-badge">YOU</span>
+                                        {% endif %}
                                         {% if comment.user.role == 'admin' or comment.user.is_superuser %}
                                             <span class="comment-role admin">(Admin)</span>
                                         {% elif comment.user.role == 'officer' %}
@@ -299,6 +303,9 @@
                                                 <div class="comment-body">
                                                     <div class="comment-header">
                                                         <span class="comment-author">{{ reply.user.first_name|default:reply.user.username }}</span>
+                                                        {% if reply.user == request.user %}
+                                                            <span class="you-badge">YOU</span>
+                                                        {% endif %}
                                                         {% if reply.user.role == 'admin' or reply.user.is_superuser %}
                                                             <span class="comment-role admin">(Admin)</span>
                                                         {% elif reply.user.role == 'officer' %}
