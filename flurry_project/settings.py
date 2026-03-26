@@ -110,14 +110,23 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-use_s3_media = os.getenv('USE_S3_MEDIA', 'False').lower() == 'true'
-use_cloudinary_media = os.getenv('USE_CLOUDINARY_MEDIA', 'False').lower() == 'true'
+USE_S3_MEDIA = os.getenv('USE_S3_MEDIA', 'False').lower() == 'true'
 
-if use_cloudinary_media:
+cloudinary_cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME', '')
+cloudinary_api_key = os.getenv('CLOUDINARY_API_KEY', '')
+cloudinary_api_secret = os.getenv('CLOUDINARY_API_SECRET', '')
+cloudinary_creds_present = all([
+    cloudinary_cloud_name,
+    cloudinary_api_key,
+    cloudinary_api_secret,
+])
+USE_CLOUDINARY_MEDIA = os.getenv('USE_CLOUDINARY_MEDIA', 'False').lower() == 'true' or cloudinary_creds_present
+
+if USE_CLOUDINARY_MEDIA:
     CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', ''),
-        'API_KEY': os.getenv('CLOUDINARY_API_KEY', ''),
-        'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', ''),
+        'CLOUD_NAME': cloudinary_cloud_name,
+        'API_KEY': cloudinary_api_key,
+        'API_SECRET': cloudinary_api_secret,
         'SECURE': True,
     }
 
@@ -132,7 +141,7 @@ if use_cloudinary_media:
 
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
-elif use_s3_media:
+elif USE_S3_MEDIA:
     aws_storage_bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
     aws_s3_region_name = os.getenv('AWS_S3_REGION_NAME', '')
     aws_s3_custom_domain = os.getenv('AWS_S3_CUSTOM_DOMAIN', '')
