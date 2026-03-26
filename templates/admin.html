@@ -51,17 +51,18 @@
                 <input type="hidden" name="next" value="{% url 'admin-dashboard' %}">
                 <div class="aform-group">
                     <label for="adminEmail">Email</label>
-                    <input type="email" name="email" id="adminEmail" placeholder="admin@example.com" required>
+                    <input type="email" name="email" id="adminEmail" placeholder="Enter your admin email" required>
                 </div>
                 <div class="aform-group">
                     <label for="adminPass">Password</label>
                     <div class="input-wrapper">
-                        <input type="password" name="password" id="adminPass" placeholder="Enter admin password">
+                        <input type="password" name="password" id="adminPass" placeholder="Enter your password" required>
                         <button type="button" class="toggle-password" data-target="adminPass">
                             <i class="fa-solid fa-eye-slash"></i>
                         </button>
                     </div>
                 </div>
+                <p style="margin: 0.4rem 0 0.9rem; font-size: 0.85rem; opacity: 0.85;">Use the real admin account you created in the database.</p>
                 
                 <button type="submit" class="btn btn-primary btn-block">Sign In</button>
             </form>
