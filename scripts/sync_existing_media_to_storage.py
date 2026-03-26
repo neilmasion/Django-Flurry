@@ -9,6 +9,12 @@ if str(BASE_DIR) not in sys.path:
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flurry_project.settings")
 
+database_url = os.getenv("DATABASE_URL", "")
+if not database_url or "YOUR_RENDER_DATABASE_URL" in database_url or "YOUR_" in database_url:
+    raise SystemExit(
+        "DATABASE_URL is missing or still a placeholder. Set DATABASE_URL to your real Render/Neon PostgreSQL URL before running this script."
+    )
+
 import django
 
 django.setup()
