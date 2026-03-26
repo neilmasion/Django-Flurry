@@ -10,6 +10,9 @@ from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, 
 from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, ShowcaseForm
 from django.core.mail import send_mail
 from django.urls import reverse
+import logging
+
+logger = logging.getLogger(__name__)
 
 @staff_member_required
 def update_role(request, user_id):
@@ -311,7 +314,9 @@ def register_view(request):
                 link=reverse('profile')
             )
             # Send automatic verification email
-            send_verification_email_logic(user, request)
+            email_sent = send_verification_email_logic(user, request)
+            if not email_sent:
+                messages.error(request, "We couldn't send your verification email right now. Please use Resend Code on the next page.")
             
             # Store email in session to verify OTP
             request.session['verification_email'] = user.email
@@ -563,17 +568,20 @@ def send_verification_email_logic(user, request):
     html_message = render_to_string('emails/verify_email.html', {'user': user, 'code': code})
     plain_message = strip_tags(html_message)
 
-    # Send in background so registration flow is fast even when SMTP is slow.
-    import threading
-
-    def _send_email_async():
-        try:
-            send_mail(subject, plain_message, None, [user.email], html_message=html_message)
-        except Exception as e:
-            print(f"Error sending verification email: {e}")
-
-    threading.Thread(target=_send_email_async, daemon=True).start()
-    return True
+    # Send synchronously so failures are surfaced to the user.
+    try:
+        send_mail(
+            subject,
+            plain_message,
+            None,
+            [user.email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        return True
+    except Exception:
+        logger.exception("Failed to send verification email to %s", user.email)
+        return False
 
 @login_required
 def update_profile(request):
@@ -671,7 +679,7 @@ def send_verification_email(request):
         return redirect('profile')
         
     if send_verification_email_logic(user, request):
-        messages.success(request, f"Verification email queued for {user.email}. Check your inbox and spam folder.")
+        messages.success(request, f"Verification email sent to {user.email}. Check your inbox and spam folder.")
     else:
         messages.error(request, "Failed to send verification email. Please try again later.")
         
