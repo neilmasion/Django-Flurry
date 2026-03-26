@@ -6,6 +6,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
+from django.conf import settings
 from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, ContactMessage, OfficerApplication, Notification, Enrollment, Showcase, ShowcaseImage, ShowcaseComment, Connection
 from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, ShowcaseForm
 from django.core.mail import send_mail
@@ -314,8 +315,9 @@ def register_view(request):
                 link=reverse('profile')
             )
             # Send automatic verification email
-            email_sent = send_verification_email_logic(user, request)
+            email_sent, email_error = send_verification_email_logic(user, request)
             if not email_sent:
+                request.session['verification_error_detail'] = email_error or 'Unknown email error'
                 messages.error(request, "We couldn't send your verification email right now. Please use Resend Code on the next page.")
             
             # Store email in session to verify OTP
@@ -567,21 +569,24 @@ def send_verification_email_logic(user, request):
     subject = "Verify your Flurry account"
     html_message = render_to_string('emails/verify_email.html', {'user': user, 'code': code})
     plain_message = strip_tags(html_message)
+    from_email = settings.DEFAULT_FROM_EMAIL
+    if 'gmail' in settings.EMAIL_HOST.lower() and settings.EMAIL_HOST_USER:
+        from_email = settings.EMAIL_HOST_USER
 
     # Send synchronously so failures are surfaced to the user.
     try:
         send_mail(
             subject,
             plain_message,
-            None,
+            from_email,
             [user.email],
             html_message=html_message,
             fail_silently=False,
         )
-        return True
-    except Exception:
+        return True, None
+    except Exception as e:
         logger.exception("Failed to send verification email to %s", user.email)
-        return False
+        return False, f"{e.__class__.__name__}: {str(e)}"
 
 @login_required
 def update_profile(request):
@@ -678,9 +683,11 @@ def send_verification_email(request):
         messages.info(request, "Your email is already verified.")
         return redirect('profile')
         
-    if send_verification_email_logic(user, request):
+    email_sent, email_error = send_verification_email_logic(user, request)
+    if email_sent:
         messages.success(request, f"Verification email sent to {user.email}. Check your inbox and spam folder.")
     else:
+        request.session['verification_error_detail'] = email_error or 'Unknown email error'
         messages.error(request, "Failed to send verification email. Please try again later.")
         
     return redirect('verify-email-sent')
@@ -719,7 +726,8 @@ def verify_email_sent(request):
         else:
             messages.error(request, "Invalid verification code or email.")
             
-    return render(request, 'verify_email_sent.html', {'email': email})
+    error_detail = request.session.pop('verification_error_detail', None)
+    return render(request, 'verify_email_sent.html', {'email': email, 'verification_error_detail': error_detail})
 
 @staff_member_required
 def delete_user(request, user_id):
