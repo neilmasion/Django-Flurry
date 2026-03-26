@@ -110,17 +110,51 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-STORAGES = {
-    'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
-    },
-    'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
-    }
-}
+use_s3_media = os.getenv('USE_S3_MEDIA', 'False').lower() == 'true'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+if use_s3_media:
+    aws_storage_bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
+    aws_s3_region_name = os.getenv('AWS_S3_REGION_NAME', '')
+    aws_s3_custom_domain = os.getenv('AWS_S3_CUSTOM_DOMAIN', '')
+
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', '')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', '')
+    AWS_STORAGE_BUCKET_NAME = aws_storage_bucket_name
+    AWS_S3_REGION_NAME = aws_s3_region_name
+    AWS_QUERYSTRING_AUTH = os.getenv('AWS_QUERYSTRING_AUTH', 'False').lower() == 'true'
+    AWS_DEFAULT_ACL = None
+    AWS_S3_FILE_OVERWRITE = False
+
+    if aws_s3_custom_domain:
+        media_domain = aws_s3_custom_domain
+    elif aws_storage_bucket_name and aws_s3_region_name:
+        media_domain = f'{aws_storage_bucket_name}.s3.{aws_s3_region_name}.amazonaws.com'
+    else:
+        media_domain = ''
+
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.s3.S3Storage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+        }
+    }
+
+    MEDIA_URL = f'https://{media_domain}/' if media_domain else '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
+else:
+    STORAGES = {
+        'default': {
+            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+        }
+    }
+
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'base.User'
