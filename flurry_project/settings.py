@@ -111,8 +111,28 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 use_s3_media = os.getenv('USE_S3_MEDIA', 'False').lower() == 'true'
+use_cloudinary_media = os.getenv('USE_CLOUDINARY_MEDIA', 'False').lower() == 'true'
 
-if use_s3_media:
+if use_cloudinary_media:
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', ''),
+        'API_KEY': os.getenv('CLOUDINARY_API_KEY', ''),
+        'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', ''),
+        'SECURE': True,
+    }
+
+    STORAGES = {
+        'default': {
+            'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+        }
+    }
+
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
+elif use_s3_media:
     aws_storage_bucket_name = os.getenv('AWS_STORAGE_BUCKET_NAME', '')
     aws_s3_region_name = os.getenv('AWS_S3_REGION_NAME', '')
     aws_s3_custom_domain = os.getenv('AWS_S3_CUSTOM_DOMAIN', '')

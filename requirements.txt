@@ -1,8 +1,10 @@
 asgiref==3.11.1
 boto3==1.40.44
+cloudinary==1.44.1
 Django==6.0.3
 dj-database-url==2.2.0
 django-storages==1.14.6
+django-cloudinary-storage==0.3.0
 gunicorn==23.0.0
 Pillow==12.1.1
 psycopg[binary]==3.3.3
