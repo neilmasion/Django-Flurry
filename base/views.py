@@ -220,6 +220,33 @@ def contact(request):
 
 def login_view(request):
     next_url = request.POST.get('next') or request.GET.get('next')
+    admin_next_targets = {
+        '/admin/',
+        '/manager_console',
+        '/manager_console/',
+        '/admin-dashboard',
+        '/admin-dashboard/',
+    }
+
+    def render_admin_login_with_error(message_text, login_form=None):
+        messages.error(request, message_text)
+        total_users = User.objects.count()
+        total_events = Event.objects.count()
+        total_messages = ContactMessage.objects.count()
+        recent_users = User.objects.order_by('-date_joined')[:5]
+        context = {
+            'total_users': total_users,
+            'total_events': total_events,
+            'total_messages': total_messages,
+            'recent_users': recent_users,
+            'all_users': User.objects.all().order_by('-date_joined'),
+            'all_events': Event.objects.all().order_by('-id'),
+            'all_messages': ContactMessage.objects.all().order_by('-created_at'),
+            'all_testimonials': Testimonial.objects.all().order_by('-id'),
+            'login_form': login_form or StudentLoginForm(),
+        }
+        return render(request, 'admin.html', context)
+
     if request.method == 'POST':
         post_data = request.POST.copy()
         # Backward compatibility for forms that still submit `username`.
@@ -235,6 +262,14 @@ def login_view(request):
                 if user.role in ['admin', 'officer'] and not user.is_staff:
                     user.is_staff = True
                     user.save(update_fields=['is_staff'])
+
+                admin_access = user.is_staff or user.is_superuser or user.role in ['admin', 'officer']
+                if next_url and next_url in admin_next_targets and not admin_access:
+                    return render_admin_login_with_error(
+                        'Login successful, but this account has no admin access.',
+                        form,
+                    )
+
                 if not user.is_email_verified and not (user.is_staff or user.is_superuser):
                     request.session['verification_email'] = user.email
                     return redirect('verify-email-sent')
@@ -245,31 +280,8 @@ def login_view(request):
                 return redirect('index')
             else:
                 form.add_error(None, 'Invalid email or password.')
-                admin_next_targets = {
-                    '/admin/',
-                    '/manager_console',
-                    '/manager_console/',
-                    '/admin-dashboard',
-                    '/admin-dashboard/',
-                }
                 if next_url and next_url in admin_next_targets:
-                    messages.error(request, 'Invalid email or password.')
-                    total_users = User.objects.count()
-                    total_events = Event.objects.count()
-                    total_messages = ContactMessage.objects.count()
-                    recent_users = User.objects.order_by('-date_joined')[:5]
-                    context = {
-                        'total_users': total_users,
-                        'total_events': total_events,
-                        'total_messages': total_messages,
-                        'recent_users': recent_users,
-                        'all_users': User.objects.all().order_by('-date_joined'),
-                        'all_events': Event.objects.all().order_by('-id'),
-                        'all_messages': ContactMessage.objects.all().order_by('-created_at'),
-                        'all_testimonials': Testimonial.objects.all().order_by('-id'),
-                        'login_form': form,
-                    }
-                    return render(request, 'admin.html', context)
+                    return render_admin_login_with_error('Invalid email or password.', form)
     else:
         form = StudentLoginForm()
     return render(request, 'account.html', {
