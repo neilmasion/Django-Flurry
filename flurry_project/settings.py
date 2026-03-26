@@ -17,8 +17,6 @@ for host in default_allowed_hosts:
     if host not in ALLOWED_HOSTS:
         ALLOWED_HOSTS.append(host)
 
-# Render health probes may use internal host headers. Allowing all hosts only on
-# Render avoids noisy 400 healthcheck failures while keeping local/dev strict.
 if os.getenv('RENDER', '').lower() == 'true':
     allow_all_on_render = os.getenv('DJANGO_ALLOW_ALL_HOSTS_ON_RENDER', 'true').lower() == 'true'
     if allow_all_on_render:
@@ -77,7 +75,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'flurry_project.wsgi.application'
 database_url = os.getenv('DATABASE_URL')
 if database_url:
-    # Neon Postgres requires SSL.
     DATABASES = {
         'default': dj_database_url.parse(database_url, conn_max_age=600, ssl_require=True)
     }
@@ -143,12 +140,11 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', 'True').lower() == 'true'
     SECURE_HSTS_PRELOAD = os.getenv('DJANGO_SECURE_HSTS_PRELOAD', 'True').lower() == 'true'
 
-# Email Configuration
-# Using SendGrid for fast reliable email delivery (free tier available)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.sendgrid.net')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '10'))
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'apikey')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Flurry <no-reply@example.com>')

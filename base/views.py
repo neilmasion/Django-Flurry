@@ -562,13 +562,18 @@ def send_verification_email_logic(user, request):
     subject = "Verify your Flurry account"
     html_message = render_to_string('emails/verify_email.html', {'user': user, 'code': code})
     plain_message = strip_tags(html_message)
-    
-    try:
-        send_mail(subject, plain_message, None, [user.email], html_message=html_message)
-        return True
-    except Exception as e:
-        print(f"Error sending verification email: {e}")
-        return False
+
+    # Send in background so registration flow is fast even when SMTP is slow.
+    import threading
+
+    def _send_email_async():
+        try:
+            send_mail(subject, plain_message, None, [user.email], html_message=html_message)
+        except Exception as e:
+            print(f"Error sending verification email: {e}")
+
+    threading.Thread(target=_send_email_async, daemon=True).start()
+    return True
 
 @login_required
 def update_profile(request):
@@ -666,7 +671,7 @@ def send_verification_email(request):
         return redirect('profile')
         
     if send_verification_email_logic(user, request):
-        messages.success(request, f"Verification email sent to {user.email}. Check your inbox.")
+        messages.success(request, f"Verification email queued for {user.email}. Check your inbox and spam folder.")
     else:
         messages.error(request, "Failed to send verification email. Please try again later.")
         
