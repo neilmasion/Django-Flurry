@@ -14,8 +14,6 @@ from django.urls import reverse
 import logging
 from email.utils import parseaddr
 
-import requests
-
 logger = logging.getLogger(__name__)
 
 @staff_member_required
@@ -579,6 +577,7 @@ def send_verification_email_logic(user, request):
     sendgrid_api_key = os.getenv('SENDGRID_API_KEY') or os.getenv('EMAIL_HOST_PASSWORD', '')
     smtp_is_sendgrid = 'sendgrid' in settings.EMAIL_HOST.lower()
     if sendgrid_api_key and smtp_is_sendgrid:
+        import requests
         from_name, from_addr = parseaddr(from_email)
         if not from_addr:
             from_addr = from_email
