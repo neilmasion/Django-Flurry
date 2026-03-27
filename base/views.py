@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q, Count
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.utils import timezone
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,8 @@ from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, Showc
 from django.core.mail import send_mail
 from django.urls import reverse
 import logging
+import os
+import requests
 from email.utils import parseaddr
 
 logger = logging.getLogger(__name__)
@@ -557,7 +559,7 @@ def profile(request):
 def send_verification_email_logic(user, request):
     """Helper to send verification email without redirecting."""
     if user.is_email_verified:
-        return False
+        return False, "User is already verified."
         
     import random
     from django.template.loader import render_to_string

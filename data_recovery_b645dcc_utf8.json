@@ -1,0 +1,1125 @@
+[
+{
+  "model": "base.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$4RvSrSnRAWahJa4Rw0VBDm$NhBqF9ev1+mGShaUOv00d7G2gHUEqkHQoNRMA+UP4AQ=",
+    "last_login": "2026-03-24T13:18:10.316Z",
+    "is_superuser": true,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-03-13T13:49:30.269Z",
+    "course": null,
+    "year_level": null,
+    "school": null,
+    "role": "admin",
+    "email": "admin@example.com",
+    "username": "admin",
+    "is_email_verified": false,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$DGdYcOuv4sHNqNiG42qqpK$ISLKkZ5yvRk0MV1kigNZ2aMT2m2pF41v5gjgT4r0L3w=",
+    "last_login": "2026-03-24T22:47:54.273Z",
+    "is_superuser": false,
+    "first_name": "Neil",
+    "last_name": "Masion",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-03-13T14:02:24.497Z",
+    "course": "IT",
+    "year_level": "3rd",
+    "school": "Cebu Eastern College - (CEC)",
+    "role": "officer",
+    "email": "neilmasion2@gmail.com",
+    "username": "Ainz",
+    "is_email_verified": true,
+    "email_verification_code": null,
+    "last_username_update": "2026-03-15T15:12:03.013Z",
+    "bio": "Web Developer",
+    "profile_picture": "profile_pics/sung-jinwoo-solo-3840x2160-17972.jpg",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$tTThXOTE5D7l72AY71LspP$7Ocr6Av9GzE8AZYTe0m3k9ZUtsfHPTGeom2QwCrvkC0=",
+    "last_login": "2026-03-23T16:01:42.885Z",
+    "is_superuser": false,
+    "first_name": "albert",
+    "last_name": "villasor",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-14T11:46:20.746Z",
+    "course": "CS",
+    "year_level": "3rd",
+    "school": null,
+    "role": "member",
+    "email": "albertvillasor@gmail.com",
+    "username": "albert",
+    "is_email_verified": true,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$1hDeaosyYEqF97VyR9rIk1$rsi6TCsV0jKMW8UTFn7X16B6qgpaF+1cRL6OXVyi+1Y=",
+    "last_login": "2026-03-24T16:25:05.574Z",
+    "is_superuser": false,
+    "first_name": "Neil",
+    "last_name": "Masion",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-15T13:43:07.846Z",
+    "course": "IT",
+    "year_level": "3rd",
+    "school": null,
+    "role": "member",
+    "email": "neilmasion11@gmail.com",
+    "username": "neilmasion",
+    "is_email_verified": true,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": "Hello!!!",
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$ysYXhGmCg3Wntnb5zQqZcC$htZHE/dTkD7pJ7xBTbjWoCKdrHEhzjrJvKRMPGeZTvg=",
+    "last_login": "2026-03-15T14:35:29.441Z",
+    "is_superuser": false,
+    "first_name": "Neil",
+    "last_name": "Masion",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-15T14:35:22.573Z",
+    "course": "IT",
+    "year_level": "2nd",
+    "school": null,
+    "role": "member",
+    "email": "neilmasion44@gmail.com",
+    "username": "neilmasion",
+    "is_email_verified": false,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 9,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$EMnLlUg85OhAB0G9n0tnhM$Fgvb/bD4+ACbS6HD+kZxaUY2SAjPXoK3idAgolxpK5Q=",
+    "last_login": "2026-03-15T15:42:46.582Z",
+    "is_superuser": false,
+    "first_name": "gelo",
+    "last_name": "louviere",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-15T15:42:40.558Z",
+    "course": "CS",
+    "year_level": "1st",
+    "school": null,
+    "role": "member",
+    "email": "gelolouviere@gmail.com",
+    "username": "gelolouviere",
+    "is_email_verified": false,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 10,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$HrcrHW4uwOPKWU8EvtwxI9$HmzTGAsaUqwd6pcDi2iFNfo+0orvEGraa06TImKQn1Q=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "gelo",
+    "last_name": "louviere",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-15T16:32:18.122Z",
+    "course": "CS",
+    "year_level": "3rd",
+    "school": null,
+    "role": "member",
+    "email": "gelolouviere1@gmail.com",
+    "username": "gelolouviere",
+    "is_email_verified": false,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 11,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$30a8svwUCvPVpZ37MrOeZt$59v37zGlUjmjcWYIYxlaHX/t5LaW1lOpjEQfAkwPno0=",
+    "last_login": "2026-03-19T00:11:34.294Z",
+    "is_superuser": false,
+    "first_name": "gelo",
+    "last_name": "louviere",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-15T16:34:51.211Z",
+    "course": "CS",
+    "year_level": "3rd",
+    "school": null,
+    "role": "member",
+    "email": "louvieregelo@gmail.com",
+    "username": "gelolouviere",
+    "is_email_verified": true,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 12,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$TGTVISch3bOFFGjHxGWdzp$wpEPcoU9XE8GznyRpWmmfQVyrVC33HyWuOTythN4lo4=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Test",
+    "last_name": "User",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-22T15:52:43.765Z",
+    "course": "IT",
+    "year_level": "1st",
+    "school": null,
+    "role": "member",
+    "email": "testuser1234@example.com",
+    "username": "testuser_1234",
+    "is_email_verified": false,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 13,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$UJG95ZqD5qeHRKvBhYvsDq$crRwyAY59eh0x5e7Cy/CHy2od8rQIi0K6jSelygf3Yc=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Test",
+    "last_name": "User",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-22T16:21:12.822Z",
+    "course": "IT",
+    "year_level": "1st",
+    "school": null,
+    "role": "member",
+    "email": "testuser@example.com",
+    "username": "testuser",
+    "is_email_verified": false,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 14,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$JBfYDk5iCbfuG9kkV2gPfs$6m/uT7D53mIk7J2xBPmlSPcHr6Qe8U5uWj5FlYD8oNc=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Ainz",
+    "last_name": "Gown",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-22T19:35:48.067Z",
+    "course": "IT",
+    "year_level": "1st",
+    "school": null,
+    "role": "member",
+    "email": "ainz@example.com",
+    "username": "Ainz",
+    "is_email_verified": false,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 15,
+  "fields": {
+    "password": "password",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-24T23:00:57.435Z",
+    "course": null,
+    "year_level": null,
+    "school": null,
+    "role": "member",
+    "email": "testotp2@example.com",
+    "username": "testotp2",
+    "is_email_verified": false,
+    "email_verification_code": "123328",
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 16,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$9iUQiO4aPA2i9B13Fi7RsE$6m1K6nUpuyDzp2xPFCK5qJG1NUOHeYQP8xmXLhczT4k=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Kevin Clide",
+    "last_name": "Bautista",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-24T23:04:32.387Z",
+    "course": "IT",
+    "year_level": "3rd",
+    "school": "Cebu Eastern College - (CEC)",
+    "role": "member",
+    "email": "neilmasion7@gmail.com",
+    "username": "Boki",
+    "is_email_verified": true,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.user",
+  "pk": 20,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$qA5rDUa4qeH9AwVrwqzPE4$vplWJkGiJEPVaWQDxNXQ+QQB8/C8nIguAO1APOujGWo=",
+    "last_login": "2026-03-24T23:24:34.204Z",
+    "is_superuser": false,
+    "first_name": "Lawrence",
+    "last_name": "Masion",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-03-24T23:23:42.443Z",
+    "course": "IT",
+    "year_level": "1st",
+    "school": "Cebu Eastern College - (CEC)",
+    "role": "member",
+    "email": "lawrencemasion01@gmail.com",
+    "username": "Ace",
+    "is_email_verified": true,
+    "email_verification_code": null,
+    "last_username_update": null,
+    "bio": null,
+    "profile_picture": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "base.contactmessage",
+  "pk": 1,
+  "fields": {
+    "user": null,
+    "name": "dawdawd",
+    "email": "albertvillasor@gmail.com",
+    "subject": "Workshop / Event Question",
+    "message": "awdawd",
+    "created_at": "2026-03-14T16:32:32.863Z"
+  }
+},
+{
+  "model": "base.memberstats",
+  "pk": 2,
+  "fields": {
+    "members": "120+",
+    "workshops": "30+",
+    "certs_earned": "50+"
+  }
+},
+{
+  "model": "base.event",
+  "pk": 3,
+  "fields": {
+    "title": "Into the Cloud: First step in AWS",
+    "description": "",
+    "day": "11",
+    "month": "JAN",
+    "time_range": "7:00 PM – 9:00 PM",
+    "location": "Google Meet",
+    "spots_left": "50 spots left",
+    "date": "2026-01-11",
+    "start_time": "19:00:00",
+    "end_time": "21:00:00",
+    "event_type": "talk",
+    "is_featured": true
+  }
+},
+{
+  "model": "base.event",
+  "pk": 4,
+  "fields": {
+    "title": "Into the Cloud: Building & Deploying Web Apps with AWS Amplify and S3",
+    "description": "",
+    "day": "27",
+    "month": "FEB",
+    "time_range": "9:00 AM – 12:00 PM",
+    "location": "ComLab5",
+    "spots_left": "50 spots left",
+    "date": "2026-02-27",
+    "start_time": "09:00:00",
+    "end_time": "12:00:00",
+    "event_type": "workshop",
+    "is_featured": true
+  }
+},
+{
+  "model": "base.event",
+  "pk": 5,
+  "fields": {
+    "title": " Into the Cloud: Github Fundamentals with AWS Networking & Security",
+    "description": "",
+    "day": "22",
+    "month": "MAR",
+    "time_range": "1:00 PM – 5:00 PM",
+    "location": "Google Meet",
+    "spots_left": "50 spots left",
+    "date": "2026-03-22",
+    "start_time": "13:00:00",
+    "end_time": "17:00:00",
+    "event_type": "talk",
+    "is_featured": true
+  }
+},
+{
+  "model": "base.testimonial",
+  "pk": 1,
+  "fields": {
+    "quote": "The community is friendly and supportive, which makes learning new things about AWS and cloud concepts feel less intimidating and more exciting. I’m really glad to be part of a group that encourages learning, collaboration, and growth.",
+    "author_name": "albert villasor",
+    "author_role": "Computer Science (CS) - 3rd Year",
+    "author_initials": "A",
+    "is_approved": true
+  }
+},
+{
+  "model": "base.testimonial",
+  "pk": 2,
+  "fields": {
+    "quote": "Overall this is perfect.",
+    "author_name": "Lawrence Masion",
+    "author_role": "Information Technology (IT) - 1st Year",
+    "author_initials": "A",
+    "is_approved": false
+  }
+},
+{
+  "model": "base.officerapplication",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "reason": "I want to apply as an officer because I want to contribute my creativity and skills in designing. I enjoy creating visual materials like pubmats, posters, and layouts that help promote events and activities in a more engaging way.",
+    "department": "marketing",
+    "status": "approved",
+    "created_at": "2026-03-14T13:26:13.124Z",
+    "updated_at": "2026-03-14T13:42:15.928Z"
+  }
+},
+{
+  "model": "base.officerapplication",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "reason": "Mangawat",
+    "department": "finance",
+    "status": "denied",
+    "created_at": "2026-03-14T13:41:40.874Z",
+    "updated_at": "2026-03-14T13:42:11.799Z"
+  }
+},
+{
+  "model": "base.officerapplication",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "reason": "Mangawat",
+    "department": "finance",
+    "status": "denied",
+    "created_at": "2026-03-14T13:44:42.855Z",
+    "updated_at": "2026-03-14T13:45:10.626Z"
+  }
+},
+{
+  "model": "base.officerapplication",
+  "pk": 4,
+  "fields": {
+    "user": 3,
+    "reason": "Mangawat",
+    "department": "finance",
+    "status": "denied",
+    "created_at": "2026-03-14T13:45:45.435Z",
+    "updated_at": "2026-03-14T13:55:58.628Z"
+  }
+},
+{
+  "model": "base.officerapplication",
+  "pk": 5,
+  "fields": {
+    "user": 3,
+    "reason": "Mangawat ko",
+    "department": "finance",
+    "status": "denied",
+    "created_at": "2026-03-14T13:56:24.412Z",
+    "updated_at": "2026-03-15T17:03:01.762Z"
+  }
+},
+{
+  "model": "base.officerapplication",
+  "pk": 6,
+  "fields": {
+    "user": 5,
+    "reason": "Drawing",
+    "department": "marketing",
+    "status": "pending",
+    "created_at": "2026-03-23T16:22:19.932Z",
+    "updated_at": "2026-03-23T16:22:19.932Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community!",
+    "link": null,
+    "is_read": true,
+    "created_at": "2026-03-13T14:02:25.599Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "message": "Your officer application for the Marketing & Creatives department has been approved! You now have staff access.",
+    "link": null,
+    "is_read": true,
+    "created_at": "2026-03-14T13:42:15.909Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 7,
+  "fields": {
+    "user": 5,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community!",
+    "link": null,
+    "is_read": true,
+    "created_at": "2026-03-15T13:43:08.997Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 8,
+  "fields": {
+    "user": 8,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community!",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-15T14:35:23.718Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 9,
+  "fields": {
+    "user": 9,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features.",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-15T15:42:41.713Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 10,
+  "fields": {
+    "user": 10,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features.",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-15T16:32:19.262Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 11,
+  "fields": {
+    "user": 11,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features.",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-15T16:34:52.287Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 12,
+  "fields": {
+    "user": 11,
+    "message": "Congratulations! Your email has been verified successfully. You now have full access to all Flurry features, including officer applications!",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-15T16:39:37.083Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 13,
+  "fields": {
+    "user": 3,
+    "message": "Your officer application for the Finance department has been denied.",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-15T17:03:01.745Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 14,
+  "fields": {
+    "user": 5,
+    "message": "Neil liked your project: Watchable",
+    "link": null,
+    "is_read": true,
+    "created_at": "2026-03-22T15:24:05.424Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 15,
+  "fields": {
+    "user": 5,
+    "message": "Neil commented on your project: Watchable",
+    "link": null,
+    "is_read": true,
+    "created_at": "2026-03-22T15:42:23.848Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 16,
+  "fields": {
+    "user": 12,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features.",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-22T15:52:45.970Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 17,
+  "fields": {
+    "user": 13,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features.",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-22T16:21:15.669Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 18,
+  "fields": {
+    "user": 14,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features.",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-22T19:35:52.204Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 19,
+  "fields": {
+    "user": 2,
+    "message": "Neil replied to your comment on Watchable",
+    "link": null,
+    "is_read": true,
+    "created_at": "2026-03-23T14:23:49.924Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 20,
+  "fields": {
+    "user": 2,
+    "message": "Congratulations! Your email has been verified successfully. You now have full access to all Flurry features, including officer applications!",
+    "link": null,
+    "is_read": false,
+    "created_at": "2026-03-23T14:43:42.623Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 21,
+  "fields": {
+    "user": 5,
+    "message": "albert liked your project: Watchable",
+    "link": "/community/#showcase-1",
+    "is_read": true,
+    "created_at": "2026-03-23T16:01:57.070Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 22,
+  "fields": {
+    "user": 2,
+    "message": "admin sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": true,
+    "created_at": "2026-03-23T23:32:15.580Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 23,
+  "fields": {
+    "user": 1,
+    "message": "Neil accepted your connection request!",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-23T23:32:56.561Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 24,
+  "fields": {
+    "user": 5,
+    "message": "Neil sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-23T23:53:41.051Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 25,
+  "fields": {
+    "user": 5,
+    "message": "Neil sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-24T00:07:39.858Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 26,
+  "fields": {
+    "user": 2,
+    "message": "Neil accepted your connection request!",
+    "link": "/profile/?tab=connections",
+    "is_read": true,
+    "created_at": "2026-03-24T13:12:23.399Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 27,
+  "fields": {
+    "user": 3,
+    "message": "Neil sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-24T13:45:28.738Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 28,
+  "fields": {
+    "user": 5,
+    "message": "Neil liked your project: Watchable",
+    "link": "/community/#showcase-1",
+    "is_read": false,
+    "created_at": "2026-03-24T14:23:40.467Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 29,
+  "fields": {
+    "user": 3,
+    "message": "Neil sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-24T15:17:55.509Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 30,
+  "fields": {
+    "user": 16,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features.",
+    "link": "/profile/",
+    "is_read": false,
+    "created_at": "2026-03-24T23:04:33.537Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 31,
+  "fields": {
+    "user": 16,
+    "message": "Congratulations! Your email has been verified successfully. You now have full access to all Flurry features, including officer applications!",
+    "link": "/profile/",
+    "is_read": false,
+    "created_at": "2026-03-24T23:11:07.408Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 35,
+  "fields": {
+    "user": 20,
+    "message": "Welcome to Flurry! We're glad to have you here. Explore our cloud workshops and community! Please remember to verify your email to unlock all features.",
+    "link": "/profile/",
+    "is_read": false,
+    "created_at": "2026-03-24T23:23:43.541Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 36,
+  "fields": {
+    "user": 20,
+    "message": "Congratulations! Your email has been verified successfully. You now have full access to all Flurry features, including officer applications!",
+    "link": "/profile/",
+    "is_read": false,
+    "created_at": "2026-03-24T23:24:02.271Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 37,
+  "fields": {
+    "user": 3,
+    "message": "Lawrence sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-24T23:26:47.044Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 38,
+  "fields": {
+    "user": 2,
+    "message": "Lawrence sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-24T23:26:54.188Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 39,
+  "fields": {
+    "user": 16,
+    "message": "Lawrence sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-24T23:29:05.340Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 40,
+  "fields": {
+    "user": 2,
+    "message": "Lawrence sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-24T23:29:33.130Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 41,
+  "fields": {
+    "user": 16,
+    "message": "Lawrence sent you a connection request.",
+    "link": "/profile/?tab=connections",
+    "is_read": false,
+    "created_at": "2026-03-24T23:29:50.016Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 42,
+  "fields": {
+    "user": 5,
+    "message": "Lawrence liked your project: Watchable",
+    "link": "/community/#showcase-1",
+    "is_read": false,
+    "created_at": "2026-03-24T23:31:53.131Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 43,
+  "fields": {
+    "user": 5,
+    "message": "Lawrence liked your project: Watchable",
+    "link": "/community/#showcase-1",
+    "is_read": false,
+    "created_at": "2026-03-24T23:31:55.399Z"
+  }
+},
+{
+  "model": "base.notification",
+  "pk": 44,
+  "fields": {
+    "user": 5,
+    "message": "Lawrence commented on your project: Watchable",
+    "link": "/community/#showcase-1",
+    "is_read": false,
+    "created_at": "2026-03-24T23:32:01.251Z"
+  }
+},
+{
+  "model": "base.connection",
+  "pk": 3,
+  "fields": {
+    "user_from": 2,
+    "user_to": 5,
+    "status": "accepted",
+    "created_at": "2026-03-24T00:07:39.845Z",
+    "updated_at": "2026-03-24T13:12:23.379Z"
+  }
+},
+{
+  "model": "base.connection",
+  "pk": 5,
+  "fields": {
+    "user_from": 2,
+    "user_to": 3,
+    "status": "pending",
+    "created_at": "2026-03-24T15:17:55.496Z",
+    "updated_at": "2026-03-24T15:17:55.496Z"
+  }
+},
+{
+  "model": "base.connection",
+  "pk": 6,
+  "fields": {
+    "user_from": 20,
+    "user_to": 3,
+    "status": "pending",
+    "created_at": "2026-03-24T23:26:47.036Z",
+    "updated_at": "2026-03-24T23:26:47.036Z"
+  }
+},
+{
+  "model": "base.connection",
+  "pk": 9,
+  "fields": {
+    "user_from": 20,
+    "user_to": 2,
+    "status": "pending",
+    "created_at": "2026-03-24T23:29:33.082Z",
+    "updated_at": "2026-03-24T23:29:33.082Z"
+  }
+},
+{
+  "model": "base.connection",
+  "pk": 10,
+  "fields": {
+    "user_from": 20,
+    "user_to": 16,
+    "status": "pending",
+    "created_at": "2026-03-24T23:29:49.975Z",
+    "updated_at": "2026-03-24T23:29:49.975Z"
+  }
+},
+{
+  "model": "base.enrollment",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "event": 5,
+    "enrolled_at": "2026-03-14T16:10:02.987Z"
+  }
+},
+{
+  "model": "base.enrollment",
+  "pk": 4,
+  "fields": {
+    "user": 5,
+    "event": 5,
+    "enrolled_at": "2026-03-15T13:44:21.794Z"
+  }
+},
+{
+  "model": "base.enrollment",
+  "pk": 5,
+  "fields": {
+    "user": 9,
+    "event": 5,
+    "enrolled_at": "2026-03-15T15:43:03.783Z"
+  }
+},
+{
+  "model": "base.enrollment",
+  "pk": 6,
+  "fields": {
+    "user": 11,
+    "event": 5,
+    "enrolled_at": "2026-03-15T16:40:47.112Z"
+  }
+},
+{
+  "model": "base.showcase",
+  "pk": 1,
+  "fields": {
+    "user": 5,
+    "title": "Watchable",
+    "website_url": "https://neilmasion.github.io/watchable/",
+    "description": "Past project from 2nd year",
+    "is_approved": true,
+    "created_at": "2026-03-19T02:06:41.608Z",
+    "likes": [
+      2,
+      3,
+      5,
+      20
+    ],
+    "saves": [
+      2
+    ]
+  }
+},
+{
+  "model": "base.showcaseimage",
+  "pk": 1,
+  "fields": {
+    "showcase": 1,
+    "image": "showcase_screenshots/w1.png"
+  }
+},
+{
+  "model": "base.showcaseimage",
+  "pk": 2,
+  "fields": {
+    "showcase": 1,
+    "image": "showcase_screenshots/w2.png"
+  }
+},
+{
+  "model": "base.showcaseimage",
+  "pk": 3,
+  "fields": {
+    "showcase": 1,
+    "image": "showcase_screenshots/w3.png"
+  }
+},
+{
+  "model": "base.showcasecomment",
+  "pk": 1,
+  "fields": {
+    "showcase": 1,
+    "user": 2,
+    "parent": null,
+    "content": "hi",
+    "created_at": "2026-03-22T15:42:23.801Z"
+  }
+},
+{
+  "model": "base.showcasecomment",
+  "pk": 2,
+  "fields": {
+    "showcase": 1,
+    "user": 5,
+    "parent": 1,
+    "content": "hello?",
+    "created_at": "2026-03-23T14:23:49.900Z"
+  }
+},
+{
+  "model": "base.showcasecomment",
+  "pk": 3,
+  "fields": {
+    "showcase": 1,
+    "user": 20,
+    "parent": null,
+    "content": "woah",
+    "created_at": "2026-03-24T23:32:01.233Z"
+  }
+}
+]
