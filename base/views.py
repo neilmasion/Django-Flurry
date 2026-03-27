@@ -12,6 +12,9 @@ from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, Showc
 from django.core.mail import send_mail
 from django.urls import reverse
 import logging
+from email.utils import parseaddr
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -572,6 +575,40 @@ def send_verification_email_logic(user, request):
     from_email = settings.DEFAULT_FROM_EMAIL
     if 'gmail' in settings.EMAIL_HOST.lower() and settings.EMAIL_HOST_USER:
         from_email = settings.EMAIL_HOST_USER
+
+    sendgrid_api_key = os.getenv('SENDGRID_API_KEY') or os.getenv('EMAIL_HOST_PASSWORD', '')
+    smtp_is_sendgrid = 'sendgrid' in settings.EMAIL_HOST.lower()
+    if sendgrid_api_key and smtp_is_sendgrid:
+        from_name, from_addr = parseaddr(from_email)
+        if not from_addr:
+            from_addr = from_email
+
+        payload = {
+            'personalizations': [{'to': [{'email': user.email}]}],
+            'from': {'email': from_addr, 'name': from_name or 'Flurry'},
+            'subject': subject,
+            'content': [
+                {'type': 'text/plain', 'value': plain_message},
+                {'type': 'text/html', 'value': html_message},
+            ],
+        }
+
+        try:
+            response = requests.post(
+                'https://api.sendgrid.com/v3/mail/send',
+                headers={
+                    'Authorization': f'Bearer {sendgrid_api_key}',
+                    'Content-Type': 'application/json',
+                },
+                json=payload,
+                timeout=15,
+            )
+            if 200 <= response.status_code < 300:
+                return True, None
+            return False, f'SendGrid API {response.status_code}: {response.text[:180]}'
+        except Exception as e:
+            logger.exception("SendGrid API send failed for %s", user.email)
+            return False, f"{e.__class__.__name__}: {str(e)}"
 
     # Send synchronously so failures are surfaced to the user.
     try:
