@@ -4,9 +4,10 @@ import os
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+# Accept either key name so cloud env naming differences do not crash startup.
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY') or os.getenv('SECRET_KEY')
 if not SECRET_KEY:
-    raise RuntimeError('DJANGO_SECRET_KEY is required')
+    raise RuntimeError('DJANGO_SECRET_KEY or SECRET_KEY is required')
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() == 'true'
 
