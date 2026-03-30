@@ -351,9 +351,9 @@
                             <tbody>
                                 {% for u in officers %}
                                 <tr>
-                                    <td data-label="ID"><code>#{{ forloop.revcounter|add:members.count }}</code></td>
+                                    <td data-label="ID"><code>#{{ u.id }}</code></td>
                                     <td class="name-cell" data-label="Name">
-                                        <strong>{{ u.username }}</strong><br>
+                                        <strong>{{ u.username }}</strong> - <small class="admin-tag admin-tag--blue" style="font-size: 0.72rem; padding: 2px 7px;">{{ u.get_department_display|default:u.role|title }}</small><br>
                                         <small>{{ u.email }}</small>
                                     </td>
                                     <td data-label="Department">
@@ -525,7 +525,7 @@
                             <tbody>
                                 {% for u in members %}
                                 <tr>
-                                    <td data-label="ID"><code>#{{ forloop.revcounter }}</code></td>
+                                    <td data-label="ID"><code>#{{ u.id }}</code></td>
                                     <td class="name-cell" data-label="Name">
                                         <strong>{{ u.username }}</strong><br>
                                         <small>{{ u.email }}</small>
