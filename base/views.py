@@ -428,6 +428,7 @@ def handle_officer_application(request, app_id):
         user = application.user
         user.role = 'officer'
         user.is_staff = True
+        user.department = application.department
         user.save()
         Notification.objects.create(
             user=user,

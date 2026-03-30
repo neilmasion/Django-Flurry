@@ -19,10 +19,18 @@ class User(AbstractUser):
         ('officer', 'Officer'),
         ('admin', 'Admin'),
     ]
+    DEPARTMENT_CHOICES = [
+        ('tech', 'Technical'),
+        ('marketing', 'Marketing & Creatives'),
+        ('logistics_ops', 'Logistics & Operations'),
+        ('finance', 'Finance'),
+        ('relations', 'Relations'),
+    ]
     course = models.CharField(max_length=50, choices=COURSE_CHOICES, blank=True, null=True)
     year_level = models.CharField(max_length=20, choices=YEAR_CHOICES, blank=True, null=True)
     school = models.CharField(max_length=200, blank=True, null=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
+    department = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES, blank=True, null=True)
     email = models.EmailField(unique=True)
     
     # Allow duplicate usernames by making email the primary identifier
@@ -124,16 +132,9 @@ class OfficerApplication(models.Model):
         ('approved', 'Approved'),
         ('denied', 'Denied'),
     ]
-    DEPARTMENT_CHOICES = [
-        ('tech', 'Technical'),
-        ('marketing', 'Marketing & Creatives'),
-        ('logistics_ops', 'Logistics & Operations'),
-        ('finance', 'Finance'),
-        ('relations', 'Relations'),
-    ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='officer_applications')
     reason = models.TextField()
-    department = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES, default='tech')
+    department = models.CharField(max_length=20, choices=User.DEPARTMENT_CHOICES, default='tech')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
