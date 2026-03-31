@@ -58,6 +58,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'flurry_project.urls'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'flurry-ratelimit-cache',
+    }
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

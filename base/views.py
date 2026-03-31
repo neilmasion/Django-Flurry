@@ -8,10 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.conf import settings
+from django_ratelimit.decorators import ratelimit
 from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, ContactMessage, OfficerApplication, Notification, Enrollment, Showcase, ShowcaseImage, ShowcaseComment, Connection
 from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, ShowcaseForm
 from django.core.mail import send_mail
 from django.urls import reverse
+from PIL import Image, UnidentifiedImageError
 from datetime import date as dt_date
 from datetime import timedelta
 import logging
@@ -20,6 +22,30 @@ import requests
 from email.utils import parseaddr
 
 logger = logging.getLogger(__name__)
+
+
+def _validate_profile_picture(uploaded_file, max_size_mb=5):
+    if not uploaded_file:
+        return False, 'No file uploaded.'
+
+    max_size_bytes = max_size_mb * 1024 * 1024
+    if uploaded_file.size > max_size_bytes:
+        return False, f'File too large. Maximum size is {max_size_mb}MB.'
+
+    extension = os.path.splitext(uploaded_file.name or '')[1].lower()
+    if extension not in {'.jpg', '.jpeg', '.png', '.gif', '.webp'}:
+        return False, 'Unsupported file extension. Use JPG, PNG, GIF, or WEBP.'
+
+    try:
+        image = Image.open(uploaded_file)
+        image.verify()
+        uploaded_file.seek(0)
+        if image.format not in {'JPEG', 'PNG', 'GIF', 'WEBP'}:
+            return False, 'Unsupported image type. Use JPG, PNG, GIF, or WEBP.'
+    except (UnidentifiedImageError, OSError):
+        return False, 'Invalid image file.'
+
+    return True, None
 
 
 def _demote_to_member(user):
@@ -138,7 +164,14 @@ def community(request):
     return render(request, 'community.html', {'showcases': showcases, 'form': form})
 
 @login_required
+@ratelimit(key='user', rate='120/h', method='POST', block=False)
 def toggle_like(request, pk):
+    if getattr(request, 'limited', False):
+        return JsonResponse({'error': 'Too many requests. Please try again later.'}, status=429)
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
     showcase = get_object_or_404(Showcase, pk=pk)
     if request.user in showcase.likes.all():
         showcase.likes.remove(request.user)
@@ -156,7 +189,14 @@ def toggle_like(request, pk):
     return JsonResponse({'liked': liked, 'count': showcase.total_likes})
 
 @login_required
+@ratelimit(key='user', rate='120/h', method='POST', block=False)
 def toggle_save(request, pk):
+    if getattr(request, 'limited', False):
+        return JsonResponse({'error': 'Too many requests. Please try again later.'}, status=429)
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
     showcase = get_object_or_404(Showcase, pk=pk)
     if request.user in showcase.saves.all():
         showcase.saves.remove(request.user)
@@ -167,7 +207,11 @@ def toggle_save(request, pk):
     return JsonResponse({'saved': saved, 'count': showcase.total_saves})
 
 @login_required
+@ratelimit(key='user', rate='40/h', method='POST', block=False)
 def add_comment(request, pk):
+    if getattr(request, 'limited', False):
+        return JsonResponse({'error': 'Too many comments. Please try again later.'}, status=429)
+
     if request.method == 'POST':
         showcase = get_object_or_404(Showcase, pk=pk)
         content = request.POST.get('content')
@@ -245,7 +289,17 @@ def contact(request):
         
     return render(request, 'contact.html', {'form': form})
 
+@ratelimit(key='ip', rate='12/10m', method='POST', block=False)
 def login_view(request):
+    if request.method == 'POST' and getattr(request, 'limited', False):
+        messages.error(request, 'Too many login attempts. Please wait a bit and try again.')
+        return render(request, 'account.html', {
+            'login_form': StudentLoginForm(data=request.POST),
+            'register_form': StudentRegistrationForm(),
+            'panel': 'login',
+            'next': request.POST.get('next') or request.GET.get('next')
+        })
+
     next_url = request.POST.get('next') or request.GET.get('next')
     admin_next_targets = {
         '/admin/',
@@ -790,7 +844,12 @@ def update_profile(request):
 def upload_avatar(request):
     if request.method == 'POST' and request.FILES.get('profile_picture'):
         user = request.user
-        user.profile_picture = request.FILES['profile_picture']
+        profile_picture = request.FILES['profile_picture']
+        is_valid, error_message = _validate_profile_picture(profile_picture)
+        if not is_valid:
+            return JsonResponse({'success': False, 'error': error_message}, status=400)
+
+        user.profile_picture = profile_picture
         user.save()
         return JsonResponse({
             'success': True,
@@ -805,7 +864,12 @@ def upload_avatar(request):
         
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
+@ratelimit(key='ip', rate='8/h', method=['GET', 'POST'], block=False)
 def send_verification_email(request):
+    if getattr(request, 'limited', False):
+        messages.error(request, 'Too many resend attempts. Please try again later.')
+        return redirect('verify-email-sent')
+
     user = None
     if request.user.is_authenticated:
         user = request.user
