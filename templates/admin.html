@@ -161,36 +161,6 @@
                     </div>
                 </div>
                 <div class="admin-topbar-right">
-                    {% if user.is_authenticated %}
-                    <div class="notif-wrapper" id="notifWrapper">
-                        <button class="nav-notif-btn" id="notifToggle" title="Notifications" style="color: rgba(255,255,255,0.7);">
-                            <i class="fa-solid fa-bell"></i>
-                            {% if unread_notifications_count > 0 %}
-                            <span class="notif-badge" style="border-color: #1a1a1a;">{{ unread_notifications_count }}</span>
-                            {% endif %}
-                        </button>
-                        <div class="notif-dropdown" id="notifDropdown" style="background: rgba(13, 36, 144, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
-                            <div class="notif-dropdown-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                <span>Notifications</span>
-                                {% if unread_notifications_count > 0 %}
-                                <span class="notif-count">{{ unread_notifications_count }} New</span>
-                                {% endif %}
-                            </div>
-                            <div class="notif-dropdown-content">
-                                {% for n in all_notifications %}
-                                <div class="notif-dropdown-item{% if n.is_read %} notif-read{% endif %}" data-notif-id="{{ n.id }}" style="cursor:pointer;border-bottom: 1px solid rgba(255,255,255,0.05);" onclick="markNotifRead(this, '{{ n.id }}', '{{ n.link|default:'' }}')">
-                                    <p style="color: #fff;">{{ n.message }}</p>
-                                    <small style="color: rgba(255,255,255,0.5);">{{ n.created_at|timesince }} ago</small>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            <div class="notif-dropdown-footer" style="padding: 0.65rem 1rem; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; gap: 0.5rem;">
-                                <a href="{% url 'mark-all-notifications-read' %}" style="font-size: 0.72rem; color: #60a5fa; font-weight: 600; text-decoration: none;"><i class="fa-solid fa-check-double"></i> Mark all read</a>
-                                <a href="{% url 'clear-all-notifications' %}" style="font-size: 0.72rem; color: #f87171; font-weight: 600; text-decoration: none;"><i class="fa-solid fa-trash-can"></i> Clear all</a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
                     <button class="admin-theme-btn theme-toggle" id="appThemeBtn" aria-label="Toggle theme">
                         <img src="{% static 'images/theme.png' %}" alt="Theme" class="theme-icon">
                     </button>
@@ -353,7 +323,7 @@
                                 <tr>
                                     <td data-label="ID"><code>#{{ u.id }}</code></td>
                                     <td class="name-cell" data-label="Name">
-                                        <strong>{{ u.username }}</strong> - <small class="admin-tag admin-tag--blue" style="font-size: 0.72rem; padding: 2px 7px;">{{ u.get_department_display|default:u.role|title }}</small><br>
+                                        <strong>{{ u.username }}</strong><br>
                                         <small>{{ u.email }}</small>
                                     </td>
                                     <td data-label="Department">
