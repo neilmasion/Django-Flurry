@@ -312,10 +312,12 @@
                             <thead>
                                 <tr>
                                     <th style="width: 10%;">ID</th>
-                                    <th style="width: 25%;">Name</th>
-                                    <th style="width: 20%;">Department</th>
-                                    <th style="width: 20%;">Date Joined</th>
-                                    <th style="width: 25%;">Role</th>
+                                    <th style="width: 22%;">Name</th>
+                                    <th style="width: 18%;">Department</th>
+                                    <th style="width: 18%;">Date Joined</th>
+                                    <th style="width: 16%;">Term Ends</th>
+                                    <th style="width: 16%;">Role</th>
+                                    <th style="width: 16%;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -330,12 +332,36 @@
                                         <span class="admin-tag admin-tag--blue">{{ u.get_department_display|default:"General" }}</span>
                                     </td>
                                     <td data-label="Date Joined">{{ u.date_joined|date:"M d, Y" }}</td>
+                                    <td data-label="Term Ends">
+                                        {% if u.officer_ends_at %}
+                                            {% if u.officer_ends_at < today %}
+                                                <span class="admin-tag admin-tag--orange">Expired {{ u.officer_ends_at|date:"M d, Y" }}</span>
+                                            {% else %}
+                                                {{ u.officer_ends_at|date:"M d, Y" }}
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="admin-tag">Not set</span>
+                                        {% endif %}
+                                    </td>
                                     <td data-label="Role">
                                         <span class="admin-tag">{{ u.role|title }}</span>
                                     </td>
+                                    <td data-label="Action">
+                                        <form action="{% url 'demote-officer' u.id %}" method="POST" class="delete-form"
+                                            data-title="Move to Member?"
+                                            data-confirm="Are you sure you want to move {{ u.username }} from officer to member?"
+                                            data-btn-text="Confirm"
+                                            style="display:inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="reason" value="Manual admin demotion">
+                                            <button type="submit" class="admin-btn-icon admin-btn-icon--danger" title="Move to member">
+                                                <i class="fa-solid fa-user-minus"></i>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                                 {% empty %}
-                                <tr><td colspan="4">No officers found.</td></tr>
+                                <tr><td colspan="6">No officers found.</td></tr>
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -542,6 +568,7 @@
                                         <form action="{% url 'handle-officer-application' app.id %}" method="POST" style="display:inline;">
                                             {% csrf_token %}
                                             <input type="hidden" name="action" value="approve">
+                                            <input type="hidden" name="term_days" value="365">
                                             <button type="submit" class="admin-btn-icon admin-btn-icon--success" title="Approve"><i class="fa-solid fa-check"></i></button>
                                         </form>
                                         <form action="{% url 'handle-officer-application' app.id %}" method="POST" style="display:inline;" class="delete-form"

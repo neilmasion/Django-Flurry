@@ -26,6 +26,7 @@ urlpatterns = [
     path('approve-showcase/<int:showcase_id>/', views.approve_showcase, name='approve-showcase'),
     path('delete-showcase/<int:showcase_id>/', views.delete_showcase, name='delete-showcase'),
     path('update-role/<int:user_id>/', views.update_role, name='update-role'),
+    path('demote-officer/<int:user_id>/', views.demote_officer, name='demote-officer'),
     path('apply-for-officer/', views.apply_for_officer, name='apply-for-officer'),
     path('handle-officer-application/<int:app_id>/', views.handle_officer_application, name='handle-officer-application'),
     path('notification-read/<int:notification_id>/', views.mark_notification_read, name='mark-notification-read'),

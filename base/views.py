@@ -11,12 +11,31 @@ from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, 
 from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, ShowcaseForm
 from django.core.mail import send_mail
 from django.urls import reverse
+from datetime import timedelta
 import logging
 import os
 import requests
 from email.utils import parseaddr
 
 logger = logging.getLogger(__name__)
+
+
+def _demote_to_member(user):
+    user.role = 'member'
+    if not user.is_superuser:
+        user.is_staff = False
+    user.department = None
+    user.officer_started_at = None
+    user.officer_ends_at = None
+
+
+def _promote_to_officer(user, department, term_days=365):
+    today = timezone.now().date()
+    user.role = 'officer'
+    user.is_staff = True
+    user.department = department
+    user.officer_started_at = today
+    user.officer_ends_at = today + timedelta(days=term_days)
 
 @staff_member_required
 def update_role(request, user_id):
@@ -27,16 +46,15 @@ def update_role(request, user_id):
         target_user = get_object_or_404(User, id=user_id)
         new_role = request.POST.get('role')
         if new_role in ['member', 'officer', 'admin']:
-            target_user.role = new_role
-            # Sync is_staff/is_superuser if role is admin
             if new_role == 'admin':
+                target_user.role = 'admin'
                 target_user.is_staff = True
             elif new_role == 'officer':
-                target_user.is_staff = True # Officers can access some admin parts
+                department = request.POST.get('department') or target_user.department or 'tech'
+                _promote_to_officer(target_user, department)
             else:
-                if not target_user.is_superuser:
-                    target_user.is_staff = False
-            
+                _demote_to_member(target_user)
+
             target_user.save()
             messages.success(request, f'Role updated for {target_user.username}.')
         else:
@@ -391,6 +409,7 @@ def admin_dashboard(request):
         'all_messages': all_messages,
         'all_testimonials': all_testimonials,
         'all_showcases': all_showcases,
+        'today': today,
     }
     return render(request, 'admin.html', context)
 
@@ -400,6 +419,14 @@ def apply_for_officer(request):
         messages.error(request, 'Please verify your email before applying for an officer position.')
         return redirect('profile')
         
+    if request.user.role == 'officer':
+        messages.info(request, 'You are already an officer.')
+        return redirect('profile')
+
+    if request.user.officer_applications.filter(status='pending').exists():
+        messages.info(request, 'You already have a pending officer application.')
+        return redirect('profile')
+
     if request.method == 'POST':
         reason = request.POST.get('reason')
         department = request.POST.get('department')
@@ -426,13 +453,18 @@ def handle_officer_application(request, app_id):
     if action == 'approve':
         application.status = 'approved'
         user = application.user
-        user.role = 'officer'
-        user.is_staff = True
-        user.department = application.department
+        term_days_raw = request.POST.get('term_days', '365')
+        try:
+            term_days = max(1, int(term_days_raw))
+        except (TypeError, ValueError):
+            term_days = 365
+
+        _promote_to_officer(user, application.department, term_days=term_days)
         user.save()
+        end_date_str = user.officer_ends_at.strftime('%b %d, %Y') if user.officer_ends_at else 'N/A'
         Notification.objects.create(
             user=user,
-            message=f"Your officer application for the {application.get_department_display()} department has been approved! You now have staff access.",
+            message=f"Your officer application for the {application.get_department_display()} department has been approved! Your term ends on {end_date_str}.",
             link=reverse('profile')
         )
         messages.success(request, f"Approved {user.username}'s application.")
@@ -446,6 +478,34 @@ def handle_officer_application(request, app_id):
         messages.success(request, f"Denied {application.user.username}'s application.")
     
     application.save()
+    return redirect('admin-dashboard')
+
+
+@staff_member_required
+def demote_officer(request, user_id):
+    if request.user.role != 'admin' and not request.user.is_superuser:
+        messages.error(request, 'Only Administrators can demote officers.')
+        return redirect('admin-dashboard')
+
+    if request.method != 'POST':
+        return redirect('admin-dashboard')
+
+    target_user = get_object_or_404(User, id=user_id)
+    reason = request.POST.get('reason', 'Admin role update').strip()
+
+    if target_user.role != 'officer':
+        messages.info(request, f'{target_user.username} is not currently an officer.')
+        return redirect('admin-dashboard')
+
+    _demote_to_member(target_user)
+    target_user.save()
+
+    Notification.objects.create(
+        user=target_user,
+        message=f"Your officer role has been changed back to member. Reason: {reason}",
+        link=reverse('profile')
+    )
+    messages.success(request, f'{target_user.username} has been moved back to member.')
     return redirect('admin-dashboard')
 
 @login_required

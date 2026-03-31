@@ -1,6 +1,8 @@
 import uuid
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 class User(AbstractUser):
     COURSE_CHOICES = [
@@ -47,6 +49,13 @@ class User(AbstractUser):
     last_username_update = models.DateTimeField(null=True, blank=True)
     bio = models.TextField(max_length=500, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    officer_started_at = models.DateField(blank=True, null=True)
+    officer_ends_at = models.DateField(blank=True, null=True)
+
+    def set_officer_term(self, days=365):
+        start_date = timezone.now().date()
+        self.officer_started_at = start_date
+        self.officer_ends_at = start_date + timedelta(days=days)
 
 class ContactMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='contact_messages', null=True, blank=True)
