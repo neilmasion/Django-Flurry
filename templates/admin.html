@@ -176,48 +176,54 @@
                     <p>Overview of Flurry community activity.</p>
                 </div>
 
-                {% if user.role == 'admin' or user.is_superuser %}
-                <div class="dash-stats">
-                    <div class="dash-stat-card">
-                        <div class="dash-stat-icon"><i class="fa-solid fa-users"></i></div>
-                        <div class="dash-stat-body">
-                            <div class="dash-stat-num" id="statTotalUsers">{{ total_users }}</div>
-                            <div class="dash-stat-label">Total Users</div>
+                <div class="dash-unified-card">
+                    <div class="dash-card">
+                        <div class="dash-card-header">
+                            <h4><i class="fa-solid fa-chart-pie"></i> Quick Stats & Recent Activity</h4>
                         </div>
-                    </div>
-                    <div class="dash-stat-card">
-                        <div class="dash-stat-icon"><i class="fa-solid fa-envelope"></i></div>
-                        <div class="dash-stat-body">
-                            <div class="dash-stat-num" id="statTotalMessages">{{ total_messages }}</div>
-                            <div class="dash-stat-label">Contact Messages</div>
-                        </div>
-                    </div>
-                    <div class="dash-stat-card">
-                        <div class="dash-stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
-                        <div class="dash-stat-body">
-                            <div class="dash-stat-num" id="statTotalEvents">{{ total_events }}</div>
-                            <div class="dash-stat-label">Active Events</div>
+                        <div class="dash-card-body stats-and-activity">
+                            <div class="dash-stats-compact">
+                                {% if user.role == 'admin' or user.is_superuser %}
+                                <div class="dash-stat-mini">
+                                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                                    <div><div class="stat-num" id="statTotalUsers">{{ total_users }}</div><div class="stat-label">Users</div></div>
+                                </div>
+                                {% endif %}
+                                <div class="dash-stat-mini">
+                                    <div class="stat-icon"><i class="fa-solid fa-envelope"></i></div>
+                                    <div><div class="stat-num" id="statTotalMessages">{{ total_messages }}</div><div class="stat-label">Messages</div></div>
+                                </div>
+                                <div class="dash-stat-mini">
+                                    <div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                                    <div><div class="stat-num" id="statTotalEvents">{{ total_events }}</div><div class="stat-label">Events</div></div>
+                                </div>
+                            </div>
+                            {% if user.role == 'admin' or user.is_superuser %}
+                            <div class="regs-divider"></div>
+                            <div class="recent-regs-list-compact">
+                                <h5 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 0 0 0.65rem 0; letter-spacing: 0.05em;"><i class="fa-solid fa-clock-rotate-left"></i> Latest Joins</h5>
+                                {% for r_user in recent_users %}
+                                <div class="recent-reg-item-compact">
+                                    <div class="reg-avatar-sm">
+                                        {% if r_user.profile_picture %}
+                                            <img src="{{ r_user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                        {% else %}
+                                            {{ r_user.username.0|upper }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="reg-details-compact">
+                                        <div class="reg-name">{{ r_user.username }}</div>
+                                        <div class="reg-date">{{ r_user.date_joined|date:"M d" }}</div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="dash-empty" style="padding: 1rem;"><p>No recent registrations.</p></div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-                {% else %}
-                <div class="dash-stats">
-                    <div class="dash-stat-card">
-                        <div class="dash-stat-icon"><i class="fa-solid fa-envelope"></i></div>
-                        <div class="dash-stat-body">
-                            <div class="dash-stat-num" id="statTotalMessages">{{ total_messages }}</div>
-                            <div class="dash-stat-label">Contact Messages</div>
-                        </div>
-                    </div>
-                    <div class="dash-stat-card">
-                        <div class="dash-stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
-                        <div class="dash-stat-body">
-                            <div class="dash-stat-num" id="statTotalEvents">{{ total_events }}</div>
-                            <div class="dash-stat-label">Active Events</div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
 
                 <div class="dash-charts">
                     <div class="dash-card chart-card">
@@ -238,39 +244,6 @@
                     </div>
                 </div>
 
-                {% if user.role == 'admin' or user.is_superuser %}
-                <div class="dash-lower">
-                    <div class="dash-card">
-                        <div class="dash-card-header">
-                            <h4><i class="fa-solid fa-clock-rotate-left"></i> Recent Registrations</h4>
-                        </div>
-                        <div class="dash-card-body recent-regs-list">
-                            {% for r_user in recent_users %}
-                            <div class="recent-reg-item">
-                                <div class="reg-avatar">
-                                    {% if r_user.profile_picture %}
-                                        <img src="{{ r_user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
-                                    {% else %}
-                                        {{ r_user.username.0|upper }}
-                                    {% endif %}
-                                </div>
-                                <div class="reg-details">
-                                    <div class="reg-name">{{ r_user.username }}</div>
-                                    <div class="reg-meta">
-                                        <i class="fa-regular fa-calendar"></i>
-                                        <span>Joined {{ r_user.date_joined|date:"M d, Y" }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% empty %}
-                            <div class="dash-empty">
-                                <p>No recent registrations.</p>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
             </section>
             <section class="admin-section" id="section-messages">
                 <div class="admin-section-header">

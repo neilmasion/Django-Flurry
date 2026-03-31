@@ -320,6 +320,7 @@
 }
 
 .dash-lower { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.dash-unified-card { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1rem; }
 .dash-charts {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
@@ -343,6 +344,128 @@
 .chart-wrap canvas {
     width: 100% !important;
     height: 100% !important;
+}
+
+/* Unified Dashboard Card Styles */
+.dash-card-body.stats-and-activity {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 1.2rem 1.5rem;
+}
+
+.dash-stats-compact {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.dash-stat-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 0.45rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.dash-stat-mini:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.dash-stat-mini .stat-icon {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.4);
+    min-width: 20px;
+}
+
+.dash-stat-mini .stat-num {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+}
+
+.dash-stat-mini .stat-label {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.regs-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 1rem 0;
+}
+
+.recent-regs-list-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.recent-regs-list-compact h5 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0 0 0.65rem 0;
+    letter-spacing: 0.05em;
+}
+
+.recent-reg-item-compact {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem;
+    border-radius: 0.35rem;
+    transition: background var(--transition-fast);
+}
+
+.recent-reg-item-compact:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.reg-avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+}
+
+.reg-details-compact {
+    min-width: 0;
+    flex: 1;
+}
+
+.reg-details-compact .reg-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reg-details-compact .reg-date {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 0.15rem;
 }
 
 .dash-card {
