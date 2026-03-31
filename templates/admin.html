@@ -349,7 +349,7 @@
                                     <td data-label="Action">
                                         <form action="{% url 'demote-officer' u.id %}" method="POST" class="delete-form"
                                             data-title="Move to Member?"
-                                            data-confirm="Are you sure you want to move {{ u.username }} from officer to member?"
+                                            data-confirm="You are about to move this officer back to member:&#10;&#10;Name: {{ u.username }}&#10;Email: {{ u.email }}&#10;Department: {{ u.get_department_display|default:'General' }}&#10;Term Ends: {% if u.officer_ends_at %}{{ u.officer_ends_at|date:'M d, Y' }}{% else %}Not set{% endif %}&#10;Joined: {{ u.date_joined|date:'M d, Y' }}&#10;&#10;Proceed with demotion?"
                                             data-btn-text="Confirm"
                                             style="display:inline;">
                                             {% csrf_token %}
@@ -830,7 +830,7 @@
         <div class="admin-modal admin-modal--sm">
             <div class="admin-modal-icon danger"><i class="fa-solid fa-trash-can"></i></div>
             <h3 id="deleteModalTitle">Delete Item?</h3>
-            <p id="deleteModalDesc">This action cannot be undone. Are you sure?</p>
+            <p id="deleteModalDesc" style="white-space: pre-line; text-align: left;">This action cannot be undone. Are you sure?</p>
             <div class="admin-modal-actions">
                 <button class="btn btn-outline" id="deleteCancel">Cancel</button>
                 <button class="btn admin-btn-danger" id="deleteConfirm">Delete Now</button>
