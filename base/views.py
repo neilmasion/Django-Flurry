@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q, Count
+from django.db.models.functions import TruncMonth
 from django.http import JsonResponse, Http404
 from django.utils import timezone
 from django.contrib.auth import login, authenticate, logout
@@ -11,6 +12,7 @@ from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, 
 from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, ShowcaseForm
 from django.core.mail import send_mail
 from django.urls import reverse
+from datetime import date as dt_date
 from datetime import timedelta
 import logging
 import os
@@ -375,8 +377,6 @@ def admin_dashboard(request):
         request.user.is_staff = True
         request.user.save(update_fields=['is_staff'])
     
-    from django.db.models import Count
-    
     total_users = User.objects.count()
     total_events = Event.objects.count()
     total_messages = ContactMessage.objects.count()
@@ -395,6 +395,41 @@ def admin_dashboard(request):
     all_messages = ContactMessage.objects.all().order_by('-created_at')
     all_testimonials = Testimonial.objects.all().order_by('-id')
     all_showcases = Showcase.objects.all().order_by('-created_at')
+
+    # Build a 6-month trend series for dashboard charts.
+    first_of_this_month = today.replace(day=1)
+    month_starts = []
+    for offset in range(-5, 1):
+        total_months = (first_of_this_month.year * 12 + first_of_this_month.month - 1) + offset
+        year = total_months // 12
+        month = (total_months % 12) + 1
+        month_starts.append(dt_date(year, month, 1))
+
+    month_labels = [m.strftime('%b %Y') for m in month_starts]
+
+    users_month_qs = (
+        User.objects.filter(date_joined__date__gte=month_starts[0])
+        .annotate(month=TruncMonth('date_joined'))
+        .values('month')
+        .annotate(total=Count('id'))
+        .order_by('month')
+    )
+    users_month_map = {row['month'].date(): row['total'] for row in users_month_qs if row['month']}
+    users_month_counts = [users_month_map.get(m, 0) for m in month_starts]
+
+    messages_month_qs = (
+        ContactMessage.objects.filter(created_at__date__gte=month_starts[0])
+        .annotate(month=TruncMonth('created_at'))
+        .values('month')
+        .annotate(total=Count('id'))
+        .order_by('month')
+    )
+    messages_month_map = {row['month'].date(): row['total'] for row in messages_month_qs if row['month']}
+    messages_month_counts = [messages_month_map.get(m, 0) for m in month_starts]
+
+    top_events = Event.objects.annotate(enroll_total=Count('enrollments')).order_by('-enroll_total', 'title')[:5]
+    event_labels = [event.title for event in top_events]
+    event_enroll_counts = [event.enroll_total for event in top_events]
     
     context = {
         'total_users': total_users,
@@ -410,6 +445,11 @@ def admin_dashboard(request):
         'all_testimonials': all_testimonials,
         'all_showcases': all_showcases,
         'today': today,
+        'chart_month_labels': month_labels,
+        'chart_user_counts': users_month_counts,
+        'chart_message_counts': messages_month_counts,
+        'chart_event_labels': event_labels,
+        'chart_event_enroll_counts': event_enroll_counts,
     }
     return render(request, 'admin.html', context)
 

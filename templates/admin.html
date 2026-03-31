@@ -219,6 +219,25 @@
                 </div>
                 {% endif %}
 
+                <div class="dash-charts">
+                    <div class="dash-card chart-card">
+                        <div class="dash-card-header">
+                            <h4><i class="fa-solid fa-chart-line"></i> Monthly Activity Trend</h4>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="activityTrendChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="dash-card chart-card">
+                        <div class="dash-card-header">
+                            <h4><i class="fa-solid fa-chart-column"></i> Top Event Enrollments</h4>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="eventEnrollmentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 {% if user.role == 'admin' or user.is_superuser %}
                 <div class="dash-lower">
                     <div class="dash-card">
@@ -988,10 +1007,130 @@
         <span id="adminToastMsg"></span>
     </div>
 
+    {{ chart_month_labels|json_script:"chart-month-labels" }}
+    {{ chart_user_counts|json_script:"chart-user-counts" }}
+    {{ chart_message_counts|json_script:"chart-message-counts" }}
+    {{ chart_event_labels|json_script:"chart-event-labels" }}
+    {{ chart_event_enroll_counts|json_script:"chart-event-enroll-counts" }}
+
     <script src="{% static 'js/modules/cloudparticles.js' %}" type="module"></script>
     <script type="module">
         import { setupCloudParticles } from "{% static 'js/modules/cloudparticles.js' %}";
         setupCloudParticles();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script>
+    function parseChartData(id) {
+        const el = document.getElementById(id);
+        if (!el) return [];
+        try {
+            return JSON.parse(el.textContent);
+        } catch (err) {
+            return [];
+        }
+    }
+
+    function renderDashboardCharts() {
+        if (typeof Chart === 'undefined') return;
+
+        const monthLabels = parseChartData('chart-month-labels');
+        const userCounts = parseChartData('chart-user-counts');
+        const messageCounts = parseChartData('chart-message-counts');
+        const eventLabels = parseChartData('chart-event-labels');
+        const eventEnrollCounts = parseChartData('chart-event-enroll-counts');
+
+        const activityCtx = document.getElementById('activityTrendChart');
+        if (activityCtx && monthLabels.length) {
+            new Chart(activityCtx, {
+                type: 'line',
+                data: {
+                    labels: monthLabels,
+                    datasets: [
+                        {
+                            label: 'New Users',
+                            data: userCounts,
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            tension: 0.35,
+                            fill: true,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                        },
+                        {
+                            label: 'Messages',
+                            data: messageCounts,
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            backgroundColor: 'rgba(34, 197, 94, 0.18)',
+                            tension: 0.35,
+                            fill: true,
+                            pointRadius: 3,
+                            pointHoverRadius: 5,
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: 'rgba(255,255,255,0.75)' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: 'rgba(255,255,255,0.55)' },
+                            grid: { color: 'rgba(255,255,255,0.08)' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: 'rgba(255,255,255,0.55)', precision: 0 },
+                            grid: { color: 'rgba(255,255,255,0.08)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        const eventsCtx = document.getElementById('eventEnrollmentChart');
+        if (eventsCtx && eventLabels.length) {
+            new Chart(eventsCtx, {
+                type: 'bar',
+                data: {
+                    labels: eventLabels,
+                    datasets: [
+                        {
+                            label: 'Enrollments',
+                            data: eventEnrollCounts,
+                            backgroundColor: 'rgba(14, 165, 233, 0.7)',
+                            borderColor: 'rgba(14, 165, 233, 1)',
+                            borderWidth: 1,
+                            borderRadius: 8,
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: 'rgba(255,255,255,0.75)' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: 'rgba(255,255,255,0.55)' },
+                            grid: { color: 'rgba(255,255,255,0.06)' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: 'rgba(255,255,255,0.55)', precision: 0 },
+                            grid: { color: 'rgba(255,255,255,0.08)' }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderDashboardCharts);
     </script>
     <script src="{% static 'js/admin.js' %}" defer></script>
     <script>
