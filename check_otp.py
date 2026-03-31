@@ -1,6 +1,8 @@
 import os
 import django
+from dotenv import load_dotenv
 
+load_dotenv()
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flurry_project.settings')
 django.setup()
 
@@ -12,7 +14,11 @@ rf = RequestFactory()
 request = rf.get('/')
 request.session = {}
 
-user = User.objects.create(username='testotp2', email='testotp2@example.com', password='password')
+user, created = User.objects.get_or_create(
+    username='test_local_mail', 
+    email='neilmasion1234@gmail.com', 
+    defaults={'password': 'password'}
+)
 
 print("Sending email...")
 try:
