@@ -129,10 +129,6 @@
                         <i class="fa-solid fa-comment-dots"></i>
                         <span>Testimonials</span>
                     </button>
-                    <button class="admin-nav-item" data-section="showcases">
-                        <i class="fa-solid fa-globe"></i>
-                        <span>Showcase</span>
-                    </button>
                 </nav>
             </div>
             <div class="admin-sidebar-bottom">
@@ -422,76 +418,6 @@
                                 </tr>
                                 {% empty %}
                                 <tr><td colspan="4" class="empty-row">No testimonials found.</td></tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section id="section-showcases" class="admin-section">
-                    <div class="section-header">
-                        <h2><i class="fa-solid fa-globe"></i> Showcase Management</h2>
-                        <p>Approve or remove user-submitted websites.</p>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Site Info</th>
-                                    <th>Submitted By</th>
-                                    <th>Status</th>
-                                    <th>URL</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for s in all_showcases %}
-                                <tr>
-                                    <td>
-                                        <strong>{{ s.title }}</strong>
-                                        <div class="user-email">{{ s.description|truncatechars:50 }}</div>
-                                    </td>
-                                    <td>
-                                        <div class="user-cell">
-                                            <div class="user-avatar-sm">
-                                                {% if s.user.profile_picture %}
-                                                    <img src="{{ s.user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
-                                                {% else %}
-                                                    {{ s.user.username|slice:":1"|upper }}
-                                                {% endif %}
-                                            </div>
-                                            <strong>{{ s.user.username }}</strong>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {% if s.is_approved %}
-                                        <span class="badge badge-success">Approved</span>
-                                        {% else %}
-                                        <span class="badge badge-warning">Pending</span>
-                                        {% endif %}
-                                    </td>
-                                    <td><a href="{{ s.website_url }}" target="_blank" class="link-primary">{{ s.website_url|truncatechars:30 }}</a></td>
-                                    <td>
-                                        <div class="table-actions">
-                                            <form action="{% url 'approve-showcase' s.id %}" method="POST">
-                                                {% csrf_token %}
-                                                <button type="submit" class="action-btn action-btn-edit" title="{% if s.is_approved %}Hide{% else %}Approve{% endif %}">
-                                                    <i class="fa-solid {% if s.is_approved %}fa-eye-slash{% else %}fa-check{% endif %}"></i>
-                                                </button>
-                                            </form>
-                                            {% if user.role == 'admin' or user.is_superuser %}
-                                            <form action="{% url 'delete-showcase' s.id %}" method="POST" onsubmit="return confirm('Delete this showcase item?')">
-                                                {% csrf_token %}
-                                                <button type="submit" class="action-btn action-btn-delete" title="Delete">
-                                                    <i class="fa-solid fa-trash-can"></i>
-                                                </button>
-                                            </form>
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr><td colspan="5" class="empty-row">No showcase submissions yet.</td></tr>
                                 {% endfor %}
                             </tbody>
                         </table>

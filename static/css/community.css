@@ -67,7 +67,7 @@
 }
 
 .showcase-card:hover {
-    transform: translateY(-12px);
+    transform: translateY(-6px);
     border-color: var(--accent-color);
     box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
     background: rgba(30, 30, 30, 0.6);
@@ -111,7 +111,7 @@
 }
 
 .showcase-card:hover .showcase-image i {
-    transform: rotate(15deg) scale(1.2);
+    transform: rotate(8deg) scale(1.06);
     color: rgba(255, 255, 255, 0.5);
 }
 
@@ -131,7 +131,7 @@
 }
 
 .showcase-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
     border-color: var(--accent-color);
     box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
     background: rgba(255, 255, 255, 0.06);
