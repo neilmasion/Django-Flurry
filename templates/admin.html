@@ -1108,6 +1108,7 @@
                     ]
                 },
                 options: {
+                    indexAxis: 'y',
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
@@ -1116,12 +1117,22 @@
                     },
                     scales: {
                         x: {
+                            beginAtZero: true,
                             ticks: { color: 'rgba(255,255,255,0.55)' },
                             grid: { color: 'rgba(255,255,255,0.06)' }
                         },
                         y: {
-                            beginAtZero: true,
-                            ticks: { color: 'rgba(255,255,255,0.55)', precision: 0 },
+                            ticks: {
+                                color: 'rgba(255,255,255,0.75)',
+                                font: { size: 12 },
+                                callback: function(value) {
+                                    let label = this.getLabelForValue(value);
+                                    if (label.length > 28) {
+                                        return label.substring(0, 25) + '...';
+                                    }
+                                    return label;
+                                }
+                            },
                             grid: { color: 'rgba(255,255,255,0.08)' }
                         }
                     }

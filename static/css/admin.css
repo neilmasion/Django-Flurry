@@ -327,11 +327,17 @@
 }
 
 .chart-card { min-height: 320px; }
+.chart-card:last-child { min-height: 340px; }
 
 .chart-wrap {
     position: relative;
     height: 250px;
     padding: 0.9rem 1.1rem 1.2rem;
+}
+
+.chart-card:last-child .chart-wrap {
+    height: 270px;
+    padding: 0.9rem 1rem 1.2rem 0.7rem;
 }
 
 .chart-wrap canvas {
