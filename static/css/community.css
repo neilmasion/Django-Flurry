@@ -242,6 +242,22 @@
     transition: color 0.3s;
 }
 
+.card-stats .engagement-btn {
+    align-items: center;
+}
+
+.card-stats .engagement-btn i,
+.save-btn i {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.card-stats .engagement-btn .count,
+.card-stats .comment-count {
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
 .card-stats span:hover, .engagement-btn:hover {
     color: var(--accent-color);
 }
@@ -537,7 +553,6 @@
     background: transparent;
     border: none;
     color: rgba(255, 255, 255, 0.6); /* Increased opacity */
-    font-size: 1.25rem;
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -633,9 +648,9 @@
 
 /* Compact variant used by the website upload form */
 .upload-modal {
-    max-width: 560px;
+    max-width: 520px;
     border-radius: 1.25rem;
-    padding: 1.4rem 1.6rem;
+    padding: 1.2rem 1.35rem;
     box-shadow: 0 28px 70px -24px rgba(0, 0, 0, 0.78);
 }
 
@@ -645,12 +660,12 @@
 }
 
 .upload-modal .admin-modal-header h2 {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
     gap: 0.6rem;
 }
 
 .upload-modal .admin-modal-header p {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     margin-top: 0.35rem;
 }
 
@@ -663,39 +678,39 @@
     gap: 1rem;
 }
 
-.upload-modal .edit-group {
+.admin-modal.upload-modal .edit-group {
     gap: 0.4rem;
 }
 
-.upload-modal .edit-group label {
-    font-size: 0.82rem;
+.admin-modal.upload-modal .edit-group label {
+    font-size: 0.75rem;
 }
 
-.upload-modal .edit-group input[type="text"],
-.upload-modal .edit-group input[type="url"],
-.upload-modal .edit-group input[type="email"],
-.upload-modal .edit-group input[type="tel"],
-.upload-modal .edit-group input[type="search"],
-.upload-modal .edit-group input[type="password"],
-.upload-modal .edit-group textarea {
+.admin-modal.upload-modal .edit-group input[type="text"],
+.admin-modal.upload-modal .edit-group input[type="url"],
+.admin-modal.upload-modal .edit-group input[type="email"],
+.admin-modal.upload-modal .edit-group input[type="tel"],
+.admin-modal.upload-modal .edit-group input[type="search"],
+.admin-modal.upload-modal .edit-group input[type="password"],
+.admin-modal.upload-modal .edit-group textarea {
     border-radius: 0.8rem;
-    padding: 0.8rem 0.95rem;
-    font-size: 0.92rem;
-    line-height: 1.45;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.85rem;
+    line-height: 1.3;
 }
 
-.upload-modal .edit-group input[type="file"] {
-    padding: 0.7rem;
+.admin-modal.upload-modal .edit-group input[type="file"] {
+    padding: 0.5rem 0.6rem;
     border-radius: 0.8rem;
     border-color: rgba(255, 255, 255, 0.14);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
-.upload-modal .edit-group input[type="file"]::-webkit-file-upload-button {
-    padding: 0.5rem 1rem;
+.admin-modal.upload-modal .edit-group input[type="file"]::-webkit-file-upload-button {
+    padding: 0.35rem 0.75rem;
     border-radius: 0.65rem;
-    margin-right: 0.75rem;
-    font-size: 0.78rem;
+    margin-right: 0.45rem;
+    font-size: 0.72rem;
     box-shadow: 0 3px 8px rgba(67, 97, 238, 0.25);
 }
 
@@ -705,10 +720,10 @@
 }
 
 .upload-modal .btn-modal-submit {
-    padding: 0.75rem 1.4rem;
+    padding: 0.62rem 1.15rem;
     border-radius: 0.8rem;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     transition: all 0.25s ease;
     box-shadow: 0 7px 16px rgba(67, 97, 238, 0.2);
 }
@@ -719,9 +734,9 @@
 }
 
 .upload-modal .btn-modal-cancel {
-    padding: 0.75rem 1.2rem;
+    padding: 0.62rem 1.05rem;
     border-radius: 0.8rem;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
 }
 
 /* --- Modal Header --- */
