@@ -5,10 +5,10 @@
     --secondary-color: #ffffff;
     --accent-color: #29b4f6;
 
-    --bg-primary: #0b3472; /* Slightly deeper blue for text contrast */
-    --bg-secondary: rgba(0, 20, 60, 0.22); /* Darker navy glass for white text in light mode */
-    --bg-tertiary: rgba(0, 15, 50, 0.35); /* Solidified for cards in day mode */
-    --bg-hover: rgba(0, 25, 75, 0.4);
+    --bg-primary: #0b3472;
+    --bg-secondary: rgba(0, 25, 80, 0.88); /* Much more solid for better readability */
+    --bg-tertiary: rgba(0, 20, 70, 0.92);  /* Almost solid navy for deep contrast */
+    --bg-hover: rgba(0, 35, 100, 0.95);
 
     --text-primary: #ffffff;
     --text-secondary: rgba(255, 255, 255, 0.9);
@@ -67,7 +67,6 @@ html:not([data-theme="dark"]) body {
     background-image: linear-gradient(135deg, #0b3472 0%, #1565c0 50%, #082d61 100%);
     background-attachment: fixed;
     min-height: 100vh;
-    text-shadow: var(--text-depth); /* Apply text-shadow globally in light mode */
 }
 
 [data-theme="dark"] body {
