@@ -631,6 +631,99 @@
     opacity: 1;
 }
 
+/* Compact variant used by the website upload form */
+.upload-modal {
+    max-width: 560px;
+    border-radius: 1.25rem;
+    padding: 1.4rem 1.6rem;
+    box-shadow: 0 28px 70px -24px rgba(0, 0, 0, 0.78);
+}
+
+.upload-modal .admin-modal-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.65rem;
+}
+
+.upload-modal .admin-modal-header h2 {
+    font-size: 1.35rem;
+    gap: 0.6rem;
+}
+
+.upload-modal .admin-modal-header p {
+    font-size: 0.88rem;
+    margin-top: 0.35rem;
+}
+
+.upload-modal .modal-body {
+    gap: 1rem;
+    margin-top: 0.75rem;
+}
+
+.upload-modal .modal-row {
+    gap: 1rem;
+}
+
+.upload-modal .edit-group {
+    gap: 0.4rem;
+}
+
+.upload-modal .edit-group label {
+    font-size: 0.82rem;
+}
+
+.upload-modal .edit-group input[type="text"],
+.upload-modal .edit-group input[type="url"],
+.upload-modal .edit-group input[type="email"],
+.upload-modal .edit-group input[type="tel"],
+.upload-modal .edit-group input[type="search"],
+.upload-modal .edit-group input[type="password"],
+.upload-modal .edit-group textarea {
+    border-radius: 0.8rem;
+    padding: 0.8rem 0.95rem;
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.upload-modal .edit-group input[type="file"] {
+    padding: 0.7rem;
+    border-radius: 0.8rem;
+    border-color: rgba(255, 255, 255, 0.14);
+    font-size: 0.85rem;
+}
+
+.upload-modal .edit-group input[type="file"]::-webkit-file-upload-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.65rem;
+    margin-right: 0.75rem;
+    font-size: 0.78rem;
+    box-shadow: 0 3px 8px rgba(67, 97, 238, 0.25);
+}
+
+.upload-modal .modal-footer {
+    margin-top: 1.1rem;
+    gap: 0.75rem;
+}
+
+.upload-modal .btn-modal-submit {
+    padding: 0.75rem 1.4rem;
+    border-radius: 0.8rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.25s ease;
+    box-shadow: 0 7px 16px rgba(67, 97, 238, 0.2);
+}
+
+.upload-modal .btn-modal-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 11px 22px rgba(67, 97, 238, 0.32);
+}
+
+.upload-modal .btn-modal-cancel {
+    padding: 0.75rem 1.2rem;
+    border-radius: 0.8rem;
+    font-size: 0.88rem;
+}
+
 /* --- Modal Header --- */
 .admin-modal-header {
     margin-bottom: 1.5rem;
@@ -699,6 +792,12 @@
     .modal-row {
         grid-template-columns: 1fr;
         gap: 1rem;
+    }
+
+    .upload-modal {
+        width: calc(100% - 1rem);
+        max-width: none;
+        padding: 1.1rem;
     }
 }
 
