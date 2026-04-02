@@ -726,6 +726,7 @@
     background: #fff;
     color: #111;
     border-color: #fff;
+    box-shadow: none;
 }
 
 .upload-modal .modal-footer {
@@ -748,6 +749,7 @@
 .upload-modal .btn-modal-submit:hover {
     transform: translateY(-1px);
     background: rgba(255, 255, 255, 0.92);
+    box-shadow: none;
 }
 
 .upload-modal .btn-modal-cancel {
@@ -763,6 +765,7 @@
 .upload-modal .btn-modal-cancel:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #fff;
+    box-shadow: none;
 }
 
 /* --- Modal Header --- */
