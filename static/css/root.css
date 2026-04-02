@@ -102,8 +102,8 @@ html:not([data-theme="dark"]) body {
 }
 
 :not([data-theme="dark"]) select option {
-    background-color: #0d2490;
-    color: #ffffff;
+    background-color: #ffffff; /* White background for options */
+    color: var(--text-primary); /* Dark text for options */
 }
 
 [data-theme="dark"] select option {
@@ -150,7 +150,7 @@ html:not([data-theme="dark"]) body {
 }
 
 :not([data-theme="dark"]) .footer a {
-    color: #fff;
+    color: var(--text-primary);
 }
 
 :not([data-theme="dark"]) .btn-primary {
@@ -167,11 +167,11 @@ html:not([data-theme="dark"]) body {
 }
 
 :not([data-theme="dark"]) .btn-outline {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
 }
 
 :not([data-theme="dark"]) .btn-outline:hover {
@@ -197,7 +197,7 @@ html:not([data-theme="dark"]) body {
 }
 
 :not([data-theme="dark"]) .partners-label {
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--text-tertiary);
 }
 
 :not([data-theme="dark"]) .partner-item {
