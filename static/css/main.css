@@ -302,6 +302,10 @@ html[data-theme="dark"] .theme-icon {
     line-height: 1;
 }
 
+html:not([data-theme="dark"]) .notif-badge {
+    border-color: #f3f4f6;
+}
+
 .notif-wrapper,
 .mobile-notif-wrapper {
     position: relative;
