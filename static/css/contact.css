@@ -287,3 +287,50 @@
     line-height: 1.75;
     margin: 0;
 }
+
+html:not([data-theme="dark"]) .contact-channel,
+html:not([data-theme="dark"]) .contact-form-wrap,
+html:not([data-theme="dark"]) .fact-card,
+html:not([data-theme="dark"]) .faq-item {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(244, 250, 255, 0.6));
+    border-color: rgba(10, 26, 43, 0.16);
+    box-shadow: 0 10px 24px rgba(10, 26, 43, 0.08);
+}
+
+html:not([data-theme="dark"]) .contact-channel:hover,
+html:not([data-theme="dark"]) .fact-card:hover,
+html:not([data-theme="dark"]) .faq-item:hover {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(247, 252, 255, 0.72));
+    border-color: rgba(15, 94, 168, 0.3);
+}
+
+html:not([data-theme="dark"]) .contact-info-header h2,
+html:not([data-theme="dark"]) .contact-form-wrap h3,
+html:not([data-theme="dark"]) .faq-question span,
+html:not([data-theme="dark"]) .contact-channel-body strong,
+html:not([data-theme="dark"]) .fact-num {
+    color: #0a1a2b;
+}
+
+html:not([data-theme="dark"]) .contact-info-header p,
+html:not([data-theme="dark"]) .contact-form-wrap>p,
+html:not([data-theme="dark"]) .contact-channel-body span,
+html:not([data-theme="dark"]) .fact-label,
+html:not([data-theme="dark"]) .fact-desc,
+html:not([data-theme="dark"]) .faq-answer p {
+    color: #4a6177;
+}
+
+html:not([data-theme="dark"]) .contact-channel-icon {
+    background: rgba(15, 94, 168, 0.12);
+    color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .cf-group label {
+    color: #24374a;
+    font-weight: 600;
+}
+
+html:not([data-theme="dark"]) .faq-question i {
+    color: rgba(10, 26, 43, 0.5);
+}

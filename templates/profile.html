@@ -411,7 +411,7 @@
                             <div class="enrolled-card-date"><i class="fa-regular fa-calendar"></i> {{ enrollment.event.month }} {{ enrollment.event.day }}</div>
                             <div class="enrolled-card-time"><i class="fa-regular fa-clock"></i> {{ enrollment.event.time_range }}</div>
                             {% if enrollment.event.is_past %}
-                                <div class="enrolled-card-status" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1);">Completed</div>
+                                <div class="enrolled-card-status is-completed">Completed</div>
                             {% else %}
                                 <div class="enrolled-card-status">Enrolled</div>
                             {% endif %}
@@ -440,8 +440,8 @@
                 </div>
 
                 {% if pending_received %}
-                <div style="margin-bottom: 2.5rem; padding: 0 0.5rem;">
-                    <h4 style="color: #60a5fa; font-size: 1.1rem; margin-bottom: 1.25rem;"><i class="fa-solid fa-user-clock"></i> Pending Requests</h4>
+                <div class="connection-section">
+                    <h4 class="connection-section-title connection-section-title--accent"><i class="fa-solid fa-user-clock"></i> Pending Requests</h4>
                     <div class="network-list">
                         {% for p in pending_received %}
                         <div class="network-item">
@@ -458,7 +458,7 @@
                             </div>
                             <div class="network-actions">
                                 <button class="btn btn-primary btn-small handle-conn-btn" data-conn-id="{{ p.id }}" data-action="accept">Accept</button>
-                                <button class="btn btn-outline btn-small handle-conn-btn" data-conn-id="{{ p.id }}" data-action="decline" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171;">Decline</button>
+                                <button class="btn btn-outline btn-small handle-conn-btn connection-btn-decline" data-conn-id="{{ p.id }}" data-action="decline">Decline</button>
                             </div>
                         </div>
                         {% endfor %}
@@ -467,8 +467,8 @@
                 {% endif %}
 
                 {% if pending_sent %}
-                <div style="margin-bottom: 2.5rem; padding: 0 0.5rem; opacity: 0.9;">
-                    <h4 style="font-size: 1.1rem; margin-bottom: 1.25rem;">Sent Requests</h4>
+                <div class="connection-section">
+                    <h4 class="connection-section-title">Sent Requests</h4>
                     <div class="network-list">
                         {% for p in pending_sent %}
                         <div class="network-item">
@@ -487,7 +487,7 @@
                                 </div>
                             </div>
                             <div class="network-actions">
-                                <button class="btn btn-outline btn-small connect-btn" data-user-id="{{ p.user_to.id }}" style="border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.5);">Cancel</button>
+                                <button class="btn btn-outline btn-small connect-btn connection-btn-muted" data-user-id="{{ p.user_to.id }}">Cancel</button>
                             </div>
                         </div>
                         {% endfor %}
@@ -495,8 +495,8 @@
                 </div>
                 {% endif %}
 
-                <div style="margin-bottom: 2rem; padding: 0 0.5rem;">
-                    <h4 style="font-size: 1.1rem; margin-bottom: 1.25rem;">Connected Developers</h4>
+                <div class="connection-section connection-section-last">
+                    <h4 class="connection-section-title">Connected Developers</h4>
                     <div class="network-list">
                         {% for friend in friends %}
                         <div class="network-item">
@@ -517,7 +517,7 @@
                                 </div>
                             </div>
                             <div class="network-actions">
-                                <button class="btn btn-outline btn-small remove-friend-btn" data-user-id="{{ friend.id }}" style="border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.5);">Remove</button>
+                                <button class="btn btn-outline btn-small remove-friend-btn connection-btn-muted" data-user-id="{{ friend.id }}">Remove</button>
                             </div>
                         </div>
                         {% empty %}
@@ -536,20 +536,6 @@
             <div class="tab-panel" id="tab-edit">
                 <h3 class="edit-title">Edit Profile</h3>
                 <form class="edit-form" id="editForm" novalidate>
-                    <div class="edit-group" style="align-items: center; margin-bottom: 1.5rem;">
-                        <label>Current Photo</label>
-                        <div class="profile-avatar" id="editPhotoPreview" style="margin-top: 0.5rem;">
-                            {% if user.profile_picture %}
-                                <img src="{{ user.profile_picture.url }}" alt="Profile photo">
-                            {% else %}
-                                {{ user.username|slice:":1"|upper }}
-                            {% endif %}
-                        </div>
-                        <button type="button" class="btn btn-outline btn-small" id="removePhotoBtn" style="margin-top: 0.75rem; font-size: 0.7rem;">
-                            <i class="fa-solid fa-trash"></i> Remove Photo
-                        </button>
-                    </div>
-
                     <div class="edit-group">
                         <label for="editUsername">Username</label>
                         <div class="input-wrapper">

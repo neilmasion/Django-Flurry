@@ -499,3 +499,68 @@
 :not([data-theme="dark"]) .roadmap-info p {
     color: var(--text-secondary);
 }
+
+html:not([data-theme="dark"]) .event-card,
+html:not([data-theme="dark"]) .resource-card,
+html:not([data-theme="dark"]) .workshop-item {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(243, 249, 254, 0.58));
+    border-color: rgba(10, 26, 43, 0.16);
+    box-shadow: 0 10px 24px rgba(10, 26, 43, 0.08);
+}
+
+html:not([data-theme="dark"]) .event-card:hover,
+html:not([data-theme="dark"]) .resource-card:hover,
+html:not([data-theme="dark"]) .workshop-item:hover {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(247, 251, 255, 0.72));
+    border-color: rgba(15, 94, 168, 0.28);
+}
+
+html:not([data-theme="dark"]) .event-tag {
+    background: rgba(15, 94, 168, 0.12);
+    border: 1px solid rgba(15, 94, 168, 0.18);
+    color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .event-tag--workshop {
+    background: rgba(2, 132, 199, 0.16);
+    color: #0369a1;
+}
+
+html:not([data-theme="dark"]) .event-tag--talk {
+    background: rgba(5, 150, 105, 0.14);
+    color: #047857;
+}
+
+html:not([data-theme="dark"]) .ws-tag {
+    background: rgba(51, 65, 85, 0.12);
+    color: #334155;
+}
+
+html:not([data-theme="dark"]) .workshop-item-footer {
+    border-top-color: rgba(10, 26, 43, 0.12);
+}
+
+html:not([data-theme="dark"]) .resource-body a {
+    color: #0f5ea8;
+    font-weight: 700;
+}
+
+html:not([data-theme="dark"]) .resource-body a:hover {
+    color: #0b4a85;
+}
+
+html:not([data-theme="dark"]) .roadmap-node {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(10, 26, 43, 0.18);
+    color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .roadmap-node--active {
+    background: rgba(15, 94, 168, 0.2);
+    border-color: rgba(15, 94, 168, 0.52);
+    color: #0b4a85;
+}
+
+html:not([data-theme="dark"]) .roadmap-line {
+    background: rgba(10, 26, 43, 0.16);
+}

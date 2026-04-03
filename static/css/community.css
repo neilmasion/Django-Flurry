@@ -1137,3 +1137,103 @@
         opacity: 1 !important;
     }
 }
+
+html:not([data-theme="dark"]) .hero-content h1,
+html:not([data-theme="dark"]) .showcase-title,
+html:not([data-theme="dark"]) .author-name {
+    color: #0a1a2b;
+}
+
+html:not([data-theme="dark"]) .hero-content p,
+html:not([data-theme="dark"]) .post-time,
+html:not([data-theme="dark"]) .showcase-description,
+html:not([data-theme="dark"]) .card-stats,
+html:not([data-theme="dark"]) .comment-date,
+html:not([data-theme="dark"]) .comment-role {
+    color: #4a6177;
+}
+
+html:not([data-theme="dark"]) .showcase-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(244, 250, 255, 0.58));
+    border-color: rgba(10, 26, 43, 0.16);
+    box-shadow: 0 12px 28px rgba(10, 26, 43, 0.1);
+}
+
+html:not([data-theme="dark"]) .showcase-card:hover {
+    border-color: rgba(15, 94, 168, 0.32);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(247, 252, 255, 0.7));
+}
+
+html:not([data-theme="dark"]) .showcase-card-footer {
+    border-top-color: rgba(10, 26, 43, 0.1);
+}
+
+html:not([data-theme="dark"]) .visitor-btn {
+    background: rgba(15, 94, 168, 0.14);
+    border-color: rgba(15, 94, 168, 0.24);
+    color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .visitor-btn:hover {
+    background: #0f5ea8;
+    color: #ffffff;
+    border-color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .save-btn,
+html:not([data-theme="dark"]) .card-menu-btn {
+    color: rgba(10, 26, 43, 0.56);
+}
+
+html:not([data-theme="dark"]) .save-btn:hover,
+html:not([data-theme="dark"]) .card-menu-btn:hover,
+html:not([data-theme="dark"]) .card-stats span:hover,
+html:not([data-theme="dark"]) .engagement-btn:hover {
+    color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .comments-section {
+    background: rgba(255, 255, 255, 0.58);
+    border-top-color: rgba(10, 26, 43, 0.1);
+}
+
+html:not([data-theme="dark"]) .comment-author,
+html:not([data-theme="dark"]) .comment-content,
+html:not([data-theme="dark"]) .comments-header h3 {
+    color: #13283c;
+}
+
+html:not([data-theme="dark"]) .add-comment-form textarea,
+html:not([data-theme="dark"]) .reply-form textarea {
+    background: rgba(255, 255, 255, 0.74);
+    border-color: rgba(10, 26, 43, 0.18);
+    color: #13283c;
+}
+
+html:not([data-theme="dark"]) .submit-comment,
+html:not([data-theme="dark"]) .submit-reply {
+    background: rgba(15, 94, 168, 0.12);
+    border-color: rgba(15, 94, 168, 0.25);
+    color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .submit-comment:hover,
+html:not([data-theme="dark"]) .submit-reply:hover {
+    background: #0f5ea8;
+    color: #ffffff;
+}
+
+html:not([data-theme="dark"]) .admin-modal {
+    background: rgba(249, 252, 255, 0.96);
+    border-color: rgba(10, 26, 43, 0.12);
+    box-shadow: 0 24px 64px rgba(10, 26, 43, 0.18);
+}
+
+html:not([data-theme="dark"]) .admin-modal-header h2,
+html:not([data-theme="dark"]) .edit-group label {
+    color: #13283c;
+}
+
+html:not([data-theme="dark"]) .admin-modal-header p {
+    color: #4a6177;
+}
