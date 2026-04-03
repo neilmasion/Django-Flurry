@@ -92,7 +92,9 @@
 }
 
 @keyframes spin-slow {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .profile-identity {
@@ -102,7 +104,7 @@
 .profile-identity h2 {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 0.4rem;
 }
 
@@ -201,7 +203,7 @@
 }
 
 .profile-tab.active {
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--primary-color);
     color: #fff;
 }
 
@@ -217,8 +219,15 @@
 }
 
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .overview-sidebar-layout {
@@ -288,7 +297,7 @@
 .combined-stat-num {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     line-height: 1;
 }
 
@@ -363,7 +372,7 @@
 .welcome-text h3 {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 0.3rem;
 }
 
@@ -385,8 +394,15 @@
 }
 
 @keyframes float-icon {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-8px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
 }
 
 .overview-activity {
@@ -399,7 +415,7 @@
 .overview-activity h4 {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 1.25rem;
 }
 
@@ -432,7 +448,7 @@
 .workshops-header h3 {
     font-size: 1rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     margin: 0;
 }
 
@@ -520,7 +536,7 @@
 .enrolled-card h4 {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -540,7 +556,7 @@
 .request-card .user-avatar-sm {
     width: 42px;
     height: 42px;
-    border: 2px solid rgba(255,255,255,0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 
@@ -589,7 +605,7 @@
 .edit-title {
     font-size: 1rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     margin: 0;
 }
 
@@ -603,12 +619,12 @@
     padding: 2rem;
 }
 
-.edit-form .input-wrapper { 
+.edit-form .input-wrapper {
     position: relative;
 }
 
 .toggle-password {
-    position: absolute; 
+    position: absolute;
     right: 0.75rem;
     top: 50%;
     background: none;
@@ -734,11 +750,13 @@
         padding: 6rem 2rem 3rem;
         flex-direction: column;
     }
+
     .profile-sidebar {
         position: static;
         flex: none;
         width: 100%;
     }
+
     .enrolled-grid {
         grid-template-columns: 1fr;
     }
@@ -776,8 +794,15 @@
 }
 
 @keyframes dialog-pop {
-    from { transform: scale(0.88); opacity: 0; }
-    to   { transform: scale(1);    opacity: 1; }
+    from {
+        transform: scale(0.88);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .remove-photo-icon {
@@ -1015,8 +1040,15 @@
 }
 
 @keyframes note-pop {
-    from { transform: scale(0.5); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -1026,11 +1058,13 @@
         transform-origin: bottom center;
         border-radius: 18px;
     }
+
     .profile-note-bubble:hover {
         transform: translateX(-50%) scale(1.05);
     }
+
     .profile-note-bubble::after {
         left: 50%;
         margin-left: -5px;
     }
-}
+}

@@ -20,13 +20,13 @@
 .contact-info-header h2 {
     font-size: 1.6rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 0.5rem;
 }
 
 .contact-info-header p {
     font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.65);
+    color: var(--text-secondary);
     line-height: 1.75;
     margin: 0;
 }
@@ -71,7 +71,7 @@
     display: block;
     font-size: 0.82rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .contact-channel-body span {
@@ -91,7 +91,7 @@
 .contact-form-wrap h3 {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 0.3rem;
 }
 
@@ -200,7 +200,7 @@
 .fact-num {
     font-size: 2.2rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-primary);
     line-height: 1;
 }
 
@@ -258,7 +258,7 @@
 .faq-question span {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .faq-question i {

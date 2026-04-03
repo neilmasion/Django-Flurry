@@ -1564,6 +1564,12 @@ select option {
 
 }
 
+}
+
+:not([data-theme="dark"]) body {
+    color: #000000 !important;
+}
+
 :not([data-theme="dark"]) i {
     color: #000000 !important;
 }
@@ -1575,22 +1581,32 @@ select option {
 
 :not([data-theme="dark"]) .empty-state,
 :not([data-theme="dark"]) .notif-empty {
-    background: var(--primary-color);
-    color: #ffffff !important;
-    padding: 2rem;
-    border-radius: var(--radius-lg);
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 3rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+:not([data-theme="dark"]) .empty-state h1,
+:not([data-theme="dark"]) .empty-state h2,
+:not([data-theme="dark"]) .empty-state h3,
+:not([data-theme="dark"]) .empty-state p {
+    color: #000000 !important;
 }
 
 :not([data-theme="dark"]) .empty-state i,
 :not([data-theme="dark"]) .notif-empty i {
-    color: #ffffff !important;
+    color: #000000 !important;
 }
 
 :not([data-theme="dark"]) .testimonial-card:hover,
 :not([data-theme="dark"]) .event-card:hover,
 :not([data-theme="dark"]) .showcase-card:hover {
-    background-color: var(--bg-hover) !important;
+    background-color: #ffffff !important;
     box-shadow: var(--shadow-hover) !important;
     transform: translateY(-4px);
-    backdrop-filter: none;
+    backdrop-filter: none !important;
+    opacity: 1 !important;
 }
