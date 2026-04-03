@@ -167,6 +167,12 @@ a:hover {
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border-bottom: var(--glass-border);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+    will-change: transform;
+}
+
+.navbar.nav-hidden {
+    transform: translateY(calc(-100% - 8px));
 }
 
 .nav-container {
