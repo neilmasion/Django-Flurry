@@ -553,6 +553,66 @@
     margin: 0;
 }
 
+/* Light mode readability overrides for About page only */
+html:not([data-theme="dark"]) .mv-card {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+html:not([data-theme="dark"]) .mv-card-icon {
+    color: var(--icon-color);
+}
+
+html:not([data-theme="dark"]) .mv-card p,
+html:not([data-theme="dark"]) .story-text p,
+html:not([data-theme="dark"]) .milestone-body p,
+html:not([data-theme="dark"]) .recruitment-content p,
+html:not([data-theme="dark"]) .role-desc {
+    color: var(--text-secondary);
+}
+
+html:not([data-theme="dark"]) .milestone-year,
+html:not([data-theme="dark"]) .deck-hint,
+html:not([data-theme="dark"]) .deck-course,
+html:not([data-theme="dark"]) .deck-counter {
+    color: var(--text-tertiary);
+}
+
+html:not([data-theme="dark"]) .milestone-body,
+html:not([data-theme="dark"]) .recruitment-container {
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+html:not([data-theme="dark"]) .deck-role {
+    color: var(--text-secondary);
+}
+
+html:not([data-theme="dark"]) .deck-links a {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.14);
+    color: var(--text-primary);
+}
+
+html:not([data-theme="dark"]) .deck-links a:hover {
+    background: rgba(0, 0, 0, 0.14);
+    color: var(--text-primary);
+}
+
+html:not([data-theme="dark"]) .dept-card {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+html:not([data-theme="dark"]) .dept-card:hover {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+html:not([data-theme="dark"]) .dept-icon {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--text-primary);
+}
+
 @media (max-width: 1200px) {
     .hierarchy-grid {
         grid-template-columns: repeat(2, 1fr);
