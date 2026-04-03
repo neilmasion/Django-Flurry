@@ -334,3 +334,13 @@ html:not([data-theme="dark"]) .cf-group label {
 html:not([data-theme="dark"]) .faq-question i {
     color: rgba(10, 26, 43, 0.5);
 }
+
+html:not([data-theme="dark"]) .facts-section .section-title h2,
+html:not([data-theme="dark"]) .faq-section .section-title h2 {
+    color: #0a1a2b;
+}
+
+html:not([data-theme="dark"]) .facts-section .section-title p,
+html:not([data-theme="dark"]) .faq-section .section-title p {
+    color: #4a6177;
+}

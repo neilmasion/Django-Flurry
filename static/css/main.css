@@ -796,6 +796,8 @@ select option {
     border-top: 1px solid var(--border-color);
     padding: var(--spacing-2xl) var(--spacing-lg) 0;
     margin-top: var(--spacing-2xl);
+    position: relative;
+    z-index: 2;
 }
 
 .footer-container {

@@ -1167,6 +1167,22 @@ html:not([data-theme="dark"]) .admin-search-wrap i {
     color: rgba(31, 51, 72, 0.5);
 }
 
+html:not([data-theme="dark"]) .admin-toolbar .btn-primary {
+    background: #0f5ea8;
+    color: #ffffff;
+    border: 1px solid rgba(11, 74, 133, 0.4);
+}
+
+html:not([data-theme="dark"]) .admin-toolbar .btn-primary i {
+    color: #ffffff !important;
+}
+
+html:not([data-theme="dark"]) .admin-toolbar .btn-primary:hover {
+    background: #0b4a85;
+    color: #ffffff;
+    border-color: rgba(11, 74, 133, 0.65);
+}
+
 html:not([data-theme="dark"]) .admin-modal,
 html:not([data-theme="dark"]) .view-msg-content,
 html:not([data-theme="dark"]) .admin-toast {

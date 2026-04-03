@@ -186,7 +186,7 @@
     border: none;
     padding: 0.65rem 1rem;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 500;
     color: rgba(255, 255, 255, 0.5);
     border-radius: var(--radius-lg);
     cursor: pointer;
@@ -205,6 +205,11 @@
 .profile-tab.active {
     background: var(--primary-color);
     color: #fff;
+    font-weight: 500;
+}
+
+.profile-tab.active i {
+    color: #ffffff !important;
 }
 
 .tab-panel {
@@ -447,7 +452,7 @@
 
 .workshops-header h3 {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-primary);
     margin: 0;
 }
@@ -535,7 +540,7 @@
 
 .enrolled-card h4 {
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-primary);
     margin: 0;
     white-space: nowrap;
@@ -1193,6 +1198,10 @@ html:not([data-theme="dark"]) .profile-tab:hover {
 html:not([data-theme="dark"]) .profile-tab.active {
     background: #0f5ea8;
     color: #ffffff;
+}
+
+html:not([data-theme="dark"]) .profile-tab.active i {
+    color: #ffffff !important;
 }
 
 html:not([data-theme="dark"]) .combined-stat-divider,

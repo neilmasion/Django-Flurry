@@ -6,6 +6,8 @@
 .community-hero {
     padding: 8rem 7rem 0;
     background: transparent;
+    position: relative;
+    z-index: 1;
 }
 
 
@@ -37,6 +39,26 @@
 
 .hero-action {
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+html:not([data-theme="dark"]) .community-hero .btn-primary {
+    position: relative;
+    z-index: 3;
+    background: rgba(10, 26, 43, 0.92);
+    color: #ffffff;
+    border: 1px solid rgba(10, 26, 43, 0.5);
+}
+
+html:not([data-theme="dark"]) .community-hero .btn-primary i {
+    color: #ffffff !important;
+}
+
+html:not([data-theme="dark"]) .community-hero .btn-primary:hover {
+    background: #0f5ea8;
+    border-color: rgba(15, 94, 168, 0.5);
+    color: #ffffff;
 }
 
 
