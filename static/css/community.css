@@ -140,15 +140,14 @@
     padding: 0.5rem;
 }
 
-:not([data-theme="dark"]) .showcase-card {
-    background: var(--bg-secondary);
+.showcase-card:hover {
+    background: var(--bg-hover) !important;
+    backdrop-filter: none !important;
+    box-shadow: var(--shadow-hover);
 }
 
-.showcase-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent-color);
-    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
-    background: rgba(255, 255, 255, 0.06);
+:not([data-theme="dark"]) .showcase-card {
+    background: var(--bg-secondary);
 }
 
 .showcase-card-author {

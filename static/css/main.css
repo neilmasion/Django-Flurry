@@ -855,6 +855,11 @@ select option {
     will-change: transform;
 }
 
+:not([data-theme="dark"]) #cloudCanvas {
+    opacity: 1.0;
+    /* Full opacity for sun/clouds in light mode */
+}
+
 .scroll-top-btn {
     position: fixed;
     bottom: 2rem;
@@ -1557,15 +1562,35 @@ select option {
         left: auto;
     }
 
-    .notif-dropdown-content {
-        height: clamp(200px, 52vh, 380px);
-        min-height: 0;
-    }
+}
 
-    .search-results-dropdown {
-        width: min(92vw, 320px) !important;
-        max-width: calc(100vw - 1rem);
-        left: auto;
-        right: 0;
-    }
+:not([data-theme="dark"]) i {
+    color: #000000 !important;
+}
+
+:not([data-theme="dark"]) .nav-menu .nav-link:hover,
+:not([data-theme="dark"]) .nav-menu .nav-link.active {
+    color: var(--primary-color) !important;
+}
+
+:not([data-theme="dark"]) .empty-state,
+:not([data-theme="dark"]) .notif-empty {
+    background: var(--primary-color);
+    color: #ffffff !important;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+}
+
+:not([data-theme="dark"]) .empty-state i,
+:not([data-theme="dark"]) .notif-empty i {
+    color: #ffffff !important;
+}
+
+:not([data-theme="dark"]) .testimonial-card:hover,
+:not([data-theme="dark"]) .event-card:hover,
+:not([data-theme="dark"]) .showcase-card:hover {
+    background-color: var(--bg-hover) !important;
+    box-shadow: var(--shadow-hover) !important;
+    transform: translateY(-4px);
+    backdrop-filter: none;
 }

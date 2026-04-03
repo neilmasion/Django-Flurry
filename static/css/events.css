@@ -102,6 +102,12 @@
     margin: 0;
 }
 
+.events-hero-content h1 {
+    color: var(--text-primary);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
 :not([data-theme="dark"]) .event-card h3 {
     color: var(--text-primary);
     font-weight: 600;
@@ -234,9 +240,9 @@
 }
 
 .workshop-item:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
-    transform: translateY(-3px);
+    background: var(--bg-hover) !important;
+    backdrop-filter: none !important;
+    transform: translateY(-5px);
 }
 
 .workshop-item-icon {

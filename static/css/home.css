@@ -70,13 +70,8 @@
 .hero-stat-num {
     font-size: 1.4rem;
     font-weight: 700;
-    color: #fff;
-    line-height: 1;
-}
-
-:not([data-theme="dark"]) .hero-stat-num {
     color: var(--text-primary);
-    font-weight: 700;
+    line-height: 1;
 }
 
 .hero-stat-label {
@@ -180,7 +175,8 @@
 }
 
 .diagram-node:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--bg-hover) !important;
+    backdrop-filter: none !important;
     z-index: 10;
 }
 
@@ -412,10 +408,6 @@
 }
 
 .partners-label h1 {
-    color: #fff;
-}
-
-:not([data-theme="dark"]) .partners-label h1 {
     color: var(--text-primary);
 }
 
@@ -489,14 +481,9 @@
 .about-text h2 {
     font-size: 2rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     line-height: 1.15;
     margin-bottom: 1.25rem;
-}
-
-:not([data-theme="dark"]) .about-text h2 {
-    color: var(--text-primary);
-    font-weight: 600;
 }
 
 .about-text p {
