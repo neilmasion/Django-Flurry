@@ -1638,7 +1638,7 @@ html:not([data-theme="dark"]) .testimonial-card:hover,
 html:not([data-theme="dark"]) .event-card:hover,
 html:not([data-theme="dark"]) .showcase-card:hover {
     background-color: #ffffff !important;
-    box-shadow: var(--shadow-hover) !important;
+    box-shadow: none !important;
     transform: none !important;
     backdrop-filter: none !important;
     opacity: 1 !important;
