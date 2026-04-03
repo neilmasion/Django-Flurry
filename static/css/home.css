@@ -174,6 +174,13 @@ html:not([data-theme="dark"]) .diagram-node {
     color: var(--text-primary);
 }
 
+html[data-theme="dark"] .diagram-node {
+    background: #000000;
+    border-color: rgba(255, 255, 255, 0.18);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
 .diagram-node:hover {
     background: var(--bg-hover) !important;
     backdrop-filter: none !important;

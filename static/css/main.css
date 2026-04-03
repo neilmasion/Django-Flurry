@@ -194,6 +194,14 @@ a:hover {
     transition: filter var(--transition-fast);
 }
 
+html:not([data-theme="dark"]) .logo-icon {
+    filter: brightness(0);
+}
+
+html[data-theme="dark"] .logo-icon {
+    filter: brightness(0) invert(1);
+}
+
 .theme-icon {
     width: 30px;
     height: 35px;
