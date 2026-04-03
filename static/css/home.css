@@ -76,6 +76,7 @@
 
 :not([data-theme="dark"]) .hero-stat-num {
     color: var(--text-primary);
+    font-weight: 700;
 }
 
 .hero-stat-label {
@@ -173,8 +174,8 @@
 }
 
 :not([data-theme="dark"]) .diagram-node {
-    background: rgba(255, 255, 255, 0.7);
-    border-color: rgba(0, 0, 0, 0.08);
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
     color: var(--text-primary);
 }
 
@@ -501,6 +502,7 @@
 
 :not([data-theme="dark"]) .about-text h2 {
     color: var(--text-primary);
+    font-weight: 600;
 }
 
 .about-text p {
@@ -861,8 +863,8 @@
 }
 
 :not([data-theme="dark"]) .testimonial-btn {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
     color: var(--text-primary);
 }
 

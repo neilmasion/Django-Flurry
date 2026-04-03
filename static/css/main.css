@@ -206,6 +206,7 @@ a:hover {
 
 :not([data-theme="dark"]) .logo-text {
     color: var(--text-primary);
+    font-weight: 600;
 }
 
 .nav-menu {
@@ -500,7 +501,6 @@ a:hover {
 
 :not([data-theme="dark"]) .nav-link {
     color: var(--text-primary);
-    font-weight: 500;
 }
 
 .nav-link:hover,
@@ -1371,8 +1371,8 @@ select option {
 }
 
 :not([data-theme="dark"]) .search-input-wrap {
-    background: rgba(0, 0, 0, 0.04);
-    border-color: rgba(0, 0, 0, 0.1);
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
 }
 
 .search-input-wrap:focus-within {
@@ -1416,7 +1416,7 @@ select option {
 }
 
 :not([data-theme="dark"]) .search-input-wrap input::placeholder {
-    color: rgba(0, 0, 0, 0.4);
+    color: var(--text-tertiary);
 }
 
 /* Profile-specific Search Overrides */

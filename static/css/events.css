@@ -17,6 +17,7 @@
 
 :not([data-theme="dark"]) .section-title h2 {
     color: var(--text-primary);
+    font-weight: 600;
 }
 
 .section-title p {
@@ -49,6 +50,7 @@
 
 :not([data-theme="dark"]) .events-header h2 {
     color: var(--text-primary);
+    font-weight: 600;
 }
 
 .events-header p {
@@ -102,6 +104,7 @@
 
 :not([data-theme="dark"]) .event-card h3 {
     color: var(--text-primary);
+    font-weight: 600;
 }
 
 .event-card p {
@@ -158,6 +161,7 @@
 
 :not([data-theme="dark"]) .event-day {
     color: var(--text-primary);
+    font-weight: 700;
 }
 
 .event-month {
@@ -253,7 +257,7 @@
 }
 
 :not([data-theme="dark"]) .workshop-item-icon {
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--bg-tertiary);
     color: var(--primary-color);
 }
 
@@ -274,6 +278,7 @@
 
 :not([data-theme="dark"]) .workshop-item h4 {
     color: var(--text-primary);
+    font-weight: 600;
 }
 
 .workshop-item p {
@@ -373,7 +378,7 @@
 }
 
 :not([data-theme="dark"]) .resource-icon {
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--bg-tertiary);
     color: var(--primary-color);
 }
 

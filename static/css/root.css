@@ -5,19 +5,19 @@
     --secondary-color: #ffffff;
     --accent-color: #29b4f6;
 
-    --bg-primary: #f0f9ff;
-    /* Very light sky blue for Day mode */
-    --bg-secondary: rgba(255, 255, 255, 0.95);
-    /* More opaque white for better contrast */
-    --bg-tertiary: rgba(255, 255, 255, 0.98);
-    /* Near-solid white */
-    --bg-hover: rgba(255, 255, 255, 1.0);
+    --bg-primary: #ffffff;
+    /* Clean white background */
+    --bg-secondary: #f8fafc;
+    /* Very light grey-blue for cards */
+    --bg-tertiary: #f1f5f9;
+    /* Soft grey for subtle sections */
+    --bg-hover: #e2e8f0;
 
-    --text-primary: #111827;
-    /* Dark Slate/Black for high readability */
-    --text-secondary: #374151;
-    /* Dark grey */
-    --text-tertiary: #6b7280;
+    --text-primary: #0f172a;
+    /* Deep navy-grey for high readability */
+    --text-secondary: #334155;
+    /* Muted navy-grey */
+    --text-tertiary: #64748b;
     /* Muted grey */
 
     --border-color: rgba(0, 0, 0, 0.08);
@@ -69,12 +69,11 @@
 }
 
 html:not([data-theme="dark"]) body {
-    background-color: #f0f9ff;
-    background-image: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #d1edff 100%);
+    background-color: var(--bg-primary);
+    background-image: none;
     background-attachment: fixed;
     min-height: 100vh;
     color: var(--text-primary);
-    /* Global dark text for light mode */
 }
 
 /* Force all headers to be dark in light mode */
@@ -183,10 +182,9 @@ html:not([data-theme="dark"]) body {
 }
 
 :not([data-theme="dark"]) .btn-primary {
-    background-color: #ffffff;
-    color: #000;
+    background-color: var(--primary-color);
+    color: #fff;
     border: none;
-    font-weight: 700;
 }
 
 :not([data-theme="dark"]) .btn-primary:hover {

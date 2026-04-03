@@ -31,6 +31,7 @@
 
 :not([data-theme="dark"]) .hero-content h1 {
     color: var(--text-primary);
+    font-weight: 700;
 }
 
 .hero-content p {
@@ -183,6 +184,7 @@
 
 :not([data-theme="dark"]) .author-name {
     color: var(--text-primary);
+    font-weight: 700;
 }
 
 .post-time {
@@ -238,6 +240,7 @@
 
 :not([data-theme="dark"]) .showcase-title {
     color: var(--text-primary);
+    font-weight: 700;
 }
 
 .showcase-description {
@@ -346,6 +349,7 @@
 
 :not([data-theme="dark"]) .comments-header h3 {
     color: var(--text-primary);
+    font-weight: 600;
 }
 
 .comments-header .count {
@@ -433,6 +437,7 @@
 
 :not([data-theme="dark"]) .comment-author {
     color: var(--text-primary);
+    font-weight: 700;
 }
 
 .comment-role {
