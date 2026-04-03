@@ -80,8 +80,17 @@
     margin-top: 0.2rem;
 }
 
-:not([data-theme="dark"]) .hero-stat-label {
-    color: var(--text-secondary);
+html:not([data-theme="dark"]) .hero-title,
+html:not([data-theme="dark"]) .hero-stat-num {
+    color: #ffffff;
+}
+
+html:not([data-theme="dark"]) .hero-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+html:not([data-theme="dark"]) .hero-stat-label {
+    color: rgba(255, 255, 255, 0.82);
 }
 
 .hero-stat-divider {
@@ -90,8 +99,8 @@
     background: rgba(255, 255, 255, 0.2);
 }
 
-:not([data-theme="dark"]) .hero-stat-divider {
-    background: rgba(0, 0, 0, 0.1);
+html:not([data-theme="dark"]) .hero-stat-divider {
+    background: rgba(255, 255, 255, 0.35);
 }
 
 .hero-animation {
@@ -661,8 +670,9 @@ html:not([data-theme="dark"]) .learn-card:hover {
     flex-shrink: 0;
 }
 
-:not([data-theme="dark"]) .learn-icon {
-    background: rgba(0, 0, 0, 0.08);
+html:not([data-theme="dark"]) .learn-icon {
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.16);
     color: var(--icon-color);
 }
 
