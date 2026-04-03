@@ -127,24 +127,21 @@
 
 /* --- Showcase Card Structure Redesign --- */
 .showcase-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-secondary);
+    border: var(--glass-border);
     border-radius: 1rem;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     display: flex;
     flex-direction: column;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-md);
     padding: 0.5rem;
-    /* Internal padding for the inset look */
 }
 
 :not([data-theme="dark"]) .showcase-card {
     background: var(--bg-secondary);
-    border-color: var(--border-color);
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
 }
 
 .showcase-card:hover {
@@ -266,13 +263,8 @@
 .card-stats {
     display: flex;
     gap: 0.8rem;
-    color: rgba(255, 255, 255, 0.55);
-    /* Increased opacity for better visibility */
+    color: var(--icon-color);
     font-size: 0.8rem;
-}
-
-:not([data-theme="dark"]) .card-stats {
-    color: var(--text-secondary);
 }
 
 .card-stats span {

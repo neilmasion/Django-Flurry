@@ -71,10 +71,10 @@
 }
 
 .event-card {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: var(--bg-secondary);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
     border-radius: var(--radius-xl);
     padding: 1.75rem;
     display: flex;
@@ -124,16 +124,11 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    background: rgba(255, 255, 255, 0.18);
-    color: #fff;
+    background: var(--bg-tertiary);
+    color: var(--icon-color);
     padding: 0.25rem 0.65rem;
     border-radius: 999px;
     width: fit-content;
-}
-
-:not([data-theme="dark"]) .event-tag {
-    background: rgba(0, 0, 0, 0.08);
-    color: var(--text-secondary);
 }
 
 .event-tag--workshop {
@@ -226,10 +221,10 @@
 }
 
 .workshop-item {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.13);
+    background: var(--bg-secondary);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
     border-radius: var(--radius-xl);
     padding: 1.5rem;
     display: flex;

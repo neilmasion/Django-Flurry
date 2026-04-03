@@ -5,20 +5,26 @@
     --secondary-color: #ffffff;
     --accent-color: #29b4f6;
 
-    --bg-primary: #ffffff;
-    /* Clean white background */
-    --bg-secondary: #f8fafc;
-    /* Very light grey-blue for cards */
-    --bg-tertiary: #f1f5f9;
-    /* Soft grey for subtle sections */
-    --bg-hover: #e2e8f0;
+    --bg-primary: #7dd3fc;
+    /* Sky blue base */
+    --bg-secondary: rgba(255, 255, 255, 0.45);
+    /* Glassmorphic - Frost */
+    --bg-tertiary: rgba(255, 255, 255, 0.65);
+    /* Glassmorphic - Bright */
+    --bg-hover: rgba(255, 255, 255, 0.85);
 
     --text-primary: #0f172a;
-    /* Deep navy-grey for high readability */
-    --text-secondary: #334155;
-    /* Muted navy-grey */
-    --text-tertiary: #64748b;
-    /* Muted grey */
+    /* Deep navy-grey */
+    --text-secondary: #1e293b;
+    /* Muted navy */
+    --text-tertiary: #475569;
+    /* Muted slate */
+
+    --icon-color: #0f172a;
+    /* Dark icons for light mode */
+    --border-color: rgba(255, 255, 255, 0.3);
+    --glass-blur: 12px;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.4);
 
     --border-color: rgba(0, 0, 0, 0.08);
     /* Faint dark borders */
@@ -58,10 +64,14 @@
     --bg-hover: #2a2a2a;
 
     --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --text-tertiary: #999999;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-tertiary: rgba(255, 255, 255, 0.5);
 
-    --border-color: #475569;
+    --icon-color: #ffffff;
+    /* White icons for dark mode */
+    --border-color: rgba(255, 255, 255, 0.1);
+    --glass-blur: 24px;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.1);
     --border-light: #64748b;
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.7);
     --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.8);
@@ -70,7 +80,7 @@
 
 html:not([data-theme="dark"]) body {
     background-color: var(--bg-primary);
-    background-image: none;
+    background-image: linear-gradient(180deg, #7dd3fc 0%, #bae6fd 40%, #e0f2fe 100%);
     background-attachment: fixed;
     min-height: 100vh;
     color: var(--text-primary);
@@ -182,8 +192,9 @@ html:not([data-theme="dark"]) body {
 }
 
 :not([data-theme="dark"]) .btn-primary {
-    background-color: var(--primary-color);
-    color: #fff;
+    background-color: #000000;
+    /* Black button from Aerora example */
+    color: #ffffff;
     border: none;
 }
 
