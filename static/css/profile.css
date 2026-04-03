@@ -1089,3 +1089,153 @@ html:not([data-theme="dark"]) .user-avatar-sm {
         margin-left: -5px;
     }
 }
+
+html:not([data-theme="dark"]) .profile-sidebar,
+html:not([data-theme="dark"]) .profile-tabs,
+html:not([data-theme="dark"]) .overview-welcome,
+html:not([data-theme="dark"]) .overview-activity,
+html:not([data-theme="dark"]) .combined-stats-card,
+html:not([data-theme="dark"]) .enrolled-grid,
+html:not([data-theme="dark"]) .edit-form,
+html:not([data-theme="dark"]) .profile-notifications {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(242, 248, 253, 0.6));
+    border-color: rgba(9, 30, 52, 0.16);
+    box-shadow: 0 10px 24px rgba(8, 24, 40, 0.08);
+}
+
+html:not([data-theme="dark"]) .profile-identity h2,
+html:not([data-theme="dark"]) .welcome-text h3,
+html:not([data-theme="dark"]) .combined-stat-num,
+html:not([data-theme="dark"]) .workshops-header h3,
+html:not([data-theme="dark"]) .edit-title,
+html:not([data-theme="dark"]) .profile-notifications h4,
+html:not([data-theme="dark"]) .officer-app-card h4,
+html:not([data-theme="dark"]) .enrolled-card h4 {
+    color: #0a1a2b;
+}
+
+html:not([data-theme="dark"]) .profile-badge {
+    background: rgba(8, 145, 178, 0.18);
+    border-color: rgba(8, 145, 178, 0.35);
+    color: #0f766e;
+}
+
+html:not([data-theme="dark"]) .profile-meta-item {
+    color: #23364a;
+    background: rgba(255, 255, 255, 0.62);
+    border-color: rgba(9, 30, 52, 0.12);
+}
+
+html:not([data-theme="dark"]) .profile-meta-item i,
+html:not([data-theme="dark"]) .combined-stat-icon,
+html:not([data-theme="dark"]) .combined-stats-title,
+html:not([data-theme="dark"]) .combined-stat-label,
+html:not([data-theme="dark"]) .welcome-bio,
+html:not([data-theme="dark"]) .enrolled-card-meta,
+html:not([data-theme="dark"]) .enrolled-card-date,
+html:not([data-theme="dark"]) .enrolled-card-time,
+html:not([data-theme="dark"]) .edit-section-title,
+html:not([data-theme="dark"]) .edit-group label,
+html:not([data-theme="dark"]) .notification-body small,
+html:not([data-theme="dark"]) .officer-app-card p,
+html:not([data-theme="dark"]) .activity-empty p,
+html:not([data-theme="dark"]) .enrolled-empty p {
+    color: #4a6177;
+}
+
+html:not([data-theme="dark"]) .profile-tab {
+    color: #35506a;
+}
+
+html:not([data-theme="dark"]) .profile-tab:hover {
+    color: #0b2a44;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+html:not([data-theme="dark"]) .profile-tab.active {
+    background: #0f5ea8;
+    color: #ffffff;
+}
+
+html:not([data-theme="dark"]) .combined-stat-divider,
+html:not([data-theme="dark"]) .edit-divider,
+html:not([data-theme="dark"]) .enrolled-table-header,
+html:not([data-theme="dark"]) .enrolled-card,
+html:not([data-theme="dark"]) .notification-item {
+    border-color: rgba(9, 30, 52, 0.12);
+}
+
+html:not([data-theme="dark"]) .enrolled-table-header {
+    background: rgba(255, 255, 255, 0.62);
+}
+
+html:not([data-theme="dark"]) .enrolled-table-header span {
+    color: #5f7388;
+}
+
+html:not([data-theme="dark"]) .enrolled-card:hover,
+html:not([data-theme="dark"]) .notification-item:hover {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+html:not([data-theme="dark"]) .activity-empty i,
+html:not([data-theme="dark"]) .enrolled-empty i,
+html:not([data-theme="dark"]) .welcome-art {
+    color: rgba(10, 26, 43, 0.24);
+}
+
+html:not([data-theme="dark"]) .enrolled-empty {
+    background: rgba(255, 255, 255, 0.58);
+    border-color: rgba(9, 30, 52, 0.18);
+}
+
+html:not([data-theme="dark"]) .enrolled-empty h4 {
+    color: #24374a;
+}
+
+html:not([data-theme="dark"]) .notification-item {
+    background: rgba(255, 255, 255, 0.54);
+}
+
+html:not([data-theme="dark"]) .notification-body p {
+    color: #11263b;
+}
+
+html:not([data-theme="dark"]) .notification-close {
+    color: rgba(17, 38, 59, 0.45);
+}
+
+html:not([data-theme="dark"]) .notification-close:hover {
+    color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .officer-app-card {
+    background: rgba(15, 94, 168, 0.12);
+    border-color: rgba(15, 94, 168, 0.28);
+}
+
+html:not([data-theme="dark"]) .app-form textarea {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(9, 30, 52, 0.18);
+    color: #11263b;
+}
+
+html:not([data-theme="dark"]) .profile-note-bubble {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(9, 30, 52, 0.16);
+    box-shadow: 0 8px 24px rgba(12, 27, 43, 0.16);
+}
+
+html:not([data-theme="dark"]) .profile-note-bubble:hover {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(15, 94, 168, 0.34);
+}
+
+html:not([data-theme="dark"]) .profile-note-bubble::after {
+    border-left-color: rgba(9, 30, 52, 0.16);
+    border-bottom-color: rgba(9, 30, 52, 0.16);
+}
+
+html:not([data-theme="dark"]) .profile-note-text {
+    color: #11263b;
+}
