@@ -531,7 +531,7 @@ html:not([data-theme="dark"]) .diagram-node span {
     border-color: rgba(255, 255, 255, 0.25);
 }
 
-:not([data-theme="dark"]) .about-card:hover {
+html:not([data-theme="dark"]) .about-card:hover {
     background: #ffffff;
     border-color: rgba(0, 0, 0, 0.15);
 }
@@ -628,7 +628,7 @@ html:not([data-theme="dark"]) .diagram-node span {
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
 }
 
-:not([data-theme="dark"]) .learn-card:hover {
+html:not([data-theme="dark"]) .learn-card:hover {
     background: #ffffff;
     border-color: rgba(0, 0, 0, 0.15);
     border-top-color: rgba(0, 0, 0, 0.25);

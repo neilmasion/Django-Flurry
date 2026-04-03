@@ -1610,9 +1610,9 @@ html:not([data-theme="dark"]) i {
     color: #000000 !important;
 }
 
-:not([data-theme="dark"]) .testimonial-card:hover,
-:not([data-theme="dark"]) .event-card:hover,
-:not([data-theme="dark"]) .showcase-card:hover {
+html:not([data-theme="dark"]) .testimonial-card:hover,
+html:not([data-theme="dark"]) .event-card:hover,
+html:not([data-theme="dark"]) .showcase-card:hover {
     background-color: #ffffff !important;
     box-shadow: var(--shadow-hover) !important;
     transform: translateY(-4px);
