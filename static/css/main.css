@@ -916,6 +916,10 @@ html:not([data-theme="dark"]) #cloudCanvas {
     margin-bottom: 0.75rem;
 }
 
+html:not([data-theme="dark"]) .section-eyebrow {
+    color: var(--text-tertiary);
+}
+
 .page-hero {
     min-height: 38vh;
     display: flex;

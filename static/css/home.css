@@ -82,15 +82,15 @@
 
 html:not([data-theme="dark"]) .hero-title,
 html:not([data-theme="dark"]) .hero-stat-num {
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
 html:not([data-theme="dark"]) .hero-subtitle {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-secondary);
 }
 
 html:not([data-theme="dark"]) .hero-stat-label {
-    color: rgba(255, 255, 255, 0.82);
+    color: var(--text-secondary);
 }
 
 .hero-stat-divider {
@@ -100,7 +100,7 @@ html:not([data-theme="dark"]) .hero-stat-label {
 }
 
 html:not([data-theme="dark"]) .hero-stat-divider {
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .hero-animation {
