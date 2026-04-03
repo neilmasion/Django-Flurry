@@ -1564,8 +1564,6 @@ select option {
 
 }
 
-}
-
 :not([data-theme="dark"]) body {
     color: #000000 !important;
 }
