@@ -1,23 +1,23 @@
 :root {
-    --primary-color: #1565c0;
-    --primary-dark: #0d47a1;
-    --primary-light: #1976d2;
+    --primary-color: #0f5ea8;
+    --primary-dark: #0b4a85;
+    --primary-light: #2a7cc8;
     --secondary-color: #ffffff;
-    --accent-color: #29b4f6;
+    --accent-color: #1f8ad8;
 
-    --bg-primary: #7dd3fc;
-    --bg-secondary: rgba(255, 255, 255, 0.7);
+    --bg-primary: #8ccff1;
+    --bg-secondary: rgba(255, 255, 255, 0.74);
     /* More opaque for better readability */
     --bg-tertiary: rgba(255, 255, 255, 0.9);
-    --bg-hover: #ffffff;
+    --bg-hover: rgba(255, 255, 255, 0.96);
     /* Solid white on hover in light mode */
 
-    --text-primary: #000000;
+    --text-primary: #0a1a2b;
     /* Pure black for maximum contrast */
-    --text-secondary: #111827;
-    --text-tertiary: #374151;
+    --text-secondary: #23364a;
+    --text-tertiary: #4a6177;
 
-    --icon-color: #000000;
+    --icon-color: #0c1c2e;
     /* Pure black icons */
     --border-color: rgba(0, 0, 0, 0.1);
     --glass-blur: 8px;
@@ -80,7 +80,7 @@
 
 html:not([data-theme="dark"]) body {
     background-color: var(--bg-primary);
-    background-image: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 60%, #e0f2fe 100%);
+    background-image: radial-gradient(circle at 78% 20%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 36%), linear-gradient(180deg, #4fb3e3 0%, #87cfee 64%, #e7f4fb 100%);
     background-attachment: fixed;
     min-height: 100vh;
     color: var(--text-primary);
@@ -103,32 +103,33 @@ html:not([data-theme="dark"]) body {
     min-height: 100vh;
 }
 
-:not([data-theme="dark"]) .navbar {
+html:not([data-theme="dark"]) .navbar {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: 1px solid rgba(10, 26, 43, 0.12);
     /* Darker border for light nav */
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 24px rgba(10, 26, 43, 0.08);
+    background: rgba(248, 252, 255, 0.72);
 }
 
 :not([data-theme="dark"]) .nav-menu {
     background: transparent;
 }
 
-:not([data-theme="dark"]) input[type="text"],
-:not([data-theme="dark"]) input[type="number"],
-:not([data-theme="dark"]) input[type="email"],
-:not([data-theme="dark"]) input[type="password"],
-:not([data-theme="dark"]) input[type="date"],
-:not([data-theme="dark"]) input[type="time"],
-:not([data-theme="dark"]) input[type="tel"],
-:not([data-theme="dark"]) textarea,
-:not([data-theme="dark"]) select {
-    background: rgba(0, 0, 0, 0.06);
+html:not([data-theme="dark"]) input[type="text"],
+html:not([data-theme="dark"]) input[type="number"],
+html:not([data-theme="dark"]) input[type="email"],
+html:not([data-theme="dark"]) input[type="password"],
+html:not([data-theme="dark"]) input[type="date"],
+html:not([data-theme="dark"]) input[type="time"],
+html:not([data-theme="dark"]) input[type="tel"],
+html:not([data-theme="dark"]) textarea,
+html:not([data-theme="dark"]) select {
+    background: rgba(255, 255, 255, 0.62);
     /* Slightly more visible input bg */
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(10, 26, 43, 0.18);
     color: var(--text-primary);
     /* Use dark text */
     padding: 0.75rem 1rem;
@@ -158,18 +159,18 @@ html:not([data-theme="dark"]) body {
     /* Darker placeholder for light bg */
 }
 
-:not([data-theme="dark"]) input[type="text"]:focus,
-:not([data-theme="dark"]) input[type="number"]:focus,
-:not([data-theme="dark"]) input[type="email"]:focus,
-:not([data-theme="dark"]) input[type="password"]:focus,
-:not([data-theme="dark"]) input[type="date"]:focus,
-:not([data-theme="dark"]) input[type="time"]:focus,
-:not([data-theme="dark"]) input[type="tel"]:focus,
-:not([data-theme="dark"]) textarea:focus,
-:not([data-theme="dark"]) select:focus {
-    background: rgba(0, 0, 0, 0.25);
-    border-color: rgba(245, 230, 66, 0.7);
-    box-shadow: 0 0 0 3px rgba(245, 230, 66, 0.15);
+html:not([data-theme="dark"]) input[type="text"]:focus,
+html:not([data-theme="dark"]) input[type="number"]:focus,
+html:not([data-theme="dark"]) input[type="email"]:focus,
+html:not([data-theme="dark"]) input[type="password"]:focus,
+html:not([data-theme="dark"]) input[type="date"]:focus,
+html:not([data-theme="dark"]) input[type="time"]:focus,
+html:not([data-theme="dark"]) input[type="tel"]:focus,
+html:not([data-theme="dark"]) textarea:focus,
+html:not([data-theme="dark"]) select:focus {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(15, 94, 168, 0.55);
+    box-shadow: 0 0 0 3px rgba(15, 94, 168, 0.14);
 }
 
 :not([data-theme="dark"]) .modal-content {
@@ -192,44 +193,43 @@ html:not([data-theme="dark"]) body {
 }
 
 html:not([data-theme="dark"]) .btn-primary {
-    background-color: #000000;
-    /* Black button from Aerora example */
+    background-color: #0a1a2b;
     color: #ffffff;
     border: none;
 }
 
 html:not([data-theme="dark"]) .btn-primary:hover {
-    background-color: rgba(255, 255, 255, 0.85);
-    color: #000000;
+    background-color: #ffffff;
+    color: #0a1a2b;
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 18px rgba(10, 26, 43, 0.16);
 }
 
-:not([data-theme="dark"]) .btn-outline {
-    background: rgba(0, 0, 0, 0.05);
+html:not([data-theme="dark"]) .btn-outline {
+    background: rgba(255, 255, 255, 0.54);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(10, 26, 43, 0.22);
     color: var(--text-primary);
 }
 
-:not([data-theme="dark"]) .btn-outline:hover {
-    background: rgba(0, 0, 0, 0.15);
-    border-color: var(--text-primary);
+html:not([data-theme="dark"]) .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(10, 26, 43, 0.32);
     color: var(--text-primary);
 }
 
-:not([data-theme="dark"]) .hero-buttons input[type="email"] {
-    background: rgba(0, 0, 0, 0.05);
+html:not([data-theme="dark"]) .hero-buttons input[type="email"] {
+    background: rgba(255, 255, 255, 0.58);
     /* Light backdrop for dark text */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(10, 26, 43, 0.2);
     color: var(--text-primary);
 }
 
-:not([data-theme="dark"]) .hero-buttons input[type="email"]::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+html:not([data-theme="dark"]) .hero-buttons input[type="email"]::placeholder {
+    color: rgba(35, 54, 74, 0.6);
 }
 
 :not([data-theme="dark"]) .partners-section {
