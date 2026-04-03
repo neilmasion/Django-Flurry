@@ -191,15 +191,16 @@ html:not([data-theme="dark"]) body {
     color: var(--text-primary);
 }
 
-:not([data-theme="dark"]) .btn-primary {
+html:not([data-theme="dark"]) .btn-primary {
     background-color: #000000;
     /* Black button from Aerora example */
     color: #ffffff;
     border: none;
 }
 
-:not([data-theme="dark"]) .btn-primary:hover {
+html:not([data-theme="dark"]) .btn-primary:hover {
     background-color: rgba(255, 255, 255, 0.85);
+    color: #000000;
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }

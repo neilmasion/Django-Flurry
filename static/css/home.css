@@ -509,6 +509,19 @@ html:not([data-theme="dark"]) .diagram-node span {
     font-size: 0.82rem;
 }
 
+html:not([data-theme="dark"]) .about-text .btn-outline {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.62), rgba(236, 244, 252, 0.5));
+    border-color: rgba(15, 23, 42, 0.28);
+    color: var(--text-primary);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+}
+
+html:not([data-theme="dark"]) .about-text .btn-outline:hover {
+    background: #ffffff;
+    border-color: rgba(15, 23, 42, 0.42);
+    color: var(--text-primary);
+}
+
 .about-cards {
     flex: 1;
     display: grid;

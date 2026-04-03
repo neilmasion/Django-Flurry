@@ -469,10 +469,10 @@
             {% endfor %}
 
             {% if not featured_events and not other_events %}
-            <div class="empty-events" style="grid-column: 1 / -1; width: 100%; text-align: center; padding: 5rem 2rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-xl); border: 1px dashed rgba(255,255,255,0.1);">
-                <i class="fa-regular fa-calendar-xmark" style="font-size: 3.5rem; color: rgba(255,255,255,0.15); margin-bottom: 1.5rem;"></i>
-                <h3 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.25rem;">No upcoming events right now</h3>
-                <p style="color: rgba(255,255,255,0.5); max-width: 450px; margin: 0 auto; font-size: 0.9rem; line-height: 1.6;">We don't have any scheduled workshops at the moment. Check back soon or browse our Workshop Catalog to see what we've covered in the past!</p>
+            <div class="empty-events" style="grid-column: 1 / -1; width: 100%; text-align: center; padding: 5rem 2rem; background: var(--bg-secondary); border-radius: var(--radius-xl); border: 1px dashed var(--border-color);">
+                <i class="fa-regular fa-calendar-xmark" style="font-size: 3.5rem; color: var(--text-tertiary); margin-bottom: 1.5rem;"></i>
+                <h3 style="color: var(--text-primary); margin-bottom: 0.5rem; font-size: 1.25rem;">No upcoming events right now</h3>
+                <p style="color: var(--text-secondary); max-width: 450px; margin: 0 auto; font-size: 0.9rem; line-height: 1.6;">We don't have any scheduled workshops at the moment. Check back soon or browse our Workshop Catalog to see what we've covered in the past!</p>
             </div>
             {% endif %}
         </div>

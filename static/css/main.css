@@ -1291,6 +1291,30 @@ html:not([data-theme="dark"]) #cloudCanvas {
     flex-wrap: wrap;
 }
 
+html[data-theme="dark"] .cta-buttons .btn-primary {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+html[data-theme="dark"] .cta-buttons .btn-primary:hover {
+    background: #111827;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.36);
+}
+
+html:not([data-theme="dark"]) .cta-buttons .btn-primary {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+html:not([data-theme="dark"]) .cta-buttons .btn-primary:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: rgba(0, 0, 0, 0.35);
+}
+
 /* Global Network List & Item Styles */
 .network-list {
     display: flex;
