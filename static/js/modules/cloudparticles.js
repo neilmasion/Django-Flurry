@@ -134,22 +134,22 @@ export function setupCloudParticles() {
 
         // 1a. Ambient Blooms
         const superBloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, CORE_R * 14 * pulse);
-        const bloomAlpha = isDark() ? 0.45 : 0.75;
-        const subBloomAlpha = isDark() ? 0.15 : 0.35;
+        const bloomAlpha = isDark() ? 0.45 : 0.62;
+        const subBloomAlpha = isDark() ? 0.15 : 0.24;
         superBloom.addColorStop(0, `rgba(255,255,230,${bloomAlpha})`);
         superBloom.addColorStop(0.5, `rgba(255,255,210,${subBloomAlpha})`);
         superBloom.addColorStop(1, 'rgba(255,255,200,0)');
         ctx.save(); ctx.fillStyle = superBloom; ctx.beginPath(); ctx.arc(cx, cy, CORE_R * 14 * pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
         const bloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, CORE_R * 9 * pulse);
-        const coreBloomAlpha = isDark() ? 0.65 : 0.95;
+        const coreBloomAlpha = isDark() ? 0.65 : 0.82;
         bloom.addColorStop(0, `rgba(255,255,240,${coreBloomAlpha})`);
         bloom.addColorStop(0.6, 'rgba(255,255,220,0.22)');
         bloom.addColorStop(1, 'rgba(255,255,220,0)');
         ctx.save(); ctx.fillStyle = bloom; ctx.beginPath(); ctx.arc(cx, cy, CORE_R * 9 * pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
         // 2. Starburst Rays
-        const rayAlphaBase = isDark() ? 1.0 : 1.5; // More intense in light mode
+        const rayAlphaBase = isDark() ? 1.0 : 1.25; // Slightly softer in light mode
         for (let i = 0; i < RAY_COUNT; i++) {
             const angle = (i / RAY_COUNT) * Math.PI * 2 + rayRot;
             const isLong = i % 2 === 0;
@@ -175,7 +175,7 @@ export function setupCloudParticles() {
         const flareAlpha = 0.28 + 0.12 * Math.sin(t * 0.9);
         const fLX = CORE_R * 11, fH = CORE_R * 0.12;
         const fg = ctx.createLinearGradient(cx - fLX, cy, cx + fLX, cy);
-        fg.addColorStop(0, 'rgba(255,255,255,0)'); fg.addColorStop(0.5, `rgba(255,255,255,${flareAlpha * 1.8})`); fg.addColorStop(1, 'rgba(255,255,255,0)');
+        fg.addColorStop(0, 'rgba(255,255,255,0)'); fg.addColorStop(0.5, `rgba(255,255,255,${flareAlpha * 1.45})`); fg.addColorStop(1, 'rgba(255,255,255,0)');
         ctx.save(); ctx.fillStyle = fg; ctx.fillRect(cx - fLX, cy - fH, fLX * 2, fH * 2); ctx.restore();
 
         // 6. Specular Sparkles
