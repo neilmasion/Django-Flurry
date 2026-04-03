@@ -5,7 +5,8 @@ export function initTheme() {
 }
 
 export function updateThemeIcon(theme) {
+    const resolvedTheme = theme || document.documentElement.getAttribute('data-theme') || 'light';
     document.querySelectorAll('.theme-icon').forEach(img => {
-        img.style.filter = 'brightness(0) invert(1)';
+        img.style.filter = resolvedTheme === 'dark' ? 'brightness(0) invert(1)' : 'brightness(0)';
     });
 }

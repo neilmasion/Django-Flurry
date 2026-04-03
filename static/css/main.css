@@ -200,13 +200,12 @@ a:hover {
     transition: filter var(--transition-fast) transform var(--transition-fast);
 }
 
-:not([data-theme="dark"]) .theme-icon {
-    filter: brightness(0.2);
-    /* Darken for light mode */
+html:not([data-theme="dark"]) .theme-icon {
+    filter: brightness(0);
 }
 
-[data-theme="dark"] .theme-icon {
-    filter: brightness(100);
+html[data-theme="dark"] .theme-icon {
+    filter: brightness(0) invert(1);
 }
 
 .logo-text {
@@ -855,7 +854,7 @@ select option {
     will-change: transform;
 }
 
-:not([data-theme="dark"]) #cloudCanvas {
+html:not([data-theme="dark"]) #cloudCanvas {
     opacity: 1.0;
     /* Full opacity for sun/clouds in light mode */
 }
@@ -1568,7 +1567,7 @@ select option {
     color: #000000 !important;
 }
 
-:not([data-theme="dark"]) i {
+html:not([data-theme="dark"]) i {
     color: #000000 !important;
 }
 

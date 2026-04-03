@@ -120,7 +120,7 @@
     animation: ring-pulse 3s ease-in-out infinite;
 }
 
-:not([data-theme="dark"]) .orbit-ring {
+html:not([data-theme="dark"]) .orbit-ring {
     border-color: rgba(0, 0, 0, 0.08);
 }
 
@@ -168,7 +168,7 @@
     user-select: none;
 }
 
-:not([data-theme="dark"]) .diagram-node {
+html:not([data-theme="dark"]) .diagram-node {
     background: var(--bg-secondary);
     border-color: var(--border-color);
     color: var(--text-primary);
@@ -189,7 +189,7 @@
     line-height: 1;
 }
 
-:not([data-theme="dark"]) .diagram-node span {
+html:not([data-theme="dark"]) .diagram-node span {
     color: var(--text-secondary);
 }
 

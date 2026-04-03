@@ -100,20 +100,16 @@ export function setupCloudParticles() {
         const dark = isDark();
         ctx.save();
         ctx.globalAlpha = dark ? c.alpha * 0.65 : c.alpha;
+        const core = dark ? 'rgba(255,255,255,1)' : 'rgba(20,20,20,1)';
+        const mid = dark ? 'rgba(225,225,225,0.88)' : 'rgba(70,70,70,0.78)';
 
         c.puffs.forEach(p => {
             const px = c.x + p.ox;
             const py = c.y + p.oy;
             const grad = ctx.createRadialGradient(px, py, 0, px, py, p.r);
-            if (dark) {
-                grad.addColorStop(0, 'rgba(20, 45, 90, 1)');
-                grad.addColorStop(0.6, 'rgba(12, 25, 60, 0.8)');
-                grad.addColorStop(1, 'rgba(5, 12, 35, 0)');
-            } else {
-                grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-                grad.addColorStop(0.5, 'rgba(235, 245, 255, 0.9)');
-                grad.addColorStop(1, 'rgba(210, 225, 255, 0)');
-            }
+            grad.addColorStop(0, core);
+            grad.addColorStop(0.55, mid);
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
             ctx.fillStyle = grad;
             ctx.beginPath();
             ctx.arc(px, py, p.r, 0, Math.PI * 2);
@@ -131,25 +127,23 @@ export function setupCloudParticles() {
         const RAY_LONG = CORE_R * 5.5;
         const RAY_SHORT = CORE_R * 3.0;
         const RAY_COUNT = 24;
+        const rayCore = 'rgba(0,0,0,1)';
+        const raySoft = 'rgba(80,80,80,0.2)';
 
         // 1a. Ambient Blooms
         const superBloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, CORE_R * 14 * pulse);
-        const bloomAlpha = isDark() ? 0.45 : 0.75;
-        const subBloomAlpha = isDark() ? 0.15 : 0.35;
-        superBloom.addColorStop(0, `rgba(255,255,230,${bloomAlpha})`);
-        superBloom.addColorStop(0.5, `rgba(255,255,210,${subBloomAlpha})`);
-        superBloom.addColorStop(1, 'rgba(255,255,200,0)');
+        superBloom.addColorStop(0, 'rgba(0,0,0,0.55)');
+        superBloom.addColorStop(0.5, 'rgba(60,60,60,0.18)');
+        superBloom.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.save(); ctx.fillStyle = superBloom; ctx.beginPath(); ctx.arc(cx, cy, CORE_R * 14 * pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
         const bloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, CORE_R * 9 * pulse);
-        const coreBloomAlpha = isDark() ? 0.65 : 0.95;
-        bloom.addColorStop(0, `rgba(255,255,240,${coreBloomAlpha})`);
-        bloom.addColorStop(0.6, 'rgba(255,255,220,0.22)');
-        bloom.addColorStop(1, 'rgba(255,255,220,0)');
+        bloom.addColorStop(0, 'rgba(0,0,0,0.92)');
+        bloom.addColorStop(0.6, 'rgba(80,80,80,0.18)');
+        bloom.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.save(); ctx.fillStyle = bloom; ctx.beginPath(); ctx.arc(cx, cy, CORE_R * 9 * pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
         // 2. Starburst Rays
-        const rayAlphaBase = isDark() ? 1.0 : 1.5; // More intense in light mode
         for (let i = 0; i < RAY_COUNT; i++) {
             const angle = (i / RAY_COUNT) * Math.PI * 2 + rayRot;
             const isLong = i % 2 === 0;
@@ -160,22 +154,22 @@ export function setupCloudParticles() {
             const bx1 = cx + Math.cos(perpAngle) * rayWidth, by1 = cy + Math.sin(perpAngle) * rayWidth;
             const bx2 = cx - Math.cos(perpAngle) * rayWidth, by2 = cy - Math.sin(perpAngle) * rayWidth;
             const rayGrad = ctx.createLinearGradient(cx, cy, tipX, tipY);
-            rayGrad.addColorStop(0, `rgba(255,255,255,${rayAlphaBase})`);
-            rayGrad.addColorStop(1, 'rgba(255,255,220,0)');
+            rayGrad.addColorStop(0, rayCore);
+            rayGrad.addColorStop(1, raySoft);
             ctx.save(); ctx.fillStyle = rayGrad; ctx.beginPath(); ctx.moveTo(bx1, by1); ctx.lineTo(tipX, tipY); ctx.lineTo(bx2, by2); ctx.closePath(); ctx.fill(); ctx.restore();
         }
 
         // 3. Central Glow Halos
         const midGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, CORE_R * 3.5 * pulse);
-        midGlow.addColorStop(0, 'rgba(255,255,255,1.0)');
-        midGlow.addColorStop(1, 'rgba(255,255,235,0)');
+        midGlow.addColorStop(0, 'rgba(0,0,0,1.0)');
+        midGlow.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.save(); ctx.fillStyle = midGlow; ctx.beginPath(); ctx.arc(cx, cy, CORE_R * 3.5 * pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
         // 5. Lens Flare Streaks
         const flareAlpha = 0.28 + 0.12 * Math.sin(t * 0.9);
         const fLX = CORE_R * 11, fH = CORE_R * 0.12;
         const fg = ctx.createLinearGradient(cx - fLX, cy, cx + fLX, cy);
-        fg.addColorStop(0, 'rgba(255,255,255,0)'); fg.addColorStop(0.5, `rgba(255,255,255,${flareAlpha * 1.8})`); fg.addColorStop(1, 'rgba(255,255,255,0)');
+        fg.addColorStop(0, 'rgba(0,0,0,0)'); fg.addColorStop(0.5, `rgba(0,0,0,${flareAlpha * 1.8})`); fg.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.save(); ctx.fillStyle = fg; ctx.fillRect(cx - fLX, cy - fH, fLX * 2, fH * 2); ctx.restore();
 
         // 6. Specular Sparkles
@@ -185,7 +179,7 @@ export function setupCloudParticles() {
             const sx = cx + Math.cos(ang + rayRot * 0.5) * dist, sy = cy + Math.sin(ang + rayRot * 0.5) * dist;
             const sa = 0.5 + 0.5 * Math.sin(t * 1.5 + idx * 1.1), sR = CORE_R * 0.08;
             const sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, sR * 3);
-            sg.addColorStop(0, `rgba(255,255,255,${sa})`); sg.addColorStop(1, 'rgba(255,255,230,0)');
+            sg.addColorStop(0, `rgba(0,0,0,${sa})`); sg.addColorStop(1, 'rgba(0,0,0,0)');
             ctx.save(); ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sx, sy, sR * 3, 0, Math.PI * 2); ctx.fill(); ctx.restore();
         });
     }
@@ -198,15 +192,15 @@ export function setupCloudParticles() {
 
         // 1. Triple-Layer Smooth Glow
         const superHaze = ctx.createRadialGradient(cx, cy, 0, cx, cy, moonR * 19 * pulse);
-        superHaze.addColorStop(0, 'rgba(255,255,255,0.08)'); superHaze.addColorStop(1, 'rgba(255,255,255,0)');
+        superHaze.addColorStop(0, 'rgba(255,255,255,0.12)'); superHaze.addColorStop(1, 'rgba(255,255,255,0)');
         ctx.save(); ctx.fillStyle = superHaze; ctx.beginPath(); ctx.arc(cx, cy, moonR * 19 * pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
         const wideGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, moonR * 10 * pulse);
-        wideGlow.addColorStop(0, 'rgba(255,255,255,0.18)'); wideGlow.addColorStop(1, 'rgba(255,255,255,0)');
+        wideGlow.addColorStop(0, 'rgba(255,255,255,0.28)'); wideGlow.addColorStop(1, 'rgba(255,255,255,0)');
         ctx.save(); ctx.fillStyle = wideGlow; ctx.beginPath(); ctx.arc(cx, cy, moonR * 10 * pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
         const bloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, moonR * 4.6);
-        bloom.addColorStop(0, 'rgba(255,255,255,0.65)'); bloom.addColorStop(1, 'rgba(255,255,255,0)');
+        bloom.addColorStop(0, 'rgba(255,255,255,0.9)'); bloom.addColorStop(1, 'rgba(255,255,255,0)');
         ctx.save(); ctx.fillStyle = bloom; ctx.beginPath(); ctx.arc(cx, cy, moonR * 4.6, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 
         // 2. Moon Disc (Silver)
@@ -223,8 +217,8 @@ export function setupCloudParticles() {
         crat.forEach(c => {
             const rx = cx + c.x * moonR, ry = cy + c.y * moonR, rr = c.r * moonR;
             const cGrad = ctx.createRadialGradient(rx, ry, 0, rx, ry, rr);
-            cGrad.addColorStop(0, `rgba(0, 30, 65, ${c.a})`); cGrad.addColorStop(1, 'rgba(0, 5, 20, 0)');
-            ctx.save(); ctx.shadowBlur = rr * 0.55; ctx.shadowColor = `rgba(0, 20, 50, ${c.a * 0.5})`;
+            cGrad.addColorStop(0, `rgba(120,120,120, ${c.a})`); cGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.save(); ctx.shadowBlur = rr * 0.55; ctx.shadowColor = `rgba(90, 90, 90, ${c.a * 0.5})`;
             ctx.beginPath(); ctx.fillStyle = cGrad; ctx.arc(rx, ry, rr, 0, Math.PI * 2); ctx.fill(); ctx.restore();
             ctx.beginPath(); ctx.strokeStyle = `rgba(255, 255, 255, ${c.a * 0.22})`; ctx.lineWidth = 1;
             ctx.arc(rx + rr * 0.2, ry + rr * 0.2, rr * 0.9, 0, Math.PI * 2); ctx.stroke();
