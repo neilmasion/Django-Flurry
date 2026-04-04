@@ -1233,6 +1233,26 @@ html:not([data-theme="dark"]) .comments-section {
     border-top-color: rgba(10, 26, 43, 0.1);
 }
 
+html:not([data-theme="dark"]) .admin-modal.upload-modal .edit-group input[type="file"] {
+    color: #334155;
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(9, 30, 52, 0.16);
+}
+
+html:not([data-theme="dark"]) .admin-modal.upload-modal .edit-group input[type="file"]::file-selector-button,
+html:not([data-theme="dark"]) .admin-modal.upload-modal .edit-group input[type="file"]::-webkit-file-upload-button {
+    background: #0f5ea8;
+    color: #ffffff;
+    border-color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .admin-modal.upload-modal .edit-group input[type="file"]::file-selector-button:hover,
+html:not([data-theme="dark"]) .admin-modal.upload-modal .edit-group input[type="file"]::-webkit-file-upload-button:hover {
+    background: #0b4a85;
+    border-color: #0b4a85;
+    color: #ffffff;
+}
+
 html:not([data-theme="dark"]) .comment-author,
 html:not([data-theme="dark"]) .comment-content,
 html:not([data-theme="dark"]) .comments-header h3 {
@@ -1251,6 +1271,27 @@ html:not([data-theme="dark"]) .submit-reply {
     background: rgba(15, 94, 168, 0.12);
     border-color: rgba(15, 94, 168, 0.25);
     color: #0f5ea8;
+}
+
+/* Ensure file picker button stays readable in light mode */
+html:not([data-theme="dark"]) #uploadModal .upload-modal #id_images {
+    color: #1e293b !important;
+}
+
+html:not([data-theme="dark"]) #uploadModal .upload-modal #id_images::file-selector-button,
+html:not([data-theme="dark"]) #uploadModal .upload-modal #id_images::-webkit-file-upload-button {
+    background: #0f5ea8 !important;
+    color: #ffffff !important;
+    border: 1px solid #0f5ea8 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+}
+
+html:not([data-theme="dark"]) #uploadModal .upload-modal #id_images::file-selector-button:hover,
+html:not([data-theme="dark"]) #uploadModal .upload-modal #id_images::-webkit-file-upload-button:hover {
+    background: #0b4a85 !important;
+    color: #ffffff !important;
+    border-color: #0b4a85 !important;
 }
 
 html:not([data-theme="dark"]) .submit-comment:hover,

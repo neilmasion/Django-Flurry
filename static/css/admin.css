@@ -1264,11 +1264,11 @@ html:not([data-theme="dark"]) .edit-group[style*="flex-direction: row"] {
 }
 
 html:not([data-theme="dark"]) .edit-group[style*="flex-direction: row"] label {
-    color: #0a1a2b;
+    color: #0a1a2b !important;
 }
 
 html:not([data-theme="dark"]) .edit-group[style*="flex-direction: row"] p {
-    color: #64748b;
+    color: #1e293b !important;
 }
 
 html:not([data-theme="dark"]) .edit-group input[type="checkbox"] {
