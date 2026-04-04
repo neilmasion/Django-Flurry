@@ -314,6 +314,11 @@
                                                         <span class="comment-date">{{ reply.created_at|timesince }} ago</span>
                                                     </div>
                                                     <div class="comment-content">{{ reply.content }}</div>
+                                                    {% if reply.user != request.user %}
+                                                    <div class="comment-actions">
+                                                        <button class="reply-btn" onclick="openReplyTo({{ comment.id }}, '{{ reply.user.first_name|default:reply.user.username|escapejs }}')">Reply</button>
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                         {% endfor %}
@@ -615,6 +620,19 @@
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
 
+        function openReplyTo(commentId, username = '') {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            const textarea = document.getElementById(`reply-text-${commentId}`);
+            if (!form || !textarea) return;
+
+            form.style.display = 'block';
+            if (username && !textarea.value.trim()) {
+                textarea.value = `@${username} `;
+            }
+            textarea.focus();
+            autoResize(textarea);
+        }
+
         async function submitComment(showcaseId, parentId = null) {
             const textarea = parentId ? document.getElementById(`reply-text-${parentId}`) : document.getElementById(`new-comment-text-${showcaseId}`);
             const content = textarea.value.trim();
@@ -694,6 +712,11 @@
                                     <button class="cancel-reply" onclick="showReplyForm(${data.id})">Cancel</button>
                                     <button class="submit-reply" onclick="submitComment(${showcaseId}, ${data.id})">Post</button>
                                 </div>
+                            </div>
+                        ` : ''}
+                        ${isReply && !data.is_self ? `
+                            <div class="comment-actions">
+                                <button class="reply-btn" onclick='openReplyTo(${data.parent_id}, ${JSON.stringify(data.user)})'>Reply</button>
                             </div>
                         ` : ''}
                     </div>
