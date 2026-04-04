@@ -990,6 +990,10 @@ html:not([data-theme="dark"]) .admin-brand {
     border-bottom-color: rgba(8, 24, 40, 0.14);
 }
 
+html:not([data-theme="dark"]) .admin-brand img {
+    filter: brightness(0) saturate(100%);
+}
+
 html:not([data-theme="dark"]) .admin-nav-item {
     color: #27435b;
 }
@@ -1187,6 +1191,88 @@ html:not([data-theme="dark"]) .admin-modal,
 html:not([data-theme="dark"]) .view-msg-content,
 html:not([data-theme="dark"]) .admin-toast {
     border-color: rgba(8, 24, 40, 0.16);
+}
+
+/* Light mode stepper/modal form overrides */
+html:not([data-theme="dark"]) .modal-stepper {
+    background: rgba(242, 248, 253, 0.88);
+    border-bottom-color: rgba(9, 30, 52, 0.14);
+}
+
+html:not([data-theme="dark"]) .modal-stepper::before {
+    background: rgba(15, 94, 168, 0.3);
+}
+
+html:not([data-theme="dark"]) .stepper-item {
+    background: rgba(255, 255, 255, 0.74);
+    border-color: rgba(15, 94, 168, 0.28);
+    color: #4a6178;
+}
+
+html:not([data-theme="dark"]) .stepper-item.active {
+    background: #0f5ea8;
+    color: #ffffff;
+    border-color: #0f5ea8;
+    box-shadow: 0 0 15px rgba(15, 94, 168, 0.35);
+}
+
+html:not([data-theme="dark"]) .stepper-item.completed {
+    background: #16a34a;
+    color: #ffffff;
+    border-color: #16a34a;
+}
+
+html:not([data-theme="dark"]) .stepper-item span {
+    color: #4a6178;
+}
+
+html:not([data-theme="dark"]) .stepper-item.active span {
+    color: #0f5ea8;
+}
+
+html:not([data-theme="dark"]) .modal-step-header p {
+    color: #64748b;
+}
+
+html:not([data-theme="dark"]) .edit-group label {
+    color: #0a1a2b;
+}
+
+html:not([data-theme="dark"]) .edit-group input,
+html:not([data-theme="dark"]) .edit-group select,
+html:not([data-theme="dark"]) .edit-group textarea {
+    background: rgba(255, 255, 255, 0.88);
+    border-color: rgba(9, 30, 52, 0.14);
+    color: #0a1a2b;
+}
+
+html:not([data-theme="dark"]) .edit-group input:focus,
+html:not([data-theme="dark"]) .edit-group select:focus,
+html:not([data-theme="dark"]) .edit-group textarea:focus {
+    border-color: rgba(15, 94, 168, 0.55);
+    box-shadow: 0 0 0 3px rgba(15, 94, 168, 0.15);
+}
+
+html:not([data-theme="dark"]) .edit-group input::placeholder,
+html:not([data-theme="dark"]) .edit-group textarea::placeholder {
+    color: #94a3b8;
+}
+
+html:not([data-theme="dark"]) .edit-group[style*="flex-direction: row"] {
+    background: rgba(242, 248, 253, 0.68) !important;
+    border-color: rgba(9, 30, 52, 0.14) !important;
+}
+
+html:not([data-theme="dark"]) .edit-group[style*="flex-direction: row"] label {
+    color: #0a1a2b;
+}
+
+html:not([data-theme="dark"]) .edit-group[style*="flex-direction: row"] p {
+    color: #64748b;
+}
+
+html:not([data-theme="dark"]) .edit-group input[type="checkbox"] {
+    accent-color: #0f5ea8;
 }
 
 @media (max-width: 360px) {

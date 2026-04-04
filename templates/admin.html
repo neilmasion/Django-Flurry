@@ -929,6 +929,16 @@
         }
     }
 
+    function getChartColors() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark' || 
+                       !document.documentElement.getAttribute('data-theme');
+        return {
+            text: isDark ? 'rgba(255,255,255,0.75)' : '#0a1a2b',
+            textSecondary: isDark ? 'rgba(255,255,255,0.55)' : '#4a6178',
+            grid: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(9, 30, 52, 0.08)'
+        };
+    }
+
     function renderDashboardCharts() {
         if (typeof Chart === 'undefined') return;
 
@@ -937,6 +947,7 @@
         const messageCounts = parseChartData('chart-message-counts');
         const eventLabels = parseChartData('chart-event-labels');
         const eventEnrollCounts = parseChartData('chart-event-enroll-counts');
+        const chartColors = getChartColors();
 
         const activityCtx = document.getElementById('activityTrendChart');
         if (activityCtx && monthLabels.length) {
@@ -971,18 +982,18 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            labels: { color: 'rgba(255,255,255,0.75)' }
+                            labels: { color: chartColors.text }
                         }
                     },
                     scales: {
                         x: {
-                            ticks: { color: 'rgba(255,255,255,0.55)' },
-                            grid: { color: 'rgba(255,255,255,0.08)' }
+                            ticks: { color: chartColors.textSecondary },
+                            grid: { color: chartColors.grid }
                         },
                         y: {
                             beginAtZero: true,
-                            ticks: { color: 'rgba(255,255,255,0.55)', precision: 0 },
-                            grid: { color: 'rgba(255,255,255,0.08)' }
+                            ticks: { color: chartColors.textSecondary, precision: 0 },
+                            grid: { color: chartColors.grid }
                         }
                     }
                 }
@@ -1011,18 +1022,18 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            labels: { color: 'rgba(255,255,255,0.75)' }
+                            labels: { color: chartColors.text }
                         }
                     },
                     scales: {
                         x: {
                             beginAtZero: true,
-                            ticks: { color: 'rgba(255,255,255,0.55)' },
-                            grid: { color: 'rgba(255,255,255,0.06)' }
+                            ticks: { color: chartColors.textSecondary },
+                            grid: { color: chartColors.grid }
                         },
                         y: {
                             ticks: {
-                                color: 'rgba(255,255,255,0.75)',
+                                color: chartColors.text,
                                 font: { size: 12 },
                                 callback: function(value) {
                                     let label = this.getLabelForValue(value);
@@ -1032,7 +1043,7 @@
                                     return label;
                                 }
                             },
-                            grid: { color: 'rgba(255,255,255,0.08)' }
+                            grid: { color: chartColors.grid }
                         }
                     }
                 }
