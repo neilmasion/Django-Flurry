@@ -1287,6 +1287,35 @@ html:not([data-theme="dark"]) .profile-note-text {
     color: #11263b;
 }
 
+html:not([data-theme="dark"]) .profile-badge i,
+html:not([data-theme="dark"]) #tab-connections .network-status-tag i {
+    color: #16a34a !important;
+}
+
+html:not([data-theme="dark"]) #tab-connections .search-input-wrap {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(15, 94, 168, 0.32);
+    box-shadow: 0 8px 18px rgba(10, 26, 43, 0.08);
+}
+
+html:not([data-theme="dark"]) #tab-connections .search-input-wrap:focus-within {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(15, 94, 168, 0.55);
+    box-shadow: 0 0 0 3px rgba(15, 94, 168, 0.16);
+}
+
+html:not([data-theme="dark"]) #tab-connections .search-icon {
+    color: rgba(10, 26, 43, 0.62);
+}
+
+html:not([data-theme="dark"]) #tab-connections .search-input-wrap input {
+    color: #10263c !important;
+}
+
+html:not([data-theme="dark"]) #tab-connections .search-input-wrap input::placeholder {
+    color: #64748b;
+}
+
 html:not([data-theme="dark"]) .enrolled-card-status.is-completed {
     background: rgba(148, 163, 184, 0.2);
     border-color: rgba(100, 116, 139, 0.35);

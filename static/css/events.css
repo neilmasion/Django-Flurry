@@ -242,7 +242,7 @@
 .workshop-item:hover {
     background: var(--bg-hover) !important;
     backdrop-filter: none !important;
-    transform: translateY(-5px);
+    transform: none;
 }
 
 .workshop-item-icon {

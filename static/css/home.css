@@ -672,7 +672,7 @@ html:not([data-theme="dark"]) .learn-card:hover {
 
 html:not([data-theme="dark"]) .learn-icon {
     background: transparent;
-    border: 1px solid rgba(0, 0, 0, 0.16);
+    border: none;
     color: var(--icon-color);
 }
 

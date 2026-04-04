@@ -71,6 +71,8 @@ html:not([data-theme="dark"]) .community-hero .btn-primary:hover {
     padding: 0 7rem 4rem;
     max-width: 1400px;
     margin: 0 auto;
+    position: relative;
+    z-index: 2;
 }
 
 
@@ -86,6 +88,8 @@ html:not([data-theme="dark"]) .community-hero .btn-primary:hover {
     display: flex;
     flex-direction: column;
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 2;
 }
 
 .showcase-card:hover {
@@ -93,6 +97,7 @@ html:not([data-theme="dark"]) .community-hero .btn-primary:hover {
     border-color: var(--accent-color);
     box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
     background: rgba(30, 30, 30, 0.6);
+    z-index: 20;
 }
 
 .showcase-image-wrapper {
@@ -346,6 +351,15 @@ html:not([data-theme="dark"]) .community-hero .btn-primary:hover {
     padding: 1rem;
     position: relative;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Reply-back items stay clean (no glass background) */
+.replies-list .reply.comment--self {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    border-radius: 0;
 }
 
 .you-badge {

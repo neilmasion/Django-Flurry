@@ -833,6 +833,14 @@ select option {
     font-size: 0.9rem;
 }
 
+.footer a {
+    transition: color var(--transition-fast);
+}
+
+.footer a:hover {
+    color: var(--primary-color);
+}
+
 .footer-bottom {
     max-width: 1200px;
     margin: 0 auto;
