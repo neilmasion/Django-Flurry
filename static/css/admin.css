@@ -823,6 +823,8 @@ html[data-theme="dark"] #eventModalOverlay .edit-group textarea {
     caret-color: #ffffff;
     -webkit-text-fill-color: #ffffff;
     color-scheme: dark;
+    font-size: 0.95rem;
+    line-height: 1.35;
 }
 
 html[data-theme="dark"] #eventModalOverlay #evSpots,
@@ -836,7 +838,9 @@ html[data-theme="dark"] #eventModalOverlay .edit-group input[type="number"] {
 
 html[data-theme="dark"] #eventModalOverlay .edit-group input::placeholder,
 html[data-theme="dark"] #eventModalOverlay .edit-group textarea::placeholder {
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(226, 232, 240, 0.62);
+    font-size: 0.95rem;
+    opacity: 1;
 }
 
 html[data-theme="dark"] #eventModalOverlay #evSpots {
