@@ -212,6 +212,102 @@
     color: #ffffff !important;
 }
 
+html[data-theme="dark"] .profile-tab {
+    color: rgba(0, 0, 0, 0.72);
+}
+
+html[data-theme="dark"] .profile-tab i {
+    color: rgba(0, 0, 0, 0.72) !important;
+}
+
+html[data-theme="dark"] .profile-tab:hover {
+    color: #000000;
+}
+
+html[data-theme="dark"] .profile-tab:hover i {
+    color: #000000 !important;
+}
+
+html[data-theme="dark"] .profile-tab.active {
+    color: #000000;
+}
+
+html[data-theme="dark"] .profile-tab.active i {
+    color: #000000 !important;
+}
+
+html[data-theme="dark"] #tab-connections .search-input-wrap {
+    background: rgba(8, 22, 40, 0.76);
+    border-color: rgba(96, 165, 250, 0.45);
+}
+
+html[data-theme="dark"] #tab-connections .search-input-wrap:focus-within {
+    background: rgba(10, 28, 48, 0.9);
+    border-color: rgba(147, 197, 253, 0.68);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+html[data-theme="dark"] #tab-connections .search-input-wrap input {
+    color: #f8fbff !important;
+}
+
+html[data-theme="dark"] #tab-connections .search-input-wrap input::placeholder {
+    color: rgba(226, 232, 240, 0.58);
+}
+
+html[data-theme="dark"] #tab-connections .network-item {
+    padding: 1rem 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(145deg, rgba(15, 30, 52, 0.7), rgba(11, 26, 44, 0.62));
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="dark"] #tab-connections .network-item:hover {
+    border-color: rgba(96, 165, 250, 0.45);
+    background: linear-gradient(145deg, rgba(19, 40, 66, 0.86), rgba(13, 31, 54, 0.8));
+}
+
+html[data-theme="dark"] #tab-connections .network-avatar {
+    border-color: rgba(148, 163, 184, 0.34);
+    background: rgba(37, 99, 235, 0.26);
+    color: #ffffff;
+}
+
+html[data-theme="dark"] #tab-connections .network-name,
+html[data-theme="dark"] #tab-connections .connection-section-title {
+    color: #f8fbff;
+}
+
+html[data-theme="dark"] #tab-connections .network-subtitle {
+    color: rgba(203, 213, 225, 0.88);
+}
+
+html[data-theme="dark"] #tab-edit .edit-group input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html[data-theme="dark"] #tab-edit .edit-group select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #f8fbff;
+}
+
+html[data-theme="dark"] #tab-edit .edit-group input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
+html[data-theme="dark"] #tab-edit .edit-group select:focus {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.24);
+}
+
+html[data-theme="dark"] #tab-edit .edit-group input:not([type="checkbox"]):not([type="radio"]):not([type="file"])::placeholder {
+    color: rgba(226, 232, 240, 0.58);
+}
+
+html[data-theme="dark"] #tab-edit .toggle-password {
+    color: rgba(226, 232, 240, 0.62);
+}
+
+html[data-theme="dark"] #tab-edit .toggle-password:hover {
+    color: #ffffff;
+}
+
 .tab-panel {
     display: none;
     animation: fadeUp 0.3s ease;

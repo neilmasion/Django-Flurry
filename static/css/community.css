@@ -61,6 +61,29 @@ html:not([data-theme="dark"]) .community-hero .btn-primary:hover {
     color: #ffffff;
 }
 
+html[data-theme="dark"] .community-hero .btn-primary {
+    background: rgba(255, 255, 255, 0.96);
+    color: #0a1a2b;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+}
+
+html[data-theme="dark"] .community-hero .btn-primary i {
+    color: #0a1a2b !important;
+}
+
+html[data-theme="dark"] .community-hero .btn-primary:hover {
+    background: #0f5ea8;
+    color: #ffffff;
+    border-color: rgba(42, 124, 200, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(15, 94, 168, 0.38);
+}
+
+html[data-theme="dark"] .community-hero .btn-primary:hover i {
+    color: #ffffff !important;
+}
+
 
 
 /* --- Showcase Grid & Cards --- */

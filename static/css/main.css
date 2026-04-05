@@ -542,6 +542,11 @@ html:not([data-theme="dark"]) .notif-badge {
     color: #000;
 }
 
+html[data-theme="dark"] .nav-menu .nav-link:hover,
+html[data-theme="dark"] .nav-menu .nav-link.active {
+    color: #0f5ea8;
+}
+
 .nav-link.active::after {
     content: '';
     position: absolute;
@@ -555,6 +560,10 @@ html:not([data-theme="dark"]) .notif-badge {
 
 :not([data-theme="dark"]) .nav-link.active::after {
     background-color: var(--primary-color);
+}
+
+html[data-theme="dark"] .nav-menu .nav-link.active::after {
+    background-color: #0f5ea8;
 }
 
 .nav-auth {
@@ -839,6 +848,10 @@ select option {
 
 .footer a:hover {
     color: var(--primary-color);
+}
+
+html[data-theme="dark"] .footer a:hover {
+    color: #0f5ea8;
 }
 
 .footer-bottom {
