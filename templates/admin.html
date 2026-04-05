@@ -828,16 +828,11 @@
                         </div>
 
                         <div class="edit-group logistics-time-group">
-                            <label>Time</label>
-                            <div class="logistics-time-grid">
-                                <div class="edit-group logistics-time-field">
-                                    <label>Start Time</label>
-                                    <input type="time" name="start_time" id="evStartTime">
-                                </div>
-                                <div class="edit-group logistics-time-field">
-                                    <label>End Time</label>
-                                    <input type="time" name="end_time" id="evEndTime">
-                                </div>
+                            <label>Time (Start - End)</label>
+                            <div class="logistics-time-combined">
+                                <input type="time" name="start_time" id="evStartTime" aria-label="Start Time">
+                                <span class="logistics-time-separator">-</span>
+                                <input type="time" name="end_time" id="evEndTime" aria-label="End Time">
                             </div>
                         </div>
 
