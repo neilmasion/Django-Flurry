@@ -930,14 +930,14 @@
     }
 
     function getChartColors() {
-        const textPrimary = getComputedStyle(document.documentElement)
-            .getPropertyValue('--text-primary')
-            .trim()
-            .toLowerCase();
-        const isDark = textPrimary === '#ffffff' || textPrimary === 'rgb(255, 255, 255)';
+        const attrTheme = document.documentElement.getAttribute('data-theme');
+        const savedTheme = localStorage.getItem('lumioTheme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const resolvedTheme = attrTheme || savedTheme || systemTheme;
+        const isDark = resolvedTheme !== 'light';
         return {
-            text: isDark ? 'rgba(248,250,252,0.92)' : '#0a1a2b',
-            textSecondary: isDark ? 'rgba(226,232,240,0.78)' : '#4a6178',
+            text: isDark ? '#ffffff' : '#0a1a2b',
+            textSecondary: isDark ? 'rgba(255,255,255,0.82)' : '#4a6178',
             grid: isDark ? 'rgba(148,163,184,0.18)' : 'rgba(9, 30, 52, 0.08)'
         };
     }
