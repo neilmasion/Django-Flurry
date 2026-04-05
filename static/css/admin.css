@@ -817,20 +817,25 @@ input[type=number] {
 html[data-theme="dark"] #eventModalOverlay .edit-group input,
 html[data-theme="dark"] #eventModalOverlay .edit-group select,
 html[data-theme="dark"] #eventModalOverlay .edit-group textarea {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(148, 163, 184, 0.28);
-    color: #f8fbff;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(148, 163, 184, 0.28) !important;
+    color: #ffffff !important;
+    caret-color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    color-scheme: dark;
 }
 
 html[data-theme="dark"] #eventModalOverlay .edit-group input::placeholder,
 html[data-theme="dark"] #eventModalOverlay .edit-group textarea::placeholder {
-    color: rgba(0, 0, 0, 0.78);
+    color: rgba(255, 255, 255, 0.55);
 }
 
 html[data-theme="dark"] #eventModalOverlay #evSpots {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(148, 163, 184, 0.28);
-    color: #f8fbff;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(148, 163, 184, 0.28) !important;
+    color: #ffffff !important;
+    caret-color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
 }
 
 .admin-modal--sm {
