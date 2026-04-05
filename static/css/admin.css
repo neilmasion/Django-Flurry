@@ -825,6 +825,15 @@ html[data-theme="dark"] #eventModalOverlay .edit-group textarea {
     color-scheme: dark;
 }
 
+html[data-theme="dark"] #eventModalOverlay #evSpots,
+html[data-theme="dark"] #eventModalOverlay .edit-group input[type="number"] {
+    padding: 0.75rem 1rem !important;
+    min-height: 3.2rem;
+    line-height: 1.2;
+    box-sizing: border-box;
+    border-radius: 0.75rem;
+}
+
 html[data-theme="dark"] #eventModalOverlay .edit-group input::placeholder,
 html[data-theme="dark"] #eventModalOverlay .edit-group textarea::placeholder {
     color: rgba(255, 255, 255, 0.55);
@@ -836,6 +845,18 @@ html[data-theme="dark"] #eventModalOverlay #evSpots {
     color: #ffffff !important;
     caret-color: #ffffff;
     -webkit-text-fill-color: #ffffff;
+}
+
+html[data-theme="dark"] #eventModalOverlay input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] #eventModalOverlay input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.8);
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+html[data-theme="dark"] #eventModalOverlay input[type="date"]::-webkit-clear-button,
+html[data-theme="dark"] #eventModalOverlay input[type="time"]::-webkit-clear-button {
+    filter: invert(1) brightness(1.8);
 }
 
 .admin-modal--sm {
