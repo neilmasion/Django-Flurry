@@ -814,6 +814,32 @@ input[type=number] {
     animation: dialog-pop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+.logistics-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+}
+
+.logistics-date-group,
+.logistics-time-group,
+.logistics-location-group {
+    grid-column: 1 / -1;
+}
+
+.logistics-helper-fields {
+    display: none;
+}
+
+.logistics-time-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+}
+
+.logistics-time-field {
+    margin: 0;
+}
+
 html[data-theme="dark"] #eventModalOverlay .edit-group input,
 html[data-theme="dark"] #eventModalOverlay .edit-group select,
 html[data-theme="dark"] #eventModalOverlay .edit-group textarea {

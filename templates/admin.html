@@ -811,30 +811,40 @@
                         <h4>Logistics & Schedule</h4>
                         <p>When and where will this take place?</p>
                     </div>
-                    <div class="modal-form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
-                        <div class="edit-group">
+                    <div class="modal-form-grid logistics-layout">
+                        <div class="edit-group logistics-date-group">
                             <label>Official Date (For Auto-Archiving)</label>
                             <input type="date" name="date" id="evDate">
+                            <div class="logistics-helper-fields" aria-hidden="true">
+                                <div class="edit-group">
+                                    <label>Month (e.g. MAR)</label>
+                                    <input type="text" name="month" id="evMonth" placeholder="e.g., MAR" maxlength="3" tabindex="-1">
+                                </div>
+                                <div class="edit-group">
+                                    <label>Day (Number)</label>
+                                    <input type="text" name="day" id="evDay" placeholder="e.g., 24" maxlength="2" tabindex="-1">
+                                </div>
+                            </div>
                         </div>
-                        <div class="edit-group">
-                            <label>Month (e.g. MAR)</label>
-                            <input type="text" name="month" id="evMonth" placeholder="e.g., MAR" maxlength="3">
+
+                        <div class="edit-group logistics-time-group">
+                            <label>Time</label>
+                            <div class="logistics-time-grid">
+                                <div class="edit-group logistics-time-field">
+                                    <label>Start Time</label>
+                                    <input type="time" name="start_time" id="evStartTime">
+                                </div>
+                                <div class="edit-group logistics-time-field">
+                                    <label>End Time</label>
+                                    <input type="time" name="end_time" id="evEndTime">
+                                </div>
+                            </div>
                         </div>
-                        <div class="edit-group">
-                            <label>Day (Number)</label>
-                            <input type="text" name="day" id="evDay" placeholder="e.g., 24" maxlength="2">
-                        </div>
-                        <div class="edit-group">
-                            <label>Start Time</label>
-                            <input type="time" name="start_time" id="evStartTime">
-                        </div>
-                        <div class="edit-group">
-                            <label>End Time</label>
-                            <input type="time" name="end_time" id="evEndTime">
-                        </div>
+
                         <!-- Hidden Time Range field, auto-populated by JS -->
                         <input type="hidden" name="time_range" id="evTimeRange">
-                        <div class="edit-group">
+
+                        <div class="edit-group logistics-location-group">
                             <label>Location</label>
                             <input type="text" name="location" id="evLocation" placeholder="e.g., Innovation Lab / Zoom">
                         </div>
