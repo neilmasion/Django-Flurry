@@ -820,74 +820,14 @@ input[type=number] {
     gap: 0.85rem;
 }
 
-.logistics-date-group,
-.logistics-time-group,
-.logistics-location-group {
-    grid-column: 1 / -1;
-}
-
 .logistics-helper-fields {
     display: none;
 }
 
-.logistics-time-combined {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: center;
-    gap: 0.65rem;
-    border-radius: 0.75rem;
-    padding: 0.05rem 0.65rem;
-}
-
-#eventModalOverlay .logistics-time-combined input[type="time"] {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0.75rem 0.2rem !important;
-    min-height: 0;
-    width: 100%;
-}
-
-#eventModalOverlay .logistics-time-combined input[type="time"]:focus {
-    outline: none;
-    box-shadow: none !important;
-}
-
-.logistics-time-separator {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--text-tertiary);
-    white-space: nowrap;
-    padding: 0 0.15rem;
-}
-
 @media (max-width: 640px) {
-    .logistics-time-combined {
-        gap: 0.45rem;
-        padding: 0.05rem 0.45rem;
+    .logistics-layout {
+        grid-template-columns: 1fr;
     }
-}
-
-html:not([data-theme="dark"]) #eventModalOverlay .logistics-time-combined {
-    background: rgba(255, 255, 255, 0.88);
-    border: 1px solid rgba(9, 30, 52, 0.14);
-}
-
-html:not([data-theme="dark"]) #eventModalOverlay .logistics-time-combined:focus-within {
-    border-color: rgba(15, 94, 168, 0.55);
-    box-shadow: 0 0 0 3px rgba(15, 94, 168, 0.15);
-}
-
-html[data-theme="dark"] #eventModalOverlay .logistics-time-combined {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(148, 163, 184, 0.28);
-}
-
-html[data-theme="dark"] #eventModalOverlay .logistics-time-combined:focus-within {
-    border-color: rgba(147, 197, 253, 0.5);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
 }
 
 html[data-theme="dark"] #eventModalOverlay .edit-group input,

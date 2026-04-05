@@ -827,22 +827,23 @@
                             </div>
                         </div>
 
-                        <div class="edit-group logistics-time-group">
-                            <label>Time (Start - End)</label>
-                            <div class="logistics-time-combined">
-                                <input type="time" name="start_time" id="evStartTime" aria-label="Start Time">
-                                <span class="logistics-time-separator">-</span>
-                                <input type="time" name="end_time" id="evEndTime" aria-label="End Time">
-                            </div>
-                        </div>
-
-                        <!-- Hidden Time Range field, auto-populated by JS -->
-                        <input type="hidden" name="time_range" id="evTimeRange">
-
                         <div class="edit-group logistics-location-group">
                             <label>Location</label>
                             <input type="text" name="location" id="evLocation" placeholder="e.g., Innovation Lab / Zoom">
                         </div>
+
+                        <div class="edit-group logistics-start-group">
+                            <label>Start Time</label>
+                            <input type="time" name="start_time" id="evStartTime">
+                        </div>
+
+                        <div class="edit-group logistics-end-group">
+                            <label>End Time</label>
+                            <input type="time" name="end_time" id="evEndTime">
+                        </div>
+
+                        <!-- Hidden Time Range field, auto-populated by JS -->
+                        <input type="hidden" name="time_range" id="evTimeRange">
                     </div>
                 </div>
 
