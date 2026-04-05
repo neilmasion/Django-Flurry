@@ -1304,6 +1304,34 @@ html:not([data-theme="dark"]) .profile-tab.active i {
     color: #ffffff !important;
 }
 
+/* Strict theme isolation for profile tabs */
+html:not([data-theme="dark"]) .profile-tabs .profile-tab,
+html:not([data-theme="dark"]) .profile-tabs .profile-tab i {
+    color: #35506a !important;
+}
+
+html:not([data-theme="dark"]) .profile-tabs .profile-tab:hover,
+html:not([data-theme="dark"]) .profile-tabs .profile-tab:hover i {
+    color: #0b2a44 !important;
+}
+
+html:not([data-theme="dark"]) .profile-tabs .profile-tab.active,
+html:not([data-theme="dark"]) .profile-tabs .profile-tab.active i {
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .profile-tabs .profile-tab,
+html[data-theme="dark"] .profile-tabs .profile-tab i {
+    color: rgba(0, 0, 0, 0.72) !important;
+}
+
+html[data-theme="dark"] .profile-tabs .profile-tab:hover,
+html[data-theme="dark"] .profile-tabs .profile-tab:hover i,
+html[data-theme="dark"] .profile-tabs .profile-tab.active,
+html[data-theme="dark"] .profile-tabs .profile-tab.active i {
+    color: #000000 !important;
+}
+
 html:not([data-theme="dark"]) .combined-stat-divider,
 html:not([data-theme="dark"]) .edit-divider,
 html:not([data-theme="dark"]) .enrolled-table-header,
