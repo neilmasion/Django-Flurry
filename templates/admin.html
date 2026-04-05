@@ -930,11 +930,7 @@
     }
 
     function getChartColors() {
-        const attrTheme = document.documentElement.getAttribute('data-theme');
-        const savedTheme = localStorage.getItem('lumioTheme');
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        const resolvedTheme = attrTheme || savedTheme || systemTheme;
-        const isDark = resolvedTheme !== 'light';
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         return {
             text: isDark ? '#ffffff' : '#0a1a2b',
             textSecondary: isDark ? 'rgba(255,255,255,0.82)' : '#4a6178',
