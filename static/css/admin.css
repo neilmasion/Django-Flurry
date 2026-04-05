@@ -634,6 +634,27 @@
 .admin-theme-btn img { width: 22px; height: 22px; filter: brightness(0) invert(1); margin-top: 0; }
 .admin-count { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-left: auto; white-space: nowrap; }
 .btn-small { padding: 0.5rem 1rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.4rem; }
+
+html[data-theme="dark"] .admin-toolbar .btn-primary {
+    background: rgba(255, 255, 255, 0.96);
+    color: #0a1a2b;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+html[data-theme="dark"] .admin-toolbar .btn-primary i {
+    color: #0a1a2b !important;
+}
+
+html[data-theme="dark"] .admin-toolbar .btn-primary:hover {
+    background: #0f5ea8;
+    color: #ffffff;
+    border-color: rgba(42, 124, 200, 0.85);
+    box-shadow: 0 10px 22px rgba(15, 94, 168, 0.35);
+}
+
+html[data-theme="dark"] .admin-toolbar .btn-primary:hover i {
+    color: #ffffff !important;
+}
 .admin-table-wrap {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.12);
