@@ -215,19 +215,19 @@ html[data-theme="dark"] .profile-tabs {
 }
 
 html[data-theme="dark"] .profile-tab {
-    color: rgba(0, 0, 0, 0.72);
+    color: rgba(248, 250, 252, 0.86);
 }
 
 html[data-theme="dark"] .profile-tab i {
-    color: rgba(0, 0, 0, 0.72) !important;
+    color: rgba(248, 250, 252, 0.86) !important;
 }
 
 html[data-theme="dark"] .profile-tab:hover {
-    color: #000000;
+    color: #ffffff;
 }
 
 html[data-theme="dark"] .profile-tab:hover i {
-    color: #000000 !important;
+    color: #ffffff !important;
 }
 
 html[data-theme="dark"] .profile-tab.active {
@@ -1322,11 +1322,14 @@ html:not([data-theme="dark"]) .profile-tabs .profile-tab.active i {
 
 html[data-theme="dark"] .profile-tabs .profile-tab,
 html[data-theme="dark"] .profile-tabs .profile-tab i {
-    color: rgba(0, 0, 0, 0.72) !important;
+    color: rgba(248, 250, 252, 0.86) !important;
 }
 
 html[data-theme="dark"] .profile-tabs .profile-tab:hover,
-html[data-theme="dark"] .profile-tabs .profile-tab:hover i,
+html[data-theme="dark"] .profile-tabs .profile-tab:hover i {
+    color: #ffffff !important;
+}
+
 html[data-theme="dark"] .profile-tabs .profile-tab.active,
 html[data-theme="dark"] .profile-tabs .profile-tab.active i {
     color: #000000 !important;
