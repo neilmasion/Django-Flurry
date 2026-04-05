@@ -938,8 +938,21 @@
         };
     }
 
+    let activityChartInstance = null;
+    let eventChartInstance = null;
+    let chartRerenderTimer = null;
+
     function renderDashboardCharts() {
         if (typeof Chart === 'undefined') return;
+
+        if (activityChartInstance) {
+            activityChartInstance.destroy();
+            activityChartInstance = null;
+        }
+        if (eventChartInstance) {
+            eventChartInstance.destroy();
+            eventChartInstance = null;
+        }
 
         const monthLabels = parseChartData('chart-month-labels');
         const userCounts = parseChartData('chart-user-counts');
@@ -950,7 +963,7 @@
 
         const activityCtx = document.getElementById('activityTrendChart');
         if (activityCtx && monthLabels.length) {
-            new Chart(activityCtx, {
+            activityChartInstance = new Chart(activityCtx, {
                 type: 'line',
                 data: {
                     labels: monthLabels,
@@ -1001,7 +1014,7 @@
 
         const eventsCtx = document.getElementById('eventEnrollmentChart');
         if (eventsCtx && eventLabels.length) {
-            new Chart(eventsCtx, {
+            eventChartInstance = new Chart(eventsCtx, {
                 type: 'bar',
                 data: {
                     labels: eventLabels,
@@ -1050,7 +1063,28 @@
         }
     }
 
-    window.addEventListener('load', renderDashboardCharts);
+    function scheduleChartRerender() {
+        if (chartRerenderTimer) clearTimeout(chartRerenderTimer);
+        chartRerenderTimer = setTimeout(renderDashboardCharts, 80);
+    }
+
+    window.addEventListener('load', () => {
+        renderDashboardCharts();
+
+        const themeObserver = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if (m.type === 'attributes' && m.attributeName === 'data-theme') {
+                    scheduleChartRerender();
+                    break;
+                }
+            }
+        });
+
+        themeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    });
     </script>
     <script src="{% static 'js/admin.js' %}" defer></script>
     <script>
