@@ -590,7 +590,7 @@
             </div>
             <form action="{% url 'apply-for-officer' %}" method="POST">
                 {% csrf_token %}
-                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div class="officer-apply-grid">
                     <div class="edit-group">
                         <label>Select Department</label>
                         <select name="department" id="deptSelect" required>
@@ -617,7 +617,7 @@
                             <option value="" disabled selected>Choose a position...</option>
                         </select>
                     </div>
-                    <div class="edit-group">
+                    <div class="edit-group full-width">
                         <label>Why do you want to join?</label>
                         <textarea name="reason" placeholder="Describe your motivation, relevant experience, and what you hope to achieve..." rows="4" required spellcheck="false" autocomplete="off"></textarea>
                     </div>

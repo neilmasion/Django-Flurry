@@ -113,6 +113,29 @@
     margin-bottom: 0;
 }
 
+#applyModalOverlay .admin-modal {
+    max-width: 650px;
+}
+
+.officer-apply-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.officer-apply-grid .edit-group.full-width {
+    grid-column: span 2;
+}
+
+@media (max-width: 600px) {
+    .officer-apply-grid {
+        grid-template-columns: 1fr;
+    }
+    .officer-apply-grid .edit-group.full-width {
+        grid-column: span 1;
+    }
+}
+
 .officer-apply-actions {
     margin-top: 2.5rem;
     display: flex;
