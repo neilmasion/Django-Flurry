@@ -9,11 +9,17 @@ export function updateUIAfterLogin() {
     const userEmail = document.body.dataset.email || 'guest';
     const serverPhoto = document.body.dataset.profilePic || '';
     const cachedPhoto = localStorage.getItem(`flurryUserPhoto_${userEmail}`) || '';
+    const gender = (document.body.dataset.gender || '').toLowerCase();
+    const genderFallback = gender === 'female'
+        ? (document.body.dataset.defaultAvatarFemale || '')
+        : gender === 'male'
+            ? (document.body.dataset.defaultAvatarMale || '')
+            : '';
     const username = document.body.dataset.username || 'U';
     const fallbackInitial = username.charAt(0).toUpperCase();
 
-    if (navAvatar && (serverPhoto || cachedPhoto)) {
-        const selectedPhoto = serverPhoto || cachedPhoto;
+    if (navAvatar && (serverPhoto || cachedPhoto || genderFallback)) {
+        const selectedPhoto = serverPhoto || cachedPhoto || genderFallback;
         navAvatar.innerHTML = `<img src="${selectedPhoto}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
 
         const avatarImg = navAvatar.querySelector('img');

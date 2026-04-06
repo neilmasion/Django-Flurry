@@ -13,10 +13,18 @@ class StudentRegistrationForm(UserCreationForm):
     last_name = forms.CharField(max_length=100, required=True)
     email = forms.EmailField(required=True)
     school = forms.CharField(max_length=200, required=True)
+    gender = forms.ChoiceField(
+        choices=[
+            ('', 'Select your gender'),
+            ('male', 'Male'),
+            ('female', 'Female'),
+        ],
+        required=True,
+    )
     
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'school', 'course', 'year_level')
+        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'school', 'gender', 'course', 'year_level')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

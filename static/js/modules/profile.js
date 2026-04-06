@@ -7,6 +7,13 @@ function getPhoto() {
     return document.body.dataset.profilePic || null;
 }
 
+function getFallbackAvatarSrc() {
+    const gender = (document.body.dataset.gender || '').toLowerCase();
+    if (gender === 'female') return document.body.dataset.defaultAvatarFemale || '';
+    if (gender === 'male') return document.body.dataset.defaultAvatarMale || '';
+    return document.body.dataset.defaultAvatarGeneric || '';
+}
+
 function getInitials() {
     const username = document.body.dataset.username || 'U';
     return username.charAt(0).toUpperCase();
@@ -15,8 +22,9 @@ function getInitials() {
 function applyPhotoToEl(el, photo, initials) {
     if (!el) return;
     const fallBack = initials || getInitials();
-    if (photo) {
-        el.innerHTML = `<img src="${photo}" alt="Profile photo">`;
+    const avatarSrc = photo || getFallbackAvatarSrc();
+    if (avatarSrc) {
+        el.innerHTML = `<img src="${avatarSrc}" alt="Profile photo">`;
     } else {
         el.textContent = fallBack;
     }
@@ -29,8 +37,9 @@ function refreshAllAvatars(photo, initials) {
 
     const navAvatar = document.getElementById('userAvatarNav');
     if (navAvatar) {
-        if (photo) {
-            navAvatar.innerHTML = `<img src="${photo}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
+        const avatarSrc = photo || getFallbackAvatarSrc();
+        if (avatarSrc) {
+            navAvatar.innerHTML = `<img src="${avatarSrc}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
         } else {
             navAvatar.innerHTML = '';
             navAvatar.textContent = initials;
@@ -232,6 +241,7 @@ function setupProfileUpdate() {
             last_name: document.getElementById('editLastName').value,
             email: document.getElementById('editEmail').value,
             school: document.getElementById('editSchool').value,
+            gender: document.getElementById('editGender')?.value || '',
             course: document.getElementById('editCourse').value,
             year_level: document.getElementById('editYear').value,
             bio: document.getElementById('editBio').value,
@@ -288,6 +298,7 @@ function setupProfileUpdate() {
                 document.body.dataset.firstName = payload.first_name;
                 document.body.dataset.lastName = payload.last_name;
                 document.body.dataset.username = data.username;
+                document.body.dataset.gender = data.gender || payload.gender || '';
 
                 setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
             } else {

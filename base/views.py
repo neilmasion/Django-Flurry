@@ -9,6 +9,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.conf import settings
 from django_ratelimit.decorators import ratelimit
+from django.templatetags.static import static
 from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, ContactMessage, OfficerApplication, Notification, Enrollment, Showcase, ShowcaseImage, ShowcaseComment, Connection
 from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, ShowcaseForm
 from django.core.mail import send_mail
@@ -22,6 +23,80 @@ import requests
 from email.utils import parseaddr
 
 logger = logging.getLogger(__name__)
+
+OFFICER_ROLE_LABELS = {
+    'tech': 'Chief of Technical',
+    'marketing': 'Chief of Marketing & Creatives',
+    'logistics_ops': 'Chief of Logistics & Operations',
+    'finance': 'Chief of Finance',
+    'relations': 'Chief of Relations',
+}
+
+
+def _default_avatar_url(user):
+    if getattr(user, 'profile_picture', None):
+        return user.profile_picture.url
+    if getattr(user, 'gender', None) == 'female':
+        return static('images/woman.jpg')
+    if getattr(user, 'gender', None) == 'male':
+        return static('images/man.jpg')
+    return static('images/no-profile.png')
+
+
+def _format_course_and_year(user):
+    course_label = user.get_course_display() if user.course else ''
+    year_label = user.get_year_level_display() if user.year_level else ''
+
+    if course_label.startswith('Information Technology'):
+        course_name = 'BS Information Technology'
+    elif course_label.startswith('Computer Science'):
+        course_name = 'BS Computer Science'
+    elif course_label:
+        course_name = f'BS {course_label.split(" (")[0]}'
+    else:
+        course_name = ''
+
+    if course_name and year_label:
+        return f'{course_name}, {year_label}'
+    return course_name or year_label or 'Member'
+
+
+def _build_officer_card(user, role_label=None):
+    return {
+        'name': user.get_full_name().strip() or user.username,
+        'role': role_label or OFFICER_ROLE_LABELS.get(user.department or '', user.get_department_display() if user.department else 'Officer'),
+        'course': _format_course_and_year(user),
+        'avatar_url': _default_avatar_url(user),
+    }
+
+
+def _default_officer_cards():
+    return [
+        {
+            'name': 'Neil Francis Masion',
+            'role': 'Captain',
+            'course': 'BS Information Technology, 3rd Year',
+            'avatar_url': static('images/man.jpg'),
+        },
+        {
+            'name': 'Carla Jen Sayson',
+            'role': 'Executive Secretary',
+            'course': 'BS Information Technology, 3rd Year',
+            'avatar_url': static('images/woman.jpg'),
+        },
+        {
+            'name': 'Emmanuel Solayao',
+            'role': 'Chief of Finance',
+            'course': 'BS Information Technology, 3rd Year',
+            'avatar_url': static('images/man.jpg'),
+        },
+        {
+            'name': 'Daryl Tautjo',
+            'role': 'Chief of Marketing & Creatives',
+            'course': 'BS Information Technology, 3rd Year',
+            'avatar_url': static('images/man.jpg'),
+        },
+    ]
 
 
 def _validate_profile_picture(uploaded_file, max_size_mb=5):
@@ -133,7 +208,23 @@ def events_list(request):
     return render(request, 'events.html', context)
 
 def about(request):
-    return render(request, 'about.html')
+    approved_applications = (
+        OfficerApplication.objects
+        .filter(status='approved')
+        .select_related('user')
+        .order_by('-updated_at')[:4]
+    )
+
+    officer_cards = [
+        _build_officer_card(app.user, OFFICER_ROLE_LABELS.get(app.department, app.get_department_display()))
+        for app in approved_applications
+    ]
+    if not officer_cards:
+        officer_cards = _default_officer_cards()
+
+    return render(request, 'about.html', {
+        'officer_cards': officer_cards,
+    })
 
 def community(request):
     showcases = Showcase.objects.filter(is_approved=True).order_by('-created_at')
@@ -800,6 +891,7 @@ def update_profile(request):
         course = data.get('course', user.course)
         year_level = data.get('year_level', user.year_level)
         school = data.get('school', user.school)
+        gender = data.get('gender', user.gender)
         new_username = data.get('username', user.username)
 
         # Handle Username Change Cooldown
@@ -824,6 +916,7 @@ def update_profile(request):
         user.course = course
         user.year_level = year_level
         user.school = school
+        user.gender = gender or None
         user.bio = bio
         
         user.save()
@@ -834,6 +927,7 @@ def update_profile(request):
             'username': user.username,
             'course_display': user.get_course_display(),
             'year_display': user.get_year_level_display(),
+            'gender': user.gender,
             'cooldown_active': True if new_username != user.username else False, # If changed, it's active now
             'cooldown_remaining': '3d 0h' if new_username != user.username else None
         })

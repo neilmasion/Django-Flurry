@@ -28,9 +28,14 @@ class User(AbstractUser):
         ('finance', 'Finance'),
         ('relations', 'Relations'),
     ]
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+    ]
     course = models.CharField(max_length=50, choices=COURSE_CHOICES, blank=True, null=True)
     year_level = models.CharField(max_length=20, choices=YEAR_CHOICES, blank=True, null=True)
     school = models.CharField(max_length=200, blank=True, null=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
     department = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES, blank=True, null=True)
     email = models.EmailField(unique=True)

@@ -15,6 +15,10 @@
             <div class="profile-avatar">
                 {% if target_user.profile_picture %}
                     <img src="{{ target_user.profile_picture.url }}" alt="{{ target_user.username }}">
+                {% elif target_user.gender == 'female' %}
+                    <img src="{% static 'images/woman.jpg' %}" alt="{{ target_user.username }}">
+                {% elif target_user.gender == 'male' %}
+                    <img src="{% static 'images/man.jpg' %}" alt="{{ target_user.username }}">
                 {% else %}
                     {{ target_user.username|slice:":1"|upper }}
                 {% endif %}

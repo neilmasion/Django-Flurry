@@ -2,28 +2,32 @@ export function setupOfficerDeck() {
     const deck = document.getElementById('officerDeck');
     if (!deck) return;
 
-    const officers = [
-        { initials:'NFM', name:'Neil Francis Masion',         role:'Captain',                           course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
-        { initials:'CJS', name:'Carla Jen Sayson',            role:'Executive Secretary',               course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
-        { initials:'ES',  name:'Emmanuel Solayao',            role:'Chief of Finance',                  course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
-        { initials:'DT',  name:'Daryl Tautjo',                role:'Chief of Marketing & Creatives',    course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] }
-    ];
-
     const cards    = Array.from(deck.querySelectorAll('.deck-card'));
     const total    = cards.length;
     let topIndex   = 0;
     let animating  = false;
 
+    function getOfficerData(idx) {
+        const card = cards[idx];
+        if (!card) return { name: '', role: '', course: '' };
+        return {
+            name: card.dataset.name || '',
+            role: card.dataset.role || '',
+            course: card.dataset.course || '',
+        };
+    }
+
     function updateInfo(idx) {
-        const o = officers[idx];
+        const o = getOfficerData(idx);
         document.getElementById('deckName').textContent    = o.name;
         document.getElementById('deckRole').textContent    = o.role;
         document.getElementById('deckCourse').textContent  = o.course;
         document.getElementById('deckCurrent').textContent = idx + 1;
         const linksEl = document.getElementById('deckLinks');
-        linksEl.innerHTML = o.links.map(l =>
-            '<a href="#"><i class="fa-brands fa-' + l + '"></i></a>'
-        ).join('');
+        linksEl.innerHTML = [
+            '<a href="#"><i class="fa-brands fa-linkedin"></i></a>',
+            '<a href="#"><i class="fa-brands fa-github"></i></a>'
+        ].join('');
     }
 
     function getCardByIndex(idx) {

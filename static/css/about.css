@@ -643,20 +643,23 @@ html:not([data-theme="dark"]) .dept-icon {
     .deck-section {
         flex-direction: column;
         gap: 0;
-        align-items: flex-start;
+        align-items: center;
+        width: 100%;
     }
 
-    /* 3 columns: cards in row 1, infos in row 2 */
+    /* 4 columns: cards in row 1, infos in row 2 */
     .officer-deck {
         display: grid;
-        grid-template-columns: repeat(3, 220px);
+        grid-template-columns: repeat(4, 220px);
         grid-template-rows: 280px auto;
-        gap: 0 2.5rem;
+        gap: 0 1.5rem;
         width: auto;
         height: auto;
         position: static;
         margin-left: 0;
         cursor: default;
+        justify-content: center;
+        justify-items: center;
     }
 
     /* Reset stacking — keep exact original card size & look */
@@ -677,6 +680,7 @@ html:not([data-theme="dark"]) .dept-icon {
     /* Show per-card info in row 2 */
     .officer-card-info {
         display: block;
+        width: 220px;
     }
 
     /* Hide the shared deck-info sidebar & hint */

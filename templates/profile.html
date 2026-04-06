@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
 
-<body data-username="{{ user.username }}" data-first-name="{{ user.first_name }}" data-last-name="{{ user.last_name }}" data-email="{{ user.email }}" data-course="{{ user.course|default:'' }}" data-year="{{ user.year_level|default:'' }}" data-authenticated="true" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
+<body data-username="{{ user.username }}" data-first-name="{{ user.first_name }}" data-last-name="{{ user.last_name }}" data-email="{{ user.email }}" data-course="{{ user.course|default:'' }}" data-year="{{ user.year_level|default:'' }}" data-gender="{{ user.gender|default:'' }}" data-default-avatar-male="{% static 'images/man.jpg' %}" data-default-avatar-female="{% static 'images/woman.jpg' %}" data-default-avatar-generic="{% static 'images/no-profile.png' %}" data-authenticated="true" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     <!-- Save Photo Confirmation Modal -->
     <div class="remove-photo-modal" id="savePhotoModal" style="display: none;">
         <div class="remove-photo-dialog">
@@ -107,6 +107,10 @@
                             <div class="user-avatar-sm" id="userAvatarNav">
                                 {% if user.profile_picture %}
                                     <img src="{{ user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                {% elif user.gender == 'female' %}
+                                    <img src="{% static 'images/woman.jpg' %}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                {% elif user.gender == 'male' %}
+                                    <img src="{% static 'images/man.jpg' %}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
                                 {% else %}
                                     {{ user.username|slice:":1"|upper }}
                                 {% endif %}
@@ -207,6 +211,10 @@
                 <div class="profile-avatar" id="profileAvatar">
                     {% if user.profile_picture %}
                         <img src="{{ user.profile_picture.url }}" alt="Profile photo">
+                    {% elif user.gender == 'female' %}
+                        <img src="{% static 'images/woman.jpg' %}" alt="Profile photo">
+                    {% elif user.gender == 'male' %}
+                        <img src="{% static 'images/man.jpg' %}" alt="Profile photo">
                     {% else %}
                         {{ user.username|slice:":1"|upper }}
                     {% endif %}
@@ -286,6 +294,10 @@
                             <div class="welcome-avatar" id="welcomeAvatar">
                                 {% if user.profile_picture %}
                                     <img src="{{ user.profile_picture.url }}" alt="Profile photo">
+                                {% elif user.gender == 'female' %}
+                                    <img src="{% static 'images/woman.jpg' %}" alt="Profile photo">
+                                {% elif user.gender == 'male' %}
+                                    <img src="{% static 'images/man.jpg' %}" alt="Profile photo">
                                 {% else %}
                                     {{ user.username|slice:":1"|upper }}
                                 {% endif %}
@@ -572,6 +584,14 @@
                     <div class="edit-group">
                         <label for="editSchool">School / University</label>
                         <input type="text" id="editSchool" placeholder="Your school" value="{{ user.school|default:'' }}">
+                    </div>
+                    <div class="edit-group">
+                        <label for="editGender">Gender</label>
+                        <select id="editGender">
+                            <option value="">Select gender...</option>
+                            <option value="male" {% if user.gender == 'male' %}selected{% endif %}>Male</option>
+                            <option value="female" {% if user.gender == 'female' %}selected{% endif %}>Female</option>
+                        </select>
                     </div>
                     <div class="edit-row">
                         <div class="edit-group">

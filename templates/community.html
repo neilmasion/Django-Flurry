@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{% static 'css/community.css' %}">
 </head>
 
-<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
+<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-gender="{{ user.gender|default:'' }}" data-default-avatar-male="{% static 'images/man.jpg' %}" data-default-avatar-female="{% static 'images/woman.jpg' %}" data-default-avatar-generic="{% static 'images/no-profile.png' %}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     <canvas id="cloudCanvas"></canvas>
     <div style="display: none;">{% csrf_token %}</div>
     

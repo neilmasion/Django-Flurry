@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{% static 'css/admin.css' %}">
 </head>
 
-<body id="adminApp" data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
+<body id="adminApp" data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-gender="{{ user.gender|default:'' }}" data-default-avatar-male="{% static 'images/man.jpg' %}" data-default-avatar-female="{% static 'images/woman.jpg' %}" data-default-avatar-generic="{% static 'images/no-profile.png' %}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     {% if messages %}
     <div class="messages" style="position: fixed; top: 1rem; right: 2rem; z-index: 5000; min-width: 300px;">
         {% for message in messages %}

@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/query.css' %}">
 </head>
 
-<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
+<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-gender="{{ user.gender|default:'' }}" data-default-avatar-male="{% static 'images/man.jpg' %}" data-default-avatar-female="{% static 'images/woman.jpg' %}" data-default-avatar-generic="{% static 'images/no-profile.png' %}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     <!-- Skeleton Loading Screen -->
     <div id="skeleton-loader">
         <div class="skeleton-header skeleton-shimmer"></div>
@@ -270,68 +270,37 @@
 
         <div class="deck-section">
             <div class="officer-deck" id="officerDeck">
-                <div class="deck-card" data-pos="0" data-index="0">
-                    <img src="{% static 'images/man.jpg' %}" alt="team">
+                {% for officer in officer_cards %}
+                <div class="deck-card" data-pos="{{ forloop.counter0 }}" data-index="{{ forloop.counter0 }}" data-name="{{ officer.name }}" data-role="{{ officer.role }}" data-course="{{ officer.course }}">
+                    <img src="{{ officer.avatar_url }}" alt="{{ officer.name }}">
                 </div>
-                <div class="deck-card" data-pos="1" data-index="1">
-                    <img src="{% static 'images/woman.jpg' %}" alt="team">
-                </div>
-                <div class="deck-card" data-pos="2" data-index="2">
-                    <img src="{% static 'images/man.jpg' %}" alt="team">
-                </div>
-                <div class="deck-card" data-pos="3" data-index="3">
-                    <img src="{% static 'images/no-profile.png' %}" alt="team">
-                </div>
+                {% endfor %}
                 <!-- Per-card info: hidden on mobile, shown on desktop below each card -->
+                {% for officer in officer_cards %}
                 <div class="officer-card-info">
-                    <div class="deck-name">Neil Francis Masion</div>
-                    <div class="deck-role">Captain</div>
-                    <div class="deck-course">BS Information Technology, 3rd Year</div>
+                    <div class="deck-name">{{ officer.name }}</div>
+                    <div class="deck-role">{{ officer.role }}</div>
+                    <div class="deck-course">{{ officer.course }}</div>
                     <div class="deck-links">
                         <a href="#"><i class="fa-brands fa-linkedin"></i></a>
                         <a href="#"><i class="fa-brands fa-github"></i></a>
                     </div>
                 </div>
-                <div class="officer-card-info">
-                    <div class="deck-name">Carla Jen Sayson</div>
-                    <div class="deck-role">Executive Secretary</div>
-                    <div class="deck-course">BS Information Technology, 3rd Year</div>
-                    <div class="deck-links">
-                        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="#"><i class="fa-brands fa-github"></i></a>
-                    </div>
-                </div>
-                <div class="officer-card-info">
-                    <div class="deck-name">Emmanuel Solayao</div>
-                    <div class="deck-role">Chief of Finance</div>
-                    <div class="deck-course">BS Information Technology, 3rd Year</div>
-                    <div class="deck-links">
-                        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="#"><i class="fa-brands fa-github"></i></a>
-                    </div>
-                </div>
-                <div class="officer-card-info">
-                    <div class="deck-name">Daryl Tautjo</div>
-                    <div class="deck-role">Chief of Marketing & Creatives</div>
-                    <div class="deck-course">BS Information Technology, 3rd Year</div>
-                    <div class="deck-links">
-                        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
-                        <a href="#"><i class="fa-brands fa-github"></i></a>
-                    </div>
-                </div>
+                {% endfor %}
+
             </div>
 
             <div class="deck-info">
                 <div class="deck-hint"><i class="fa-solid fa-hand-pointer"></i> Click the deck to cycle through officers
                 </div>
-                <div class="deck-name" id="deckName">Neil Francis Masion</div>
-                <div class="deck-role" id="deckRole">Captain</div>
-                <div class="deck-course" id="deckCourse">BS Information Technology, 3rd Year</div>
+                <div class="deck-name" id="deckName">{{ officer_cards.0.name }}</div>
+                <div class="deck-role" id="deckRole">{{ officer_cards.0.role }}</div>
+                <div class="deck-course" id="deckCourse">{{ officer_cards.0.course }}</div>
                 <div class="deck-links" id="deckLinks">
                     <a href="#"><i class="fa-brands fa-linkedin"></i></a>
                     <a href="#"><i class="fa-brands fa-github"></i></a>
                 </div>
-                <div class="deck-counter"><span id="deckCurrent">1</span> / <span id="deckTotal">4</span></div>
+                <div class="deck-counter"><span id="deckCurrent">1</span> / <span id="deckTotal">{{ officer_cards|length }}</span></div>
             </div>
         </div>
     </section>
