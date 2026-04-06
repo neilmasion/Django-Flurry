@@ -138,63 +138,46 @@ def _demote_to_member(user):
     user.officer_ends_at = None
 
 
-def _promote_to_officer(user, department, position=None, term_days=365):
+def _promote_to_officer(user, department, position=None, gender=None, term_days=365):
     today = timezone.now().date()
     user.role = 'officer'
     user.is_staff = True
     user.department = department
     user.position = position
+    if gender:
+        user.gender = gender
     user.officer_started_at = today
     user.officer_ends_at = today + timedelta(days=term_days)
 
 def _get_available_slots():
     """Calculates remaining slots for each department/position."""
+    # Every position listed has exactly 1 slot
     limits = {
-        'captain': {'total': 1},
-        'tech': {'chief': 1, 'member': 3},
-        'marketing': {'chief': 1, 'member': 3},
-        'logistics_ops': {'chief': 1, 'member': 3},
-        'finance': {'chief': 1, 'member': 3},
-        'relations': {'chief': 1, 'member': 3},
+        'captain': ['captain', 'secretary', 'asst_secretary'],
+        'tech': ['chief_tech', 'cloud_solution', 'tech_content', 'buildhers_ambassador'],
+        'marketing': ['chief_marketing', 'graphic_multimedia', 'social_media'],
+        'logistics_ops': ['chief_logistics', 'event_coord', 'op_asst'],
+        'finance': ['chief_finance', 'treasurer', 'auditor'],
+        'relations': ['chief_relations', 'hr', 'membership'],
     }
 
-    # Count current officers
-    officers = User.objects.filter(role='officer').values('department', 'position').annotate(count=Count('id'))
-    # Count pending applications
-    pending = OfficerApplication.objects.filter(status='pending').values('department', 'position').annotate(count=Count('id'))
+    # Gather data from current officers and pending applications
+    officers = User.objects.filter(role='officer').values('department', 'position')
+    pending = OfficerApplication.objects.filter(status='pending').values('department', 'position')
     
     taken = {}
-    for d in limits:
-        if d == 'captain':
-            taken[d] = {'total': 0}
-        else:
-            taken[d] = {'chief': 0, 'member': 0}
+    for d, positions in limits.items():
+        taken[d] = {p: 0 for p in positions}
 
-    for o in officers:
-        d, p, c = o['department'], o['position'], o['count']
-        if d in taken:
-            if d == 'captain':
-                taken[d]['total'] += c
-            elif p in ['chief', 'member']:
-                taken[d][p] += c
-
-    for ap in pending:
-        d, p, c = ap['department'], ap['position'], ap['count']
-        if d in taken:
-            if d == 'captain':
-                taken[d]['total'] += c
-            elif p in ['chief', 'member']:
-                taken[d][p] += c
+    for data in list(officers) + list(pending):
+        d, p = data['department'], data['position']
+        if d in taken and p in taken[d]:
+            taken[d][p] += 1
 
     avail = {}
-    for d, lim in limits.items():
-        if d == 'captain':
-            avail[d] = {'total': max(0, lim['total'] - taken[d]['total'])}
-        else:
-            avail[d] = {
-                'chief': max(0, lim['chief'] - taken[d]['chief']),
-                'member': max(0, lim['member'] - taken[d]['member']),
-            }
+    for d, positions in limits.items():
+        avail[d] = {p: max(0, 1 - taken[d][p]) for p in positions}
+        
     return avail
 
 @staff_member_required
@@ -694,20 +677,29 @@ def apply_for_officer(request):
             messages.error(request, 'Invalid department selected.')
             return redirect('index')
 
-        if is_full:
-            messages.error(request, f'Sorry, the {department} {position or ""} slot is already full.')
+        position = request.POST.get('position')
+        reason = request.POST.get('reason')
+        gender = request.POST.get('gender')
+        
+        if not all([department, position, reason, gender]):
+            messages.error(request, 'Please fill in all required fields.')
             return redirect('index')
-
-        if reason:
-            OfficerApplication.objects.create(
-                user=request.user,
-                reason=reason,
-                department=department,
-                position=position
-            )
-            messages.success(request, 'Your application has been submitted.')
-        else:
-            messages.error(request, 'Please provide a reason for your application.')
+        
+        # Final availability check
+        available = _get_available_slots()
+        if department not in available or position not in available[department] or available[department][position] <= 0:
+            messages.error(request, 'Sorry, this position was just filled.')
+            return redirect('index')
+        
+        # Save application
+        OfficerApplication.objects.create(
+            user=request.user,
+            department=department,
+            position=position,
+            reason=reason,
+            gender=gender
+        )
+        messages.success(request, 'Your application has been submitted.')
     return redirect('index')
 
 @staff_member_required
@@ -725,16 +717,11 @@ def handle_officer_application(request, app_id):
     action = request.POST.get('action') # 'approve' or 'deny'
     
     if action == 'approve':
+        term_days = int(request.POST.get('term_days', 365))
+        _promote_to_officer(application.user, application.department, application.position, application.gender, term_days)
         application.status = 'approved'
+        application.save()
         user = application.user
-        term_days_raw = request.POST.get('term_days', '365')
-        try:
-            term_days = max(1, int(term_days_raw))
-        except (TypeError, ValueError):
-            term_days = 365
-
-        _promote_to_officer(user, application.department, position=application.position, term_days=term_days)
-        user.save()
         end_date_str = user.officer_ends_at.strftime('%b %d, %Y') if user.officer_ends_at else 'N/A'
         Notification.objects.create(
             user=user,

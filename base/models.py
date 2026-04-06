@@ -30,8 +30,25 @@ class User(AbstractUser):
         ('relations', 'Relations'),
     ]
     POSITION_CHOICES = [
-        ('chief', 'Chief'),
-        ('member', 'Member'),
+        ('captain', 'Captain'),
+        ('secretary', 'Secretary'),
+        ('asst_secretary', 'Assistant Secretary'),
+        ('chief_tech', 'Chief of Technical'),
+        ('cloud_solution', 'Cloud Solution Officer'),
+        ('tech_content', 'Technical Content Officer'),
+        ('buildhers_ambassador', 'BuildHers+ Ambassador'),
+        ('chief_marketing', 'Chief of Marketing & Creatives'),
+        ('graphic_multimedia', 'Graphic Multimedia Officer'),
+        ('social_media', 'Social Media Content Officer'),
+        ('chief_relations', 'Chief of Relations'),
+        ('hr', 'Human Resource Officer'),
+        ('membership', 'Membership Officer'),
+        ('chief_finance', 'Chief of Finance'),
+        ('treasurer', 'Treasurer'),
+        ('auditor', 'Auditor'),
+        ('chief_logistics', 'Chief of Logistics & Operations'),
+        ('event_coord', 'Event Coordinator'),
+        ('op_asst', 'Operation Assistant'),
     ]
     GENDER_CHOICES = [
         ('male', 'Male'),
@@ -156,6 +173,7 @@ class OfficerApplication(models.Model):
     reason = models.TextField()
     department = models.CharField(max_length=20, choices=User.DEPARTMENT_CHOICES, default='tech')
     position = models.CharField(max_length=20, choices=User.POSITION_CHOICES, blank=True, null=True)
+    gender = models.CharField(max_length=10, choices=User.GENDER_CHOICES, blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -595,32 +595,26 @@
                         <label>Select Department</label>
                         <select name="department" id="deptSelect" required>
                             <option value="" disabled selected>Choose a department...</option>
-                            <option value="captain" {% if available_slots.captain.total <= 0 %}disabled{% endif %}>
-                                Captain ({% if available_slots.captain.total > 0 %}{{ available_slots.captain.total }} slot left{% else %}FULL{% endif %})
-                            </option>
-                            <option value="tech" {% if available_slots.tech.chief <= 0 and available_slots.tech.member <= 0 %}disabled{% endif %}>
-                                Technical ({% if available_slots.tech.chief > 0 or available_slots.tech.member > 0 %}{{ available_slots.tech.chief|add:available_slots.tech.member }} slots left{% else %}FULL{% endif %})
-                            </option>
-                            <option value="marketing" {% if available_slots.marketing.chief <= 0 and available_slots.marketing.member <= 0 %}disabled{% endif %}>
-                                Marketing & Creatives ({% if available_slots.marketing.chief > 0 or available_slots.marketing.member > 0 %}{{ available_slots.marketing.chief|add:available_slots.marketing.member }} slots left{% else %}FULL{% endif %})
-                            </option>
-                            <option value="logistics_ops" {% if available_slots.logistics_ops.chief <= 0 and available_slots.logistics_ops.member <= 0 %}disabled{% endif %}>
-                                Logistics & Operations ({% if available_slots.logistics_ops.chief > 0 or available_slots.logistics_ops.member > 0 %}{{ available_slots.logistics_ops.chief|add:available_slots.logistics_ops.member }} slots left{% else %}FULL{% endif %})
-                            </option>
-                            <option value="finance" {% if available_slots.finance.chief <= 0 and available_slots.finance.member <= 0 %}disabled{% endif %}>
-                                Finance ({% if available_slots.finance.chief > 0 or available_slots.finance.member > 0 %}{{ available_slots.finance.chief|add:available_slots.finance.member }} slots left{% else %}FULL{% endif %})
-                            </option>
-                            <option value="relations" {% if available_slots.relations.chief <= 0 and available_slots.relations.member <= 0 %}disabled{% endif %}>
-                                Relations ({% if available_slots.relations.chief > 0 or available_slots.relations.member > 0 %}{{ available_slots.relations.chief|add:available_slots.relations.member }} slots left{% else %}FULL{% endif %})
-                            </option>
+                            <option value="captain">Captain</option>
+                            <option value="tech">Technical</option>
+                            <option value="marketing">Marketing & Creatives</option>
+                            <option value="logistics_ops">Logistics & Operations</option>
+                            <option value="finance">Finance</option>
+                            <option value="relations">Relations</option>
+                        </select>
+                    </div>
+                    <div class="edit-group">
+                        <label>Select Gender</label>
+                        <select name="gender" required>
+                            <option value="" disabled selected>Choose gender...</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
                         </select>
                     </div>
                     <div class="edit-group" id="posGroup" style="display: none;">
                         <label>Select Position</label>
-                        <select name="position" id="posSelect">
+                        <select name="position" id="posSelect" required>
                             <option value="" disabled selected>Choose a position...</option>
-                            <option value="chief" id="optChief">Chief (1 slot)</option>
-                            <option value="member" id="optMember">Member (3 slots)</option>
                         </select>
                     </div>
                     <div class="edit-group">
@@ -651,25 +645,47 @@
             
             const slots = JSON.parse(document.getElementById('slots-data').textContent);
 
+            const posLabels = {
+                'captain': 'Captain',
+                'secretary': 'Secretary',
+                'asst_secretary': 'Assistant Secretary',
+                'chief_tech': 'Chief of Technical',
+                'cloud_solution': 'Cloud Solution Officer',
+                'tech_content': 'Technical Content Officer',
+                'buildhers_ambassador': 'BuildHers+ Ambassador',
+                'chief_marketing': 'Chief of Marketing & Creatives',
+                'graphic_multimedia': 'Graphic Multimedia Officer',
+                'social_media': 'Social Media Content Officer',
+                'chief_relations': 'Chief of Relations',
+                'hr': 'Human Resource Officer',
+                'membership': 'Membership Officer',
+                'chief_finance': 'Chief of Finance',
+                'treasurer': 'Treasurer',
+                'auditor': 'Auditor',
+                'chief_logistics': 'Chief of Logistics & Operations',
+                'event_coord': 'Event Coordinator',
+                'op_asst': 'Operation Assistant'
+            };
+
             if (deptSelect) {
                 deptSelect.addEventListener('change', () => {
                     const dept = deptSelect.value;
-                    if (dept === 'captain' || !dept) {
-                        posGroup.style.display = 'none';
-                        posSelect.removeAttribute('required');
-                    } else {
+                    posSelect.innerHTML = '<option value="" disabled selected>Choose a position...</option>';
+                    
+                    if (dept) {
                         posGroup.style.display = 'block';
-                        posSelect.setAttribute('required', 'required');
-                        
-                        // Update position options based on availability
                         const deptSlots = slots[dept];
-                        if (deptSlots) {
-                            optChief.textContent = `Chief (${deptSlots.chief} slot${deptSlots.chief !== 1 ? 's' : ''} left)`;
-                            optChief.disabled = deptSlots.chief <= 0;
-                            
-                            optMember.textContent = `Member (${deptSlots.member} slot${deptSlots.member !== 1 ? 's' : ''} left)`;
-                            optMember.disabled = deptSlots.member <= 0;
+                        
+                        for (const pos in deptSlots) {
+                            const count = deptSlots[pos];
+                            const option = document.createElement('option');
+                            option.value = pos;
+                            option.textContent = `${posLabels[pos]} (${count > 0 ? count + ' slot left' : 'FULL'})`;
+                            if (count <= 0) option.disabled = true;
+                            posSelect.appendChild(option);
                         }
+                    } else {
+                        posGroup.style.display = 'none';
                     }
                 });
             }

@@ -300,12 +300,13 @@
                             <thead>
                                 <tr>
                                     <th style="width: 8%;">ID</th>
-                                    <th style="width: 20%;">Name</th>
+                                    <th style="width: 18%;">Name</th>
+                                    <th style="width: 10%;">Gender</th>
                                     <th style="width: 15%;">Department</th>
                                     <th style="width: 15%;">Position</th>
-                                    <th style="width: 14%;">Date Joined</th>
-                                    <th style="width: 14%;">Term Ends</th>
-                                    <th style="width: 14%;">Action</th>
+                                    <th style="width: 12%;">Joined</th>
+                                    <th style="width: 12%;">Ends</th>
+                                    <th style="width: 10%;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -315,6 +316,9 @@
                                     <td class="name-cell" data-label="Name">
                                         <strong>{{ u.username }}</strong><br>
                                         <small>{{ u.email }}</small>
+                                    </td>
+                                    <td data-label="Gender">
+                                        {{ u.get_gender_display|default:"None" }}
                                     </td>
                                     <td data-label="Department">
                                         <span class="admin-tag admin-tag--blue">{{ u.get_department_display|default:"General" }}</span>
@@ -473,6 +477,7 @@
                         <thead>
                             <tr>
                                 <th>User</th>
+                                <th>Gender</th>
                                 <th>Department</th>
                                 <th>Position</th>
                                 <th>Reason</th>
@@ -484,6 +489,7 @@
                             {% for app in pending_applications %}
                             <tr>
                                 <td data-label="User"><strong>{{ app.user.username }}</strong><br><small>{{ app.user.email }}</small></td>
+                                <td data-label="Gender">{{ app.get_gender_display }}</td>
                                 <td data-label="Department"><span class="admin-tag">{{ app.get_department_display }}</span></td>
                                 <td data-label="Position">
                                     {% if app.position %}<span class="admin-tag admin-tag--purple">{{ app.get_position_display }}</span>{% else %}N/A{% endif %}
