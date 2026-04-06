@@ -212,6 +212,43 @@
     flex: 1;
 }
 
+.demo-form input[type="text"],
+.demo-form input[type="email"],
+.demo-form input[type="password"],
+.demo-form input[type="tel"],
+.demo-form select {
+    color: var(--text-primary);
+}
+
+.demo-form input::placeholder {
+    color: var(--text-tertiary);
+    opacity: 1;
+}
+
+[data-theme="dark"] .demo-form input[type="text"],
+[data-theme="dark"] .demo-form input[type="email"],
+[data-theme="dark"] .demo-form input[type="password"],
+[data-theme="dark"] .demo-form input[type="tel"],
+[data-theme="dark"] .demo-form select {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .demo-form select option {
+    background-color: #0f172a;
+    color: #ffffff;
+}
+
+[data-theme="dark"] .demo-form input:-webkit-autofill,
+[data-theme="dark"] .demo-form input:-webkit-autofill:hover,
+[data-theme="dark"] .demo-form input:-webkit-autofill:focus,
+[data-theme="dark"] .demo-form input:-webkit-autofill:active {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.08) inset;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
 .demo-form select {
     width: 100%;
     padding: 0.7rem;

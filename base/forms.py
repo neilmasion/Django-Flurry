@@ -18,6 +18,15 @@ class StudentRegistrationForm(UserCreationForm):
         model = User
         fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email', 'school', 'course', 'year_level')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['course'].choices = [('', 'Select your course (e.g., Information Technology (IT))')] + [
+            choice for choice in self.fields['course'].choices if choice[0] != ''
+        ]
+        self.fields['year_level'].choices = [('', 'Select your year')] + [
+            choice for choice in self.fields['year_level'].choices if choice[0] != ''
+        ]
+
     def clean_email(self):
         email = self.cleaned_data.get('email').lower()
         domain = email.split('@')[-1]

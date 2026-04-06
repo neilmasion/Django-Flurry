@@ -148,6 +148,45 @@ html:not([data-theme="dark"]) select {
     color: #ffffff;
 }
 
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] input[type="email"],
+html[data-theme="dark"] input[type="password"],
+html[data-theme="dark"] input[type="date"],
+html[data-theme="dark"] input[type="time"],
+html[data-theme="dark"] input[type="tel"],
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] input[type="text"]::placeholder,
+html[data-theme="dark"] input[type="number"]::placeholder,
+html[data-theme="dark"] input[type="email"]::placeholder,
+html[data-theme="dark"] input[type="password"]::placeholder,
+html[data-theme="dark"] input[type="date"]::placeholder,
+html[data-theme="dark"] input[type="time"]::placeholder,
+html[data-theme="dark"] input[type="tel"]::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+    color: rgba(255, 255, 255, 0.58);
+    opacity: 1;
+}
+
+html[data-theme="dark"] input:-webkit-autofill,
+html[data-theme="dark"] input:-webkit-autofill:hover,
+html[data-theme="dark"] input:-webkit-autofill:focus,
+html[data-theme="dark"] input:-webkit-autofill:active,
+html[data-theme="dark"] textarea:-webkit-autofill,
+html[data-theme="dark"] textarea:-webkit-autofill:hover,
+html[data-theme="dark"] textarea:-webkit-autofill:focus,
+html[data-theme="dark"] textarea:-webkit-autofill:active {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.08) inset;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
 :not([data-theme="dark"]) input[type="text"]::placeholder,
 :not([data-theme="dark"]) input[type="number"]::placeholder,
 :not([data-theme="dark"]) input[type="email"]::placeholder,
