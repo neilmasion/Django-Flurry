@@ -238,7 +238,7 @@ html:not([data-theme="dark"]) .btn-primary {
 }
 
 html:not([data-theme="dark"]) .btn-primary i {
-    color: #ffffff;
+    color: #0a1a2b;
     margin-right: 0.4rem;
 }
 
@@ -250,7 +250,7 @@ html:not([data-theme="dark"]) .btn-primary:hover {
 }
 
 html:not([data-theme="dark"]) .btn-primary:hover i {
-    color: #0a1a2b;
+    color: #ffffff;
 }
 
 html[data-theme="dark"] .btn-primary i {
