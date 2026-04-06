@@ -126,7 +126,6 @@ a:hover {
 }
 
 .btn-primary i {
-    color: inherit;
     margin-right: 0.4rem;
 }
 
@@ -134,10 +133,6 @@ a:hover {
     background-color: var(--bg-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
-}
-
-.btn-primary:hover i {
-    color: inherit;
 }
 
 .btn-outline {
