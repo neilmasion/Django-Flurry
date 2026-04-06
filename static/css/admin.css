@@ -843,12 +843,6 @@ html[data-theme="dark"] #eventModalOverlay .edit-group textarea {
     line-height: 1.35;
 }
 
-#eventModalOverlay #evType,
-#eventModalOverlay #evSpots {
-    height: 3rem;
-    box-sizing: border-box;
-}
-
 html[data-theme="dark"] #eventModalOverlay .edit-group input::placeholder,
 html[data-theme="dark"] #eventModalOverlay .edit-group textarea::placeholder {
     color: rgba(226, 232, 240, 0.62);

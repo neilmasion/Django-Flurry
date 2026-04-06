@@ -375,16 +375,26 @@ html:not([data-theme="dark"]) .hero-buttons input[type="email"]::placeholder {
 }
 
 /* Custom styling for date/time picker indicators */
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+html:not([data-theme="dark"]) input[type="date"]::-webkit-calendar-picker-indicator,
+html:not([data-theme="dark"]) input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) saturate(100%);
     cursor: pointer;
     opacity: 0.6;
     transition: var(--transition-fast);
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator:hover,
-input[type="time"]::-webkit-calendar-picker-indicator:hover {
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) invert(1);
+    cursor: pointer;
+    opacity: 0.9;
+    transition: var(--transition-fast);
+}
+
+html:not([data-theme="dark"]) input[type="date"]::-webkit-calendar-picker-indicator:hover,
+html:not([data-theme="dark"]) input[type="time"]::-webkit-calendar-picker-indicator:hover,
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator:hover,
+html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator:hover {
     opacity: 1;
 }
 
