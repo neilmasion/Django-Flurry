@@ -237,11 +237,28 @@ html:not([data-theme="dark"]) .btn-primary {
     border: none;
 }
 
+html:not([data-theme="dark"]) .btn-primary i {
+    color: #ffffff;
+    margin-right: 0.4rem;
+}
+
 html:not([data-theme="dark"]) .btn-primary:hover {
     background-color: #ffffff;
     color: #0a1a2b;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(10, 26, 43, 0.16);
+}
+
+html:not([data-theme="dark"]) .btn-primary:hover i {
+    color: #0a1a2b;
+}
+
+html[data-theme="dark"] .btn-primary i {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .btn-primary:hover i {
+    color: var(--secondary-color);
 }
 
 html:not([data-theme="dark"]) .btn-outline {
