@@ -88,6 +88,17 @@
     :root {font-size: 14px;}
     html:has(.nav-menu.active) {overflow: hidden;}
 
+    html:not([data-theme="dark"]) .nav-menu {
+        background: rgba(245, 251, 255, 0.96);
+        border-top: 1px solid rgba(10, 26, 43, 0.16);
+        box-shadow: 0 10px 32px rgba(10, 26, 43, 0.18);
+    }
+    html:not([data-theme="dark"]) .nav-menu li {border-bottom-color: rgba(10, 26, 43, 0.12);}
+    html:not([data-theme="dark"]) .nav-menu a {color: rgba(10, 26, 43, 0.82);}
+    html:not([data-theme="dark"]) .nav-menu a:hover {background: rgba(15, 94, 168, 0.1); color: #0a1a2b;}
+    html:not([data-theme="dark"]) .nav-menu a.active {background: rgba(15, 94, 168, 0.16); color: #0a1a2b;}
+    html:not([data-theme="dark"]) .nav-menu a.active::after {background: rgba(15, 94, 168, 0.6);}
+
     [data-theme="dark"] .nav-menu {background: rgba(20, 20, 20, 0.92); border-right-color: var(--border-color); box-shadow: 8px 0 40px rgba(0, 0, 0, 0.7);}
     [data-theme="dark"] .nav-menu li {border-bottom-color: var(--border-color);}
     [data-theme="dark"] .nav-menu a {color: var(--text-tertiary);}
