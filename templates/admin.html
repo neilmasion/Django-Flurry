@@ -616,9 +616,6 @@
                         <div class="event-admin-footer">
                             <span class="event-enroll-count"><i class="fa-solid fa-users"></i> {{ ev.enroll_count }} enrolled</span>
                             <div class="admin-actions">
-                                <button class="admin-btn-icon" title="Edit" data-edit-ev="{{ ev.id }}">
-                                    <i class="fa-solid fa-pen"></i>
-                                </button>
                                 <form action="{% url 'delete-event' ev.id %}" method="POST" class="delete-form"
                                     data-title="Delete Archived Event?"
                                     data-confirm="Are you sure you want to permanently delete '{{ ev.title }}' from the archive?">

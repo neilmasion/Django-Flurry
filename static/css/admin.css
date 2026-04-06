@@ -850,6 +850,13 @@ html[data-theme="dark"] #eventModalOverlay .edit-group textarea::placeholder {
     opacity: 1;
 }
 
+html[data-theme="dark"] #eventModalOverlay #evSpots {
+    padding: 0.75rem 1rem !important;
+    line-height: 1.2;
+    box-sizing: border-box;
+    -webkit-text-fill-color: #ffffff;
+}
+
 html[data-theme="dark"] #eventModalOverlay input[type="date"]::-webkit-calendar-picker-indicator,
 html[data-theme="dark"] #eventModalOverlay input[type="time"]::-webkit-calendar-picker-indicator {
     filter: brightness(0) invert(1) !important;
