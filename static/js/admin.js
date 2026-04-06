@@ -102,9 +102,9 @@ function initApp() {
         overlay.classList.remove('visible');
     });
 
-    document.getElementById('adminLogoutBtn').addEventListener('click', () => {
+    const logoutBtn = document.getElementById('adminLogoutBtn');
+    logoutBtn?.closest('form')?.addEventListener('submit', () => {
         localStorage.removeItem(ADMIN_KEY);
-        location.reload();
     });
 
     // Event management logic is now handled by Django

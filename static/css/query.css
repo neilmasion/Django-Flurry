@@ -259,6 +259,9 @@
     .mv-section, .story-section, .officers-section {padding: 3.5rem 1.5rem;}
     .contact-section, .facts-section, .faq-section {padding: 3rem 1.5rem;}
     .events-page-section, .roadmap-section {padding: 3rem 1.5rem;}
+    .footer-container {padding: 2rem 1.5rem 0;}
+    .footer-content {grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem;}
+    .footer-description {width: 100%; padding-right: 0;}
     .about-inner {flex-direction: column; gap: 2.5rem;}
     .about-text {max-width: 100%;}
     .about-cards {grid-template-columns: 1fr 1fr;}
@@ -406,4 +409,11 @@
     .officer-deck, .officer-deck .deck-card {width: 180px; height: 230px;}
     .officer-deck {margin-left: 10px;}
     .hero-buttons {gap: 0.5rem;}
+}
+
+img,
+video,
+svg,
+canvas {
+    max-width: 100%;
 }

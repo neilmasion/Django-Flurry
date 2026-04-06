@@ -473,16 +473,10 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-xl);
     padding: 2rem;
-    transition: transform var(--transition-medium), border-color var(--transition-fast), background var(--transition-fast);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-}
-
-.dept-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.08);
 }
 
 .dept-header {
@@ -524,17 +518,7 @@
     transition: all 0.3s ease;
     padding: 0.5rem;
     border-radius: 0.5rem;
-    cursor: pointer;
-}
-
-.role-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateX(4px);
-}
-
-.role-item:hover .role-dot {
-    transform: scale(1.3);
-    box-shadow: 0 0 16px var(--primary-light);
+    cursor: default;
 }
 
 .role-dot {
@@ -586,10 +570,6 @@ html:not([data-theme="dark"]) .role-desc {
     color: var(--text-secondary);
 }
 
-html:not([data-theme="dark"]) .role-item:hover {
-    background: rgba(9, 30, 52, 0.08);
-}
-
 html:not([data-theme="dark"]) .milestone-year,
 html:not([data-theme="dark"]) .deck-hint,
 html:not([data-theme="dark"]) .deck-course,
@@ -620,11 +600,6 @@ html:not([data-theme="dark"]) .deck-links a:hover {
 html:not([data-theme="dark"]) .dept-card {
     background: rgba(255, 255, 255, 0.78);
     border-color: rgba(0, 0, 0, 0.12);
-}
-
-html:not([data-theme="dark"]) .dept-card:hover {
-    background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.2);
 }
 
 html:not([data-theme="dark"]) .dept-icon {
