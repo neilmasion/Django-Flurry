@@ -36,7 +36,7 @@
     min-width: 90px;
     min-height: 90px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.18);
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
     border: 2px solid rgba(255, 255, 255, 0.35);
     display: flex;
     align-items: center;
@@ -455,7 +455,7 @@ html[data-theme="dark"] #tab-edit .toggle-password:hover {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.18);
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
     border: 2px solid rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
@@ -889,7 +889,7 @@ html:not([data-theme="dark"]) .user-menu-btn:hover {
     min-width: 1.6rem;
     min-height: 1.6rem;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.25);
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -901,8 +901,8 @@ html:not([data-theme="dark"]) .user-menu-btn:hover {
 }
 
 html:not([data-theme="dark"]) .user-avatar-sm {
-    background: rgba(0, 0, 0, 0.2);
-    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    color: #fff;
 }
 
 .user-avatar-sm img {
