@@ -3,10 +3,10 @@ export function setupOfficerDeck() {
     if (!deck) return;
 
     const officers = [
-        { initials:'NFM', name:'Neil Francis Masion',         role:'Captain',                           course:'BS Information Technology, 3th Year',   links:['linkedin','github'] },
-        { initials:'CJS', name:'Carla Jen Sayson',            role:'Executive Secretary',               course:'BS Information Technology, 2nd Year',   links:['linkedin','github'] },
-        { initials:'ES',  name:'Emmanuel Solayao',            role:'Chief of Finance',                  course:'BS Information Technology, 2nd Year',   links:['linkedin','github'] },
-        { initials:'DT',  name:'Daryl Tautjo',                role:'Chief of Marketing & Creatives',    course:'BSIT - 3rd Year',                       links:['linkedin','github'] }
+        { initials:'NFM', name:'Neil Francis Masion',         role:'Captain',                           course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
+        { initials:'CJS', name:'Carla Jen Sayson',            role:'Executive Secretary',               course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
+        { initials:'ES',  name:'Emmanuel Solayao',            role:'Chief of Finance',                  course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] },
+        { initials:'DT',  name:'Daryl Tautjo',                role:'Chief of Marketing & Creatives',    course:'BS Information Technology, 3rd Year',   links:['linkedin','github'] }
     ];
 
     const cards    = Array.from(deck.querySelectorAll('.deck-card'));
