@@ -283,10 +283,6 @@ def about(request):
 
     officer_cards = [_build_officer_card(user) for user in active_officers]
 
-    # Fallback to defaults if no officers registered in DB yet
-    if not officer_cards:
-        officer_cards = _default_officer_cards()
-
     return render(request, 'about.html', {
         'officer_cards': officer_cards,
     })
