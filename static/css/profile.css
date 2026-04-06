@@ -121,7 +121,36 @@
     color: rgba(255, 255, 255, 0.8);
     padding: 0.3rem 0.75rem;
     border-radius: 999px;
+    white-space: nowrap;
 }
+
+/* Role Badges */
+.role-badge {
+    border-width: 1.5px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.captain-badge { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border-color: rgba(251, 191, 36, 0.35); }
+.tech-badge { background: rgba(96, 165, 250, 0.15); color: #60a5fa; border-color: rgba(96, 165, 250, 0.35); }
+.marketing-badge { background: rgba(244, 114, 182, 0.15); color: #f472b6; border-color: rgba(244, 114, 182, 0.35); }
+.logistics_ops-badge { background: rgba(74, 222, 128, 0.15); color: #4ade80; border-color: rgba(74, 222, 128, 0.35); }
+.finance-badge { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.35); }
+.relations-badge { background: rgba(129, 140, 248, 0.15); color: #818cf8; border-color: rgba(129, 140, 248, 0.35); }
+.admin-badge { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border-color: rgba(148, 163, 184, 0.35); }
+
+/* Theme specific overrides for badges */
+[data-theme="light"] .role-badge {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+[data-theme="light"] .captain-badge { background: #fef3c7; color: #b45309; border-color: #fcd34d; }
+[data-theme="light"] .tech-badge { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
+[data-theme="light"] .marketing-badge { background: #fce7f3; color: #be185d; border-color: #fbcfe8; }
+[data-theme="light"] .logistics_ops-badge { background: #dcfce7; color: #15803d; border-color: #86efac; }
+[data-theme="light"] .finance-badge { background: #d1fae5; color: #047857; border-color: #6ee7b7; }
+[data-theme="light"] .relations-badge { background: #e0e7ff; color: #4338ca; border-color: #a5b4fc; }
+[data-theme="light"] .admin-badge { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
 
 .profile-meta-list {
     display: flex;

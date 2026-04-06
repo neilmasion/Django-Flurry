@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Case, When, Value, IntegerField
 from django.db.models.functions import TruncMonth
 from django.http import JsonResponse, Http404
 from django.utils import timezone
@@ -60,9 +60,17 @@ def _format_course_and_year(user):
 
 
 def _build_officer_card(user, role_label=None):
+    if not role_label:
+        if user.department == 'captain':
+            role_label = 'Captain'
+        elif user.department and user.position:
+            role_label = f'{user.get_position_display()} of {user.get_department_display()}'
+        else:
+            role_label = user.get_department_display() or 'Officer'
+
     return {
         'name': user.get_full_name().strip() or user.username,
-        'role': role_label or OFFICER_ROLE_LABELS.get(user.department or '', user.get_department_display() if user.department else 'Officer'),
+        'role': role_label,
         'course': _format_course_and_year(user),
         'avatar_url': _default_avatar_url(user),
     }
@@ -130,13 +138,64 @@ def _demote_to_member(user):
     user.officer_ends_at = None
 
 
-def _promote_to_officer(user, department, term_days=365):
+def _promote_to_officer(user, department, position=None, term_days=365):
     today = timezone.now().date()
     user.role = 'officer'
     user.is_staff = True
     user.department = department
+    user.position = position
     user.officer_started_at = today
     user.officer_ends_at = today + timedelta(days=term_days)
+
+def _get_available_slots():
+    """Calculates remaining slots for each department/position."""
+    limits = {
+        'captain': {'total': 1},
+        'tech': {'chief': 1, 'member': 3},
+        'marketing': {'chief': 1, 'member': 3},
+        'logistics_ops': {'chief': 1, 'member': 3},
+        'finance': {'chief': 1, 'member': 3},
+        'relations': {'chief': 1, 'member': 3},
+    }
+
+    # Count current officers
+    officers = User.objects.filter(role='officer').values('department', 'position').annotate(count=Count('id'))
+    # Count pending applications
+    pending = OfficerApplication.objects.filter(status='pending').values('department', 'position').annotate(count=Count('id'))
+    
+    taken = {}
+    for d in limits:
+        if d == 'captain':
+            taken[d] = {'total': 0}
+        else:
+            taken[d] = {'chief': 0, 'member': 0}
+
+    for o in officers:
+        d, p, c = o['department'], o['position'], o['count']
+        if d in taken:
+            if d == 'captain':
+                taken[d]['total'] += c
+            elif p in ['chief', 'member']:
+                taken[d][p] += c
+
+    for ap in pending:
+        d, p, c = ap['department'], ap['position'], ap['count']
+        if d in taken:
+            if d == 'captain':
+                taken[d]['total'] += c
+            elif p in ['chief', 'member']:
+                taken[d][p] += c
+
+    avail = {}
+    for d, lim in limits.items():
+        if d == 'captain':
+            avail[d] = {'total': max(0, lim['total'] - taken[d]['total'])}
+        else:
+            avail[d] = {
+                'chief': max(0, lim['chief'] - taken[d]['chief']),
+                'member': max(0, lim['member'] - taken[d]['member']),
+            }
+    return avail
 
 @staff_member_required
 def update_role(request, user_id):
@@ -182,6 +241,7 @@ def index(request):
         'testimonials': testimonials,
         'pending_app': pending_app,
         'user_enrollments': user_enrollments,
+        'available_slots': _get_available_slots(),
     }
     return render(request, 'index.html', context)
 
@@ -209,10 +269,23 @@ def about(request):
     active_officers = (
         User.objects
         .filter(role='officer')
-        .order_by('-officer_started_at', '-date_joined')[:4]
+        .annotate(
+            role_priority=Case(
+                When(department='captain', then=Value(1)),
+                When(position='chief', then=Value(2)),
+                When(position='member', then=Value(3)),
+                default=Value(4),
+                output_field=IntegerField(),
+            )
+        )
+        .order_by('role_priority', 'department', 'date_joined')
     )
 
     officer_cards = [_build_officer_card(user) for user in active_officers]
+
+    # Fallback to defaults if no officers registered in DB yet
+    if not officer_cards:
+        officer_cards = _default_officer_cards()
 
     return render(request, 'about.html', {
         'officer_cards': officer_cards,
@@ -607,21 +680,49 @@ def apply_for_officer(request):
     if request.method == 'POST':
         reason = request.POST.get('reason')
         department = request.POST.get('department')
-        if reason and department:
+        position = request.POST.get('position') if department != 'captain' else None
+        
+        # Validation
+        slots = _get_available_slots()
+        is_full = False
+        if department == 'captain':
+            if slots['captain']['total'] <= 0:
+                is_full = True
+        elif department in slots:
+            if position not in ['chief', 'member']:
+                messages.error(request, 'Please select a valid position.')
+                return redirect('index')
+            if slots[department][position] <= 0:
+                is_full = True
+        else:
+            messages.error(request, 'Invalid department selected.')
+            return redirect('index')
+
+        if is_full:
+            messages.error(request, f'Sorry, the {department} {position or ""} slot is already full.')
+            return redirect('index')
+
+        if reason:
             OfficerApplication.objects.create(
                 user=request.user,
                 reason=reason,
-                department=department
+                department=department,
+                position=position
             )
             messages.success(request, 'Your application has been submitted.')
         else:
-            messages.error(request, 'Please provide both a reason and a department for your application.')
+            messages.error(request, 'Please provide a reason for your application.')
     return redirect('index')
 
 @staff_member_required
 def handle_officer_application(request, app_id):
-    if request.user.role != 'admin' and not request.user.is_superuser:
-        messages.error(request, 'Only Administrators can handle applications.')
+    can_approve = (
+        request.user.role == 'admin' 
+        or request.user.is_superuser 
+        or (request.user.role == 'officer' and request.user.department == 'captain')
+    )
+    if not can_approve:
+        messages.error(request, 'You do not have permission to handle applications.')
         return redirect('admin-dashboard')
         
     application = get_object_or_404(OfficerApplication, id=app_id)
@@ -636,7 +737,7 @@ def handle_officer_application(request, app_id):
         except (TypeError, ValueError):
             term_days = 365
 
-        _promote_to_officer(user, application.department, term_days=term_days)
+        _promote_to_officer(user, application.department, position=application.position, term_days=term_days)
         user.save()
         end_date_str = user.officer_ends_at.strftime('%b %d, %Y') if user.officer_ends_at else 'N/A'
         Notification.objects.create(

@@ -240,6 +240,23 @@
                             Verify Email
                         </a>
                     {% endif %}
+
+                    {% if user.role != 'member' %}
+                        {% if user.department == 'captain' %}
+                            <span class="profile-badge role-badge captain-badge">
+                                <i class="fa-solid fa-anchor"></i> Captain
+                            </span>
+                        {% elif user.department %}
+                            <span class="profile-badge role-badge {{ user.department }}-badge">
+                                <i class="fa-solid {% if user.department == 'tech' %}fa-microchip{% elif user.department == 'marketing' %}fa-palette{% elif user.department == 'finance' %}fa-file-invoice-dollar{% elif user.department == 'relations' %}fa-users-gear{% else %}fa-user-shield{% endif %}"></i>
+                                {{ user.get_position_display|default:'Officer' }} of {{ user.get_department_display }}
+                            </span>
+                        {% elif user.role == 'admin' %}
+                            <span class="profile-badge role-badge admin-badge">
+                                <i class="fa-solid fa-shield-halved"></i> Administrator
+                            </span>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
             <div class="profile-meta-list">

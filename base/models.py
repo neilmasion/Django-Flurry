@@ -22,11 +22,16 @@ class User(AbstractUser):
         ('admin', 'Admin'),
     ]
     DEPARTMENT_CHOICES = [
+        ('captain', 'Captain'),
         ('tech', 'Technical'),
         ('marketing', 'Marketing & Creatives'),
         ('logistics_ops', 'Logistics & Operations'),
         ('finance', 'Finance'),
         ('relations', 'Relations'),
+    ]
+    POSITION_CHOICES = [
+        ('chief', 'Chief'),
+        ('member', 'Member'),
     ]
     GENDER_CHOICES = [
         ('male', 'Male'),
@@ -38,6 +43,7 @@ class User(AbstractUser):
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True, null=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
     department = models.CharField(max_length=20, choices=DEPARTMENT_CHOICES, blank=True, null=True)
+    position = models.CharField(max_length=20, choices=POSITION_CHOICES, blank=True, null=True)
     email = models.EmailField(unique=True)
     
     # Allow duplicate usernames by making email the primary identifier
@@ -149,6 +155,7 @@ class OfficerApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='officer_applications')
     reason = models.TextField()
     department = models.CharField(max_length=20, choices=User.DEPARTMENT_CHOICES, default='tech')
+    position = models.CharField(max_length=20, choices=User.POSITION_CHOICES, blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
