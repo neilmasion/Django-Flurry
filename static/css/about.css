@@ -577,6 +577,14 @@ html:not([data-theme="dark"]) .deck-counter {
     color: var(--text-tertiary);
 }
 
+html:not([data-theme="dark"]) .deck-counter {
+    color: rgba(35, 54, 74, 0.78);
+}
+
+html:not([data-theme="dark"]) .deck-counter span {
+    color: var(--text-primary);
+}
+
 html:not([data-theme="dark"]) .milestone-body,
 html:not([data-theme="dark"]) .recruitment-container {
     border-color: rgba(0, 0, 0, 0.12);

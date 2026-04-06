@@ -268,6 +268,7 @@
             </p>
         </div>
 
+        {% if officer_cards %}
         <div class="deck-section">
             <div class="officer-deck" id="officerDeck">
                 {% for officer in officer_cards %}
@@ -303,6 +304,13 @@
                 <div class="deck-counter"><span id="deckCurrent">1</span> / <span id="deckTotal">{{ officer_cards|length }}</span></div>
             </div>
         </div>
+        {% else %}
+        <div class="deck-section" style="justify-content: flex-start;">
+            <div class="activity-empty" style="max-width: 560px; text-align: left; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 0.9rem; padding: 1.1rem 1.25rem;">
+                <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary);">No active officers right now. Approved officers will appear here automatically.</p>
+            </div>
+        </div>
+        {% endif %}
     </section>
 
     <section class="hierarchy-section" data-animate>
