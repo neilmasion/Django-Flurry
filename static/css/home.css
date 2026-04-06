@@ -55,6 +55,20 @@
     color: var(--text-tertiary);
 }
 
+#openApplyModal i {
+    margin-right: 0.4rem;
+}
+
+html:not([data-theme="dark"]) #openApplyModal i,
+html:not([data-theme="dark"]) #openApplyModal:hover i {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] #openApplyModal i,
+html[data-theme="dark"] #openApplyModal:hover i {
+    color: #000000;
+}
+
 .hero-application-status {
     margin-top: 2rem;
     padding: 1.5rem;
