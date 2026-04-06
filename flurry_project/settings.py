@@ -1,4 +1,5 @@
 from pathlib import Path
+import importlib.util
 import os
 
 import dj_database_url
@@ -41,9 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'anymail',
     'base',
 ]
+
+ANYMAIL_AVAILABLE = importlib.util.find_spec('anymail') is not None
+if ANYMAIL_AVAILABLE:
+    INSTALLED_APPS.insert(6, 'anymail')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -215,11 +219,22 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = os.getenv('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', 'True').lower() == 'true'
     SECURE_HSTS_PRELOAD = os.getenv('DJANGO_SECURE_HSTS_PRELOAD', 'True').lower() == 'true'
 
-# ANYMAIL / SENDGRID CONFIGURATION
-ANYMAIL = {
-    "SENDGRID_API_KEY": os.getenv("SENDGRID_API_KEY", ""),
-}
-EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+# EMAIL CONFIGURATION
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY', '')
+if ANYMAIL_AVAILABLE:
+    ANYMAIL = {
+        'SENDGRID_API_KEY': SENDGRID_API_KEY,
+    }
+    EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+elif SENDGRID_API_KEY:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = 'apikey'
+    EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
 
 # Keep default from email
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Flurry <no-reply@example.com>')
