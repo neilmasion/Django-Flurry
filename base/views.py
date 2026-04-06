@@ -34,8 +34,6 @@ OFFICER_ROLE_LABELS = {
 
 
 def _default_avatar_url(user):
-    if getattr(user, 'profile_picture', None):
-        return user.profile_picture.url
     if getattr(user, 'gender', None) == 'female':
         return static('images/woman.jpg')
     if getattr(user, 'gender', None) == 'male':
@@ -208,17 +206,13 @@ def events_list(request):
     return render(request, 'events.html', context)
 
 def about(request):
-    approved_applications = (
-        OfficerApplication.objects
-        .filter(status='approved')
-        .select_related('user')
-        .order_by('-updated_at')[:4]
+    active_officers = (
+        User.objects
+        .filter(role='officer')
+        .order_by('-officer_started_at', '-date_joined')[:4]
     )
 
-    officer_cards = [
-        _build_officer_card(app.user, OFFICER_ROLE_LABELS.get(app.department, app.get_department_display()))
-        for app in approved_applications
-    ]
+    officer_cards = [_build_officer_card(user) for user in active_officers]
     if not officer_cards:
         officer_cards = _default_officer_cards()
 
