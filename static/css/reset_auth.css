@@ -69,8 +69,8 @@
 }
 
 .premium-btn i {
-    color: inherit !important;
-    -webkit-text-fill-color: currentColor;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff;
 }
 
 .premium-btn:hover {
@@ -78,6 +78,11 @@
     background: #1d4ed8;
     box-shadow: 0 10px 20px rgba(29, 78, 216, 0.22);
     color: var(--secondary-color);
+}
+
+.premium-btn:hover i {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000;
 }
 
 .premium-btn:active {
