@@ -1016,14 +1016,29 @@ html[data-theme="dark"] #eventModalOverlay input[type="time"]::-webkit-clear-but
     .admin-table td:last-child { border-bottom: none; }
     .admin-table td::before {
         content: attr(data-label);
-        font-size: 0.6rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.07em;
-        color: rgba(255, 255, 255, 0.35);
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: capitalize;
+        letter-spacing: normal;
+        color: rgba(255, 255, 255, 0.45);
         white-space: nowrap;
         flex-shrink: 0;
         min-width: 76px;
+    }
+
+    .admin-table td[data-label="ID"] {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 0.85rem 1rem;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+    .admin-table td[data-label="ID"]::before {
+        display: none;
+    }
+    .admin-table td[data-label="ID"] code {
+        font-size: 0.95rem;
+        font-weight: 800;
+        background: transparent;
+        padding: 0;
     }
 
     .admin-table td[data-label=""] {justify-content: flex-end;}

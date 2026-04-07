@@ -315,8 +315,15 @@
                                     <td data-label="ID"><code>#{{ u.id }}</code></td>
                                     <td class="name-cell" data-label="Name">
                                         <div class="user-meta-stack">
-                                            <strong>{{ u.username }}</strong>
-                                            <small style="display: block;">{{ u.email }}</small>
+                                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; margin-bottom: 0.2rem;">
+                                                {% if u.profile_picture %}
+                                                    <img src="{{ u.profile_picture.url }}" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover;">
+                                                {% else %}
+                                                    <i class="fa-solid fa-circle-user" style="font-size: 20px; color: rgba(255,255,255,0.25);"></i>
+                                                {% endif %}
+                                                <strong>{{ u.username }}</strong>
+                                            </div>
+                                            <small style="display: block; opacity: 0.65; font-size: 0.72rem;">{{ u.email }}</small>
                                         </div>
                                     </td>
                                     <td data-label="Gender">
@@ -453,8 +460,15 @@
                                     <td data-label="ID"><code>#{{ u.id }}</code></td>
                                     <td class="name-cell" data-label="Name">
                                         <div class="user-meta-stack">
-                                            <strong>{{ u.username }}</strong>
-                                            <small style="display: block;">{{ u.email }}</small>
+                                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; margin-bottom: 0.2rem;">
+                                                {% if u.profile_picture %}
+                                                    <img src="{{ u.profile_picture.url }}" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover;">
+                                                {% else %}
+                                                    <i class="fa-solid fa-circle-user" style="font-size: 20px; color: rgba(255,255,255,0.25);"></i>
+                                                {% endif %}
+                                                <strong>{{ u.username }}</strong>
+                                            </div>
+                                            <small style="display: block; opacity: 0.65; font-size: 0.72rem;">{{ u.email }}</small>
                                         </div>
                                     </td>
                                     <td data-label="Date Joined">{{ u.date_joined|date:"M d, Y" }}</td>
@@ -492,7 +506,19 @@
                         <tbody>
                             {% for app in pending_applications %}
                             <tr>
-                                <td data-label="User"><div class="user-meta-stack"><strong>{{ app.user.username }}</strong><small style="display: block;">{{ app.user.email }}</small></div></td>
+                                <td data-label="User">
+                                    <div class="user-meta-stack">
+                                        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; margin-bottom: 0.2rem;">
+                                            {% if app.user.profile_picture %}
+                                                <img src="{{ app.user.profile_picture.url }}" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover;">
+                                            {% else %}
+                                                <i class="fa-solid fa-circle-user" style="font-size: 20px; color: rgba(255,255,255,0.25);"></i>
+                                            {% endif %}
+                                            <strong>{{ app.user.username }}</strong>
+                                        </div>
+                                        <small style="display: block; opacity: 0.65; font-size: 0.72rem;">{{ app.user.email }}</small>
+                                    </div>
+                                </td>
                                 <td data-label="Gender">{{ app.get_gender_display }}</td>
                                 <td data-label="Department"><span class="admin-tag">{{ app.get_department_display }}</span></td>
                                 <td data-label="Position">
