@@ -710,6 +710,7 @@ def handle_officer_application(request, app_id):
     if action == 'approve':
         term_days = int(request.POST.get('term_days', 365))
         _promote_to_officer(application.user, application.department, application.position, application.gender, term_days)
+        application.user.save()
         application.status = 'approved'
         application.save()
         user = application.user
