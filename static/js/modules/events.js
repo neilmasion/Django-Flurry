@@ -43,11 +43,17 @@ async function handleEnroll(btn) {
         const response = await fetch(`/enroll-event/${eventId}/`, {
             method: 'POST',
             headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
+                'X-CSRFToken': getCSRFToken(),
                 'X-Requested-With': 'XMLHttpRequest'
-            }
+            },
+            credentials: 'same-origin'
         });
-        
+
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            throw new Error(`Unexpected response type: ${contentType || 'unknown'}`);
+        }
+
         const data = await response.json();
         
         if (data.success) {
@@ -102,4 +108,15 @@ export function setupEventEnroll() {
             });
         }
     });
+}
+
+function getCSRFToken() {
+    // Prefer token rendered in DOM so this works even when CSRF cookie is HttpOnly.
+    const formToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    if (formToken) return formToken;
+
+    const metaToken = document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
+    if (metaToken) return metaToken;
+
+    return getCookie('csrftoken');
 }
