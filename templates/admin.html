@@ -104,7 +104,7 @@
                         <i class="fa-solid fa-chart-pie"></i>
                         <span>Dashboard</span>
                     </button>
-                    {% if user.role == 'admin' or user.is_superuser or user.position == 'captain' %}
+                    {% if user.role == 'admin' or user.is_superuser %}
                     <button class="admin-nav-item" data-section="users">
                         <i class="fa-solid fa-users"></i>
                         <span>Users</span>
@@ -179,7 +179,7 @@
                         </div>
                         <div class="dash-card-body stats-and-activity">
                             <div class="dash-stats-compact">
-                                {% if user.role == 'admin' or user.is_superuser or user.position == 'captain' %}
+                                {% if user.role == 'admin' or user.is_superuser %}
                                 <div class="dash-stat-mini">
                                     <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
                                     <div><div class="stat-num" id="statTotalUsers">{{ total_users }}</div><div class="stat-label">Users</div></div>
@@ -194,7 +194,7 @@
                                     <div><div class="stat-num" id="statTotalEvents">{{ total_events }}</div><div class="stat-label">Events</div></div>
                                 </div>
                             </div>
-                            {% if user.role == 'admin' or user.is_superuser or user.position == 'captain' %}
+                            {% if user.role == 'admin' or user.is_superuser %}
                             <div class="regs-divider"></div>
                             <div class="recent-regs-list-compact">
                                 <h5 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 0 0 0.65rem 0; letter-spacing: 0.05em;"><i class="fa-solid fa-clock-rotate-left"></i> Latest Joins</h5>
@@ -355,7 +355,7 @@
             </section>
 
 
-            {% if user.role == 'admin' or user.is_superuser or user.position == 'captain' %}
+            {% if user.role == 'admin' or user.is_superuser %}
             <section class="admin-section" id="section-users">
                 <div class="admin-section-header">
                     <h2>User Management</h2>
@@ -550,7 +550,7 @@
             </section>
             {% endif %}
 
-            {% if user.role == 'admin' or user.is_superuser or user.position == 'captain' %}
+            {% if user.role == 'admin' or user.is_superuser %}
             <section class="admin-section" id="section-applications">
                 <div class="admin-section-header">
                     <h2>Officer Applications</h2>

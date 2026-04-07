@@ -182,9 +182,8 @@ def _get_available_slots():
 
 @staff_member_required
 def update_role(request, user_id):
-    is_captain = request.user.role == 'officer' and request.user.position == 'captain'
-    if request.user.role != 'admin' and not request.user.is_superuser and not is_captain:
-        messages.error(request, 'Only Administrators and the Captain can change user roles.')
+    if request.user.role != 'admin' and not request.user.is_superuser:
+        messages.error(request, 'Only Administrators can change user roles.')
         return redirect('admin-dashboard')
     if request.method == 'POST':
         target_user = get_object_or_404(User, id=user_id)
@@ -697,8 +696,7 @@ def apply_for_officer(request):
 def handle_officer_application(request, app_id):
     can_approve = (
         request.user.role == 'admin' 
-        or request.user.is_superuser 
-        or (request.user.role == 'officer' and request.user.position == 'captain')
+        or request.user.is_superuser
     )
     if not can_approve:
         messages.error(request, 'You do not have permission to handle applications.')
@@ -736,9 +734,8 @@ def handle_officer_application(request, app_id):
 
 @staff_member_required
 def demote_officer(request, user_id):
-    is_captain = request.user.role == 'officer' and request.user.position == 'captain'
-    if request.user.role != 'admin' and not request.user.is_superuser and not is_captain:
-        messages.error(request, 'Only Administrators and the Captain can demote officers.')
+    if request.user.role != 'admin' and not request.user.is_superuser:
+        messages.error(request, 'Only Administrators can demote officers.')
         return redirect('admin-dashboard')
 
     if request.method != 'POST':
