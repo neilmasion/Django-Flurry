@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/root.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}?v=layout_fix">
 </head>
 
 <body id="adminApp" data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-gender="{{ user.gender|default:'' }}" data-default-avatar-male="{% static 'images/man.jpg' %}" data-default-avatar-female="{% static 'images/woman.jpg' %}" data-default-avatar-generic="{% static 'images/no-profile.png' %}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
@@ -314,8 +314,10 @@
                                 <tr>
                                     <td data-label="ID"><code>#{{ u.id }}</code></td>
                                     <td class="name-cell" data-label="Name">
-                                        <strong>{{ u.username }}</strong><br>
-                                        <small>{{ u.email }}</small>
+                                        <div class="user-meta-stack">
+                                            <strong>{{ u.username }}</strong>
+                                            <small style="display: block;">{{ u.email }}</small>
+                                        </div>
                                     </td>
                                     <td data-label="Gender">
                                         {{ u.get_gender_display|default:"None" }}
@@ -450,8 +452,10 @@
                                 <tr>
                                     <td data-label="ID"><code>#{{ u.id }}</code></td>
                                     <td class="name-cell" data-label="Name">
-                                        <strong>{{ u.username }}</strong><br>
-                                        <small>{{ u.email }}</small>
+                                        <div class="user-meta-stack">
+                                            <strong>{{ u.username }}</strong>
+                                            <small style="display: block;">{{ u.email }}</small>
+                                        </div>
                                     </td>
                                     <td data-label="Date Joined">{{ u.date_joined|date:"M d, Y" }}</td>
                                     <td data-label="Role">
@@ -488,7 +492,7 @@
                         <tbody>
                             {% for app in pending_applications %}
                             <tr>
-                                <td data-label="User"><strong>{{ app.user.username }}</strong><br><small>{{ app.user.email }}</small></td>
+                                <td data-label="User"><div class="user-meta-stack"><strong>{{ app.user.username }}</strong><small style="display: block;">{{ app.user.email }}</small></div></td>
                                 <td data-label="Gender">{{ app.get_gender_display }}</td>
                                 <td data-label="Department"><span class="admin-tag">{{ app.get_department_display }}</span></td>
                                 <td data-label="Position">

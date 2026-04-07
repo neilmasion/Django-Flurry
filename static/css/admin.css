@@ -1029,6 +1029,7 @@ html[data-theme="dark"] #eventModalOverlay input[type="time"]::-webkit-clear-but
     .admin-table td[data-label=""] {justify-content: flex-end;}
     .admin-table td[data-label=""]::before { display: none; }
     .admin-table td.name-cell { color: #fff; font-weight: 600; }
+    .user-meta-stack { text-align: right; }
 }
 
 @media (max-width: 480px) {
