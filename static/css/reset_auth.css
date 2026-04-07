@@ -69,7 +69,8 @@
 }
 
 .premium-btn i {
-    color: inherit;
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor;
 }
 
 .premium-btn:hover {

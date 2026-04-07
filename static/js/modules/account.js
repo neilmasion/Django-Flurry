@@ -37,6 +37,97 @@ export function setupAccount() {
         });
     }
 
+    const forgotTrigger = document.getElementById('forgotPasswordTrigger');
+    const forgotModal = document.getElementById('forgotPasswordModal');
+    const closeForgotModal = document.getElementById('closeForgotModal');
+    const forgotForm = document.getElementById('forgotPasswordForm');
+    const forgotEmail = document.getElementById('forgotEmail');
+    const forgotError = document.getElementById('forgotError');
+    const forgotSuccess = document.getElementById('forgotSuccess');
+    const forgotSubmitBtn = document.getElementById('forgotSubmitBtn');
+
+    const openForgotModal = () => {
+        if (!forgotModal) return;
+        forgotModal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+        if (forgotError) forgotError.textContent = '';
+        if (forgotSuccess) forgotSuccess.style.display = 'none';
+        setTimeout(() => forgotEmail?.focus(), 0);
+    };
+
+    const closeForgotPasswordModal = () => {
+        if (!forgotModal) return;
+        forgotModal.classList.remove('is-open');
+        document.body.style.overflow = '';
+    };
+
+    if (forgotTrigger && forgotModal) {
+        forgotTrigger.addEventListener('click', e => {
+            e.preventDefault();
+            openForgotModal();
+        });
+    }
+
+    if (closeForgotModal && forgotModal) {
+        closeForgotModal.addEventListener('click', closeForgotPasswordModal);
+        forgotModal.addEventListener('click', e => {
+            if (e.target === forgotModal) closeForgotPasswordModal();
+        });
+    }
+
+    if (forgotForm && forgotSubmitBtn && forgotEmail) {
+        forgotForm.addEventListener('submit', async e => {
+            e.preventDefault();
+
+            const email = forgotEmail.value.trim();
+            if (!email) {
+                if (forgotError) {
+                    forgotError.textContent = 'Please enter your email address.';
+                }
+                return;
+            }
+
+            if (forgotError) forgotError.textContent = '';
+            if (forgotSuccess) forgotSuccess.style.display = 'none';
+
+            const originalText = forgotSubmitBtn.innerHTML;
+            forgotSubmitBtn.disabled = true;
+            forgotSubmitBtn.innerHTML = 'Sending...';
+
+            try {
+                const response = await fetch('/password-reset/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: new URLSearchParams({
+                        email,
+                        csrfmiddlewaretoken: document.querySelector('#forgotPasswordForm [name=csrfmiddlewaretoken]')?.value || ''
+                    }),
+                    credentials: 'same-origin'
+                });
+
+                const contentType = response.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
+                    const data = await response.json();
+                    if (data.success === false) {
+                        if (forgotError) forgotError.textContent = data.message || 'Unable to send reset link.';
+                    } else {
+                        if (forgotSuccess) forgotSuccess.style.display = 'block';
+                    }
+                } else {
+                    if (forgotSuccess) forgotSuccess.style.display = 'block';
+                }
+            } catch (err) {
+                if (forgotError) forgotError.textContent = 'Something went wrong. Please try again.';
+            } finally {
+                forgotSubmitBtn.disabled = false;
+                forgotSubmitBtn.innerHTML = originalText;
+            }
+        });
+    }
+
     // School Autocomplete logic
     const schoolInput = document.getElementById('id_school');
     const schoolAutocomplete = document.getElementById('schoolAutocomplete');
