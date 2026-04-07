@@ -660,24 +660,6 @@ def apply_for_officer(request):
     if request.method == 'POST':
         reason = request.POST.get('reason')
         department = request.POST.get('department')
-        position = request.POST.get('position') if department != 'captain' else None
-        
-        # Validation
-        slots = _get_available_slots()
-        is_full = False
-        if department == 'captain':
-            if slots['captain']['total'] <= 0:
-                is_full = True
-        elif department in slots:
-            if position not in ['chief', 'member']:
-                messages.error(request, 'Please select a valid position.')
-                return redirect('index')
-            if slots[department][position] <= 0:
-                is_full = True
-        else:
-            messages.error(request, 'Invalid department selected.')
-            return redirect('index')
-
         position = request.POST.get('position')
         reason = request.POST.get('reason')
         gender = request.POST.get('gender')
@@ -685,10 +667,18 @@ def apply_for_officer(request):
         if not all([department, position, reason, gender]):
             messages.error(request, 'Please fill in all required fields.')
             return redirect('index')
+
+        slots = _get_available_slots()
         
-        # Final availability check
-        available = _get_available_slots()
-        if department not in available or position not in available[department] or available[department][position] <= 0:
+        if department not in slots:
+            messages.error(request, 'Invalid department selected.')
+            return redirect('index')
+            
+        if position not in slots[department]:
+            messages.error(request, 'Invalid position selected for this department.')
+            return redirect('index')
+            
+        if slots[department][position] <= 0:
             messages.error(request, 'Sorry, this position was just filled.')
             return redirect('index')
         
