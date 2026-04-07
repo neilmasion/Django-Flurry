@@ -1,4 +1,5 @@
 import uuid
+import re
 from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -132,6 +133,43 @@ class Event(models.Model):
         if self.date:
             return self.date < timezone.now().date()
         return False
+
+    @property
+    def spots_left_display(self):
+        """Return dynamic spots-left text based on current enrollments."""
+        raw = (self.spots_left or '').strip()
+        if not raw:
+            return ''
+
+        remaining = self.spots_remaining
+        if remaining is None:
+            return raw
+        return f"{remaining} spots left"
+
+    @property
+    def total_capacity(self):
+        raw = (self.spots_left or '').strip()
+        if not raw:
+            return None
+
+        match = re.search(r'\d+', raw)
+        if not match:
+            return None
+        return int(match.group())
+
+    @property
+    def spots_remaining(self):
+        capacity = self.total_capacity
+        if capacity is None:
+            return None
+        return max(0, capacity - self.enrollments.count())
+
+    @property
+    def is_full(self):
+        remaining = self.spots_remaining
+        if remaining is None:
+            return False
+        return remaining <= 0
 
     def __str__(self):
         return self.title

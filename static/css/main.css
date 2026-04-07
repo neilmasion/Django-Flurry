@@ -161,6 +161,23 @@ a:hover {
     cursor: not-allowed;
 }
 
+.btn-full,
+.btn-full:disabled {
+    opacity: 1;
+    cursor: not-allowed;
+    border-color: #b91c1c !important;
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%) !important;
+    color: #fee2e2 !important;
+    box-shadow: inset 0 0 0 1px rgba(254, 226, 226, 0.14);
+}
+
+html:not([data-theme="dark"]) .btn-full,
+html:not([data-theme="dark"]) .btn-full:disabled {
+    border-color: #dc2626 !important;
+    background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%) !important;
+    color: #7f1d1d !important;
+}
+
 .navbar {
     position: fixed;
     top: 0;

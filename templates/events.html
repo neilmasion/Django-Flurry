@@ -192,11 +192,13 @@
                 </div>
                 <div class="event-desc-hidden" style="display: none;">{{ event.description|linebreaksbr }}</div>
                 <div class="event-footer">
-                    <span class="event-spots">{{ event.spots_left }}</span>
+                    <span class="event-spots">{{ event.spots_left_display|default:event.spots_left }}</span>
                     <div style="display: flex; gap: 0.5rem;">
                         <button class="btn btn-outline view-details-btn" style="padding: var(--spacing-sm); font-size: 0.85rem;" data-title="{{ event.title }}" data-date="{{ event.date|date:'F j, Y' }}" data-time="{{ event.time_range }}" data-location="{{ event.location }}">View Details</button>
                         {% if event.id in user_enrollments %}
                         <button class="btn btn-primary enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}" disabled style="opacity: 0.65; padding: var(--spacing-sm); font-size: 0.85rem;">Enrolled ✓</button>
+                        {% elif event.is_full %}
+                        <button class="btn btn-primary btn-full" disabled style="padding: var(--spacing-sm); font-size: 0.85rem;">Full</button>
                         {% else %}
                         <button class="btn btn-primary enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}"
                             data-date="{{ event.month }} {{ event.day }}" data-time="{{ event.time_range }}" style="padding: var(--spacing-sm); font-size: 0.85rem;">Register Now</button>
@@ -220,11 +222,13 @@
                 </div>
                 <div class="event-desc-hidden" style="display: none;">{{ event.description|linebreaksbr }}</div>
                 <div class="event-footer">
-                    <span class="event-spots">{{ event.spots_left }}</span>
+                    <span class="event-spots">{{ event.spots_left_display|default:event.spots_left }}</span>
                     <div style="display: flex; gap: 0.5rem;">
                         <button class="btn btn-outline view-details-btn" style="padding: var(--spacing-sm); font-size: 0.85rem;" data-title="{{ event.title }}" data-date="{{ event.date|date:'F j, Y' }}" data-time="{{ event.time_range }}" data-location="{{ event.location }}">View Details</button>
                         {% if event.id in user_enrollments %}
                         <button class="btn btn-outline enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}" disabled style="opacity: 0.65; padding: var(--spacing-sm); font-size: 0.85rem;">Enrolled ✓</button>
+                        {% elif event.is_full %}
+                        <button class="btn btn-outline btn-full" disabled style="padding: var(--spacing-sm); font-size: 0.85rem;">Full</button>
                         {% else %}
                         <button class="btn btn-outline enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}"
                             data-date="{{ event.month }} {{ event.day }}"

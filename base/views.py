@@ -800,6 +800,9 @@ def enroll_event(request, event_id):
     enrolled = Enrollment.objects.filter(user=request.user, event=event).exists()
     if enrolled:
         return JsonResponse({'success': False, 'message': "Already enrolled!"})
+
+    if event.is_full:
+        return JsonResponse({'success': False, 'message': 'This event is already full.'})
     
     Enrollment.objects.create(user=request.user, event=event)
     return JsonResponse({'success': True, 'message': f"Registered for {event.title}!"})
