@@ -1418,6 +1418,29 @@ html:not([data-theme="dark"]) .edit-group input[type="checkbox"] {
     padding: 0.05rem 0.3rem;
 }
 
+@media (max-width: 768px) {
+    html:not([data-theme="dark"]) .admin-table tbody tr {
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(8, 24, 40, 0.1);
+        box-shadow: 0 4px 15px rgba(8, 24, 40, 0.04);
+    }
+    
+    html:not([data-theme="dark"]) .admin-table td {
+        border-bottom-color: rgba(8, 24, 40, 0.06);
+    }
+
+    html:not([data-theme="dark"]) .admin-table td::before {
+        color: rgba(74, 97, 119, 0.85);
+        font-weight: 700;
+    }
+
+    html:not([data-theme="dark"]) .admin-table td[data-label="ID"] {
+        background: rgba(255, 255, 255, 0.85);
+        border-bottom: 1px dashed rgba(8, 24, 40, 0.12);
+        color: #0b1f36;
+    }
+}
+
 .admin-btn-icon--success:hover {
     background: rgba(134, 239, 172, 0.15);
     border-color: rgba(134, 239, 172, 0.4);

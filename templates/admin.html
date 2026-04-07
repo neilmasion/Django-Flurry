@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/root.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <link rel="stylesheet" href="{% static 'css/admin.css' %}?v=layout_fix2">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}?v=layout_fix3">
 </head>
 
 <body id="adminApp" data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-gender="{{ user.gender|default:'' }}" data-default-avatar-male="{% static 'images/man.jpg' %}" data-default-avatar-female="{% static 'images/woman.jpg' %}" data-default-avatar-generic="{% static 'images/no-profile.png' %}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
