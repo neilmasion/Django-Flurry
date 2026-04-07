@@ -13,10 +13,10 @@
 /* Glassmorphic Auth & Reset Styles */
 .auth-container {
     padding: 2.25rem;
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.68) 0%, rgba(240, 249, 255, 0.78) 100%);
+    background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(148, 163, 184, 0.35);
+    border: 1px solid var(--border-color);
     border-radius: 1rem;
     width: 100%;
     max-width: 420px;
@@ -33,30 +33,27 @@
 
 .auth-header i {
     font-size: 3rem;
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--primary-color);
     margin-bottom: 1.25rem;
-    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+    filter: drop-shadow(0 0 10px rgba(15, 23, 42, 0.14));
 }
 
 .auth-header h1 {
     font-size: 1.6rem;
-    color: #0f172a;
+    color: var(--text-primary);
     margin-bottom: 0.75rem;
     letter-spacing: -0.02em;
 }
 
 .auth-header p {
-    color: #475569;
+    color: var(--text-tertiary);
     line-height: 1.6;
     font-size: 0.9rem;
 }
 
 .premium-btn {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    color: #fff;
+    background: var(--primary-color);
+    color: var(--secondary-color);
     font-weight: 700;
     padding: 1rem;
     border-radius: 0.5rem;
@@ -68,14 +65,18 @@
     justify-content: center;
     gap: 0.5rem;
     font-size: 1rem;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-sm);
+}
+
+.premium-btn i {
+    color: inherit;
 }
 
 .premium-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.32);
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-    color: #fff;
+    background: var(--bg-hover);
+    box-shadow: var(--shadow-sm);
+    color: var(--secondary-color);
 }
 
 .premium-btn:active {
@@ -89,7 +90,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #334155;
+    color: var(--text-tertiary);
     font-size: 0.875rem;
     text-decoration: none;
     transition: color 0.3s ease;
@@ -97,7 +98,7 @@
 }
 
 .back-home:hover {
-    color: #0f172a;
+    color: var(--text-primary);
 }
 
 .flurry-brand {
@@ -126,44 +127,44 @@
 .auth-container .demo-form input[type="email"],
 .auth-container .demo-form input[type="password"] {
     border-radius: 0.6rem;
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    color: #0f172a;
+    background: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
 }
 
 .auth-container .demo-form input::placeholder {
-    color: #64748b;
+    color: var(--text-tertiary);
 }
 
 .auth-container .demo-form input:focus {
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
-    border-color: rgba(37, 99, 235, 0.65);
-    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+    background: var(--bg-tertiary);
 }
 
 html[data-theme="dark"] .auth-container {
-    background: rgba(15, 23, 42, 0.62);
-    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
 }
 
 html[data-theme="dark"] .auth-header h1 {
-    color: #f8fafc;
+    color: var(--text-primary);
 }
 
 html[data-theme="dark"] .auth-header p {
-    color: rgba(226, 232, 240, 0.78);
+    color: var(--text-tertiary);
 }
 
 html[data-theme="dark"] .auth-container .demo-form input[type="text"],
 html[data-theme="dark"] .auth-container .demo-form input[type="email"],
 html[data-theme="dark"] .auth-container .demo-form input[type="password"] {
-    background: rgba(15, 23, 42, 0.68);
-    border-color: rgba(148, 163, 184, 0.25);
-    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: var(--text-primary);
 }
 
 html[data-theme="dark"] .auth-container .demo-form input::placeholder {
-    color: rgba(148, 163, 184, 0.9);
+    color: var(--text-tertiary);
 }
 
 html[data-theme="dark"] .back-home {
