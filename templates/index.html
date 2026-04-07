@@ -18,7 +18,7 @@
     </style>
 </head>
 
-<body data-username="{{ user.username }}" data-email="{{ user.email|default:'' }}" data-gender="{{ user.gender|default:'' }}" data-default-avatar-male="{% static 'images/man.jpg' %}" data-default-avatar-female="{% static 'images/woman.jpg' %}" data-default-avatar-generic="{% static 'images/no-profile.png' %}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
+<body data-username="{{ user.username }}" data-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}" data-email="{{ user.email|default:'' }}" data-gender="{{ user.gender|default:'' }}" data-default-avatar-male="{% static 'images/man.jpg' %}" data-default-avatar-female="{% static 'images/woman.jpg' %}" data-default-avatar-generic="{% static 'images/no-profile.png' %}" data-profile-pic="{% if user.profile_picture %}{{ user.profile_picture.url }}{% endif %}">
     <!-- Skeleton Loading Screen -->
     <div id="skeleton-loader">
         <div class="skeleton-header skeleton-shimmer"></div>
