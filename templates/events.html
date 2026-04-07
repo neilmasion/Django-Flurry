@@ -186,7 +186,10 @@
                     <span class="event-month">{{ event.date|date:"M" }}</span>
                 </div>
                 <h3>{{ event.title }}</h3>
-                <p>{{ event.description }}</p>
+                <div class="event-desc-wrapper">
+                    <p class="event-description text-clamp">{{ event.description }}</p>
+                    <button class="read-more-btn" style="display:none;">Read more</button>
+                </div>
                 <div class="event-meta">
                     <span><i class="fa-regular fa-clock"></i> {{ event.time_range }}</span>
                     <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>
@@ -212,7 +215,10 @@
                     <span class="event-month">{{ event.date|date:"M" }}</span>
                 </div>
                 <h3>{{ event.title }}</h3>
-                <p>{{ event.description }}</p>
+                <div class="event-desc-wrapper">
+                    <p class="event-description text-clamp">{{ event.description }}</p>
+                    <button class="read-more-btn" style="display:none;">Read more</button>
+                </div>
                 <div class="event-meta">
                     <span><i class="fa-regular fa-clock"></i> {{ event.time_range }}</span>
                     <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>
@@ -256,7 +262,10 @@
                     <span class="ws-tag">{{ event.get_event_type_display }}</span>
                 </div>
                 <h4>{{ event.title }}</h4>
-                <p>{{ event.description }}</p>
+                <div class="event-desc-wrapper">
+                    <p class="event-description text-clamp">{{ event.description }}</p>
+                    <button class="read-more-btn" style="display:none;">Read more</button>
+                </div>
                 <div class="workshop-item-footer">
                     <span><i class="fa-regular fa-calendar"></i> {{ event.date|date:"M d, Y" }}</span>
                     <span><i class="fa-solid fa-users"></i> {{ event.enrollments.count }} attended</span>
@@ -272,7 +281,10 @@
                     <span class="ws-tag">{{ workshop.category }}</span>
                 </div>
                 <h4>{{ workshop.title }}</h4>
-                <p>{{ workshop.description }}</p>
+                <div class="event-desc-wrapper">
+                    <p class="event-description text-clamp">{{ workshop.description }}</p>
+                    <button class="read-more-btn" style="display:none;">Read more</button>
+                </div>
                 <div class="workshop-item-footer">
                     <span><i class="fa-regular fa-clock"></i> {{ workshop.duration }}</span>
                     <span><i class="fa-solid fa-users"></i> {{ workshop.attendance_count }} attended</span>

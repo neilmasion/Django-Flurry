@@ -424,7 +424,10 @@
                     <span class="event-month">{{ event.date|date:"M" }}</span>
                 </div>
                 <h3>{{ event.title }}</h3>
-                <p>{{ event.description }}</p>
+                <div class="event-desc-wrapper">
+                    <p class="event-description text-clamp">{{ event.description }}</p>
+                    <button class="read-more-btn" style="display:none;">Read more</button>
+                </div>
                 <div class="event-meta">
                     <span><i class="fa-regular fa-clock"></i> {{ event.time_range }}</span>
                     <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>
@@ -450,7 +453,10 @@
                     <span class="event-month">{{ event.date|date:"M" }}</span>
                 </div>
                 <h3>{{ event.title }}</h3>
-                <p>{{ event.description }}</p>
+                <div class="event-desc-wrapper">
+                    <p class="event-description text-clamp">{{ event.description }}</p>
+                    <button class="read-more-btn" style="display:none;">Read more</button>
+                </div>
                 <div class="event-meta">
                     <span><i class="fa-regular fa-clock"></i> {{ event.time_range }}</span>
                     <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>

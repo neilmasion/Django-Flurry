@@ -1727,3 +1727,33 @@ html:not([data-theme="dark"]) .showcase-card:hover {
     backdrop-filter: none !important;
     opacity: 1 !important;
 }
+
+/* Base style for clamped text */
+.text-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.text-clamp.expanded {
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+}
+
+.read-more-btn {
+    border: none;
+    background: none;
+    color: var(--primary-color);
+    padding: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.25rem;
+}
+
+.read-more-btn:hover {
+    text-decoration: underline;
+}
