@@ -696,7 +696,8 @@ def apply_for_officer(request):
 def handle_officer_application(request, app_id):
     can_approve = (
         request.user.role == 'admin' 
-        or request.user.is_superuser
+        or request.user.is_superuser 
+        or (request.user.role == 'officer' and request.user.position == 'captain')
     )
     if not can_approve:
         messages.error(request, 'You do not have permission to handle applications.')

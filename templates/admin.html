@@ -109,6 +109,8 @@
                         <i class="fa-solid fa-users"></i>
                         <span>Users</span>
                     </button>
+                    {% endif %}
+                    {% if user.role == 'admin' or user.is_superuser or user.position == 'captain' %}
                     <button class="admin-nav-item" data-section="applications">
                         <i class="fa-solid fa-file-signature"></i>
                         <span>Applications</span>
@@ -550,7 +552,7 @@
             </section>
             {% endif %}
 
-            {% if user.role == 'admin' or user.is_superuser %}
+            {% if user.role == 'admin' or user.is_superuser or user.position == 'captain' %}
             <section class="admin-section" id="section-applications">
                 <div class="admin-section-header">
                     <h2>Officer Applications</h2>
