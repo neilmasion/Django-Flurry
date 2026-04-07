@@ -219,7 +219,7 @@
                             <input type="checkbox" id="rememberMe">
                             <span>Remember me</span>
                         </label>
-                        <a href="{% url 'password_reset' %}" class="forgot-link">Forgot password?</a>
+                        <a href="javascript:void(0)" class="forgot-link" id="forgotPasswordTrigger">Forgot password?</a>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block">Log In</button>
@@ -229,7 +229,32 @@
                     </p>
                 </form>
             </div>
+        </div>
+    </div>
 
+    <!-- Forgot Password Modal -->
+    <div class="auth-modal-overlay" id="forgotPasswordModal">
+        <div class="auth-modal">
+            <button class="modal-close" id="closeForgotModal">&times;</button>
+            <div class="modal-header">
+                <i class="fa-solid fa-key"></i>
+                <h2>Reset Your Password</h2>
+                <p>Don't worry! Enter your email and we'll send you instructions to get back into your account.</p>
+            </div>
+            <form id="forgotPasswordForm" class="demo-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="forgotEmail">Email Address</label>
+                    <input type="email" id="forgotEmail" name="email" placeholder="neilmasion@example.com" required>
+                    <span class="error-msg" id="forgotError"></span>
+                </div>
+                <div class="success-msg" id="forgotSuccess" style="display:none; color: #2ecc71; background: rgba(46, 204, 113, 0.1); padding: 0.8rem; border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem; border: 1px solid rgba(46, 204, 113, 0.2);">
+                    <i class="fa-solid fa-circle-check"></i> Check your inbox! We've sent reset instructions.
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="forgotSubmitBtn">
+                    Send Reset Link <i class="fa-solid fa-paper-plane" style="margin-left: 0.5rem;"></i>
+                </button>
+            </form>
         </div>
     </div>
 
