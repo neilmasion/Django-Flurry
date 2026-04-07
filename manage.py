@@ -1,11 +1,21 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+import mimetypes
 from dotenv import load_dotenv
+
+mimetypes.add_type("application/javascript", ".js", True)
 
 
 def main():
     """Run administrative tasks."""
+    # Aggressive MIME override for Windows localhost
+    mimetypes.init()
+    mimetypes.types_map['.js'] = 'application/javascript'
+    mimetypes.types_map['.mjs'] = 'application/javascript'
+    mimetypes.add_type("application/javascript", ".js", True)
+    mimetypes.add_type("application/javascript", ".mjs", True)
+
     load_dotenv()
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'flurry_project.settings')
     try:

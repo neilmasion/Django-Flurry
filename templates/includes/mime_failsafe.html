@@ -1,0 +1,38 @@
+<script>
+    /**
+     * Failsafe to resolve "Blue Screen" and hidden content issues on Windows localhost
+     * triggered by MIME type errors blocking main.js modules.
+     */
+    (function() {
+        const triggerFailsafe = () => {
+            const loader = document.getElementById('skeleton-loader');
+            if (loader && !loader.classList.contains('hidden')) {
+                console.warn("MIME Failsafe: Forcing UI reveal...");
+                
+                // 1. Force hide the loader
+                loader.classList.add('hidden');
+                loader.style.display = 'none';
+                
+                // 2. Inject override styles to reveal animated content that depends on JS
+                const style = document.createElement('style');
+                style.id = 'mime-failsafe-overrides';
+                style.innerHTML = `
+                    #skeleton-loader { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+                    [data-animate], .animate-on-scroll, .reveal-on-scroll { 
+                        opacity: 1 !important; 
+                        visibility: visible !important; 
+                        transform: none !important; 
+                        transition: none !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        };
+
+        // Run after a short delay to allow normal JS a chance to load
+        window.addEventListener('load', () => setTimeout(triggerFailsafe, 1200));
+        
+        // Backup: Run if DOM content is loaded but window load is slow
+        document.addEventListener('DOMContentLoaded', () => setTimeout(triggerFailsafe, 2500));
+    })();
+</script>

@@ -727,7 +727,7 @@
     </script>
     {% endif %}
 
-    <script type="module" src="{% static 'js/main.js' %}?v=1.5" defer></script>
+    <script type="module" src="{% static 'js/main.js' %}?v=nuclear" defer></script>
     <script>
     function markNotifRead(el, notifId, link) {
         // Immediate UI update for responsiveness
@@ -764,6 +764,7 @@
         }
     }
     </script>
+    {% include 'includes/mime_failsafe.html' %}
     {% include 'includes/enroll_toast.html' %}
     {% include 'includes/verification_modal.html' %}
 </body>

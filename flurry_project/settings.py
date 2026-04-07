@@ -3,6 +3,14 @@ import importlib.util
 import os
 
 import dj_database_url
+import mimetypes
+
+# Aggressive MIME override for Windows localhost
+mimetypes.init()
+mimetypes.types_map['.js'] = 'application/javascript'
+mimetypes.types_map['.mjs'] = 'application/javascript'
+mimetypes.add_type("application/javascript", ".js", True)
+mimetypes.add_type("application/javascript", ".mjs", True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Accept either key name so cloud env naming differences do not crash startup.
@@ -36,6 +44,7 @@ if render_external_hostname:
         CSRF_TRUSTED_ORIGINS.append(render_origin)
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +59,7 @@ if ANYMAIL_AVAILABLE:
     INSTALLED_APPS.insert(6, 'anymail')
 
 MIDDLEWARE = [
+    'base.middleware.MimeTypeFixMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -238,3 +248,10 @@ else:
 
 # Keep default from email
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Flurry <no-reply@example.com>')
+
+# Force MIME types for Windows compatibility
+WHITENOISE_MIMETYPES = {
+    '.js': 'application/javascript',
+    '.css': 'text/css',
+    '.mjs': 'application/javascript',
+}

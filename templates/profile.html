@@ -721,7 +721,7 @@
         </div>
     </div>
 
-    <script type="module" src="{% static 'js/main.js' %}?v=1.5"></script>
+    <script type="module" src="{% static 'js/main.js' %}?v=nuclear"></script>
     <script>
     const CSRF_TOKEN = '{{ csrf_token }}';
     function markNotifRead(el, notifId, link) {
@@ -759,6 +759,7 @@
         }
     }
     </script>
+    {% include 'includes/mime_failsafe.html' %}
 </body>
 
 </html>

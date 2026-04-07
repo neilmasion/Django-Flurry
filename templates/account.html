@@ -233,7 +233,7 @@
         </div>
     </div>
 
-    <script type="module" src="{% static 'js/main.js' %}" defer></script>
+    <script type="module" src="{% static 'js/main.js' %}?v=nuclear" defer></script>
     <script>
     function checkPasswordStrength(val) {
         var label = document.getElementById('password-strength-label');
@@ -256,6 +256,7 @@
         label.style.color = lvl.color;
     }
     </script>
+    {% include 'includes/mime_failsafe.html' %}
 </body>
 
 </html>

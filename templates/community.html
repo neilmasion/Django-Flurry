@@ -459,7 +459,7 @@
         </div>
     </footer>
 
-    <script type="module" src="{% static 'js/main.js' %}?v=1.5" defer></script>
+    <script type="module" src="{% static 'js/main.js' %}?v=nuclear" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const openModalBtn = document.getElementById('openUploadModal');
@@ -765,6 +765,7 @@
         }
     }
     </script>
+    {% include 'includes/mime_failsafe.html' %}
 </body>
 
 </html>

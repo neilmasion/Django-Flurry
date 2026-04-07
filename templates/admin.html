@@ -930,7 +930,7 @@
     {{ chart_event_labels|json_script:"chart-event-labels" }}
     {{ chart_event_enroll_counts|json_script:"chart-event-enroll-counts" }}
 
-    <script src="{% static 'js/modules/cloudparticles.js' %}" type="module"></script>
+    <script src="{% static 'js/modules/cloudparticles.js' %}?v=nuclear" type="module"></script>
     <script type="module">
         import { setupCloudParticles } from "{% static 'js/modules/cloudparticles.js' %}";
         setupCloudParticles();
@@ -1104,7 +1104,7 @@
         });
     });
     </script>
-    <script src="{% static 'js/admin.js' %}" defer></script>
+    <script src="{% static 'js/admin.js' %}?v=nuclear" defer></script>
     <script>
     function markNotifRead(el, notifId, link) {
         // Immediate UI update for responsiveness
@@ -1139,6 +1139,7 @@
     }
     </script>
 
+    {% include 'includes/mime_failsafe.html' %}
 </body>
 
 </html>
