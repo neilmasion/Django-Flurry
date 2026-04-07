@@ -8,7 +8,7 @@ import { setupPartnersCarousel } from './modules/carousel.js';
 import { setupCloudParticles } from './modules/cloudparticles.js';
 import { setupScrollAnimations, setupActiveNavOnScroll, setupScrollToTop } from './modules/animations.js';
 import { setupTestimonialSlider } from './modules/testimonials.js';
-import { setupOfficerDeck } from './modules/officers.js';
+import { setupOfficerDeck } from './modules/officers.js?v=single_flip_fix';
 import { setupAccount } from './modules/account.js';
 import { setupContactForm } from './modules/contact.js';
 import { setupEventEnroll } from './modules/events.js';

@@ -7,6 +7,16 @@ export function setupOfficerDeck() {
     let topIndex   = 0;
     let animating  = false;
 
+    // Hide the hint if there's only 1 card
+    if (total <= 1) {
+        const hint = document.querySelector('.deck-hint');
+        if (hint) hint.style.display = 'none';
+        
+        // Hide the counter entirely if there's only 1
+        const counter = document.querySelector('.deck-counter');
+        if (counter) counter.style.display = 'none';
+    }
+
     function getOfficerData(idx) {
         const card = cards[idx];
         if (!card) return { name: '', role: '', course: '' };
@@ -36,6 +46,7 @@ export function setupOfficerDeck() {
 
     deck.addEventListener('click', () => {
         if (window.innerWidth > 768) return;
+        if (total <= 1) return; // Prevent flip if only 1 card
         if (animating) return;
         animating = true;
 
