@@ -688,6 +688,7 @@ html[data-theme="dark"] .admin-toolbar .btn-primary:hover i {
 .admin-table tbody tr:last-child td { border-bottom: none; }
 .admin-table tbody tr:hover td { background: rgba(255,255,255,0.04); }
 .admin-table td.name-cell { font-weight: 600; color: #fff; }
+.user-meta-name { display: flex; align-items: center; justify-content: flex-start; gap: 0.5rem; margin-bottom: 0.2rem; }
 .admin-tag {
     display: inline-block;
     font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
@@ -1045,6 +1046,7 @@ html[data-theme="dark"] #eventModalOverlay input[type="time"]::-webkit-clear-but
     .admin-table td[data-label=""]::before { display: none; }
     .admin-table td.name-cell { color: #fff; font-weight: 600; }
     .user-meta-stack { text-align: right; }
+    .user-meta-name { justify-content: flex-end; }
 }
 
 @media (max-width: 480px) {
