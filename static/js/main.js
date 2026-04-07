@@ -15,7 +15,6 @@ import { setupEventEnroll } from './modules/events.js';
 import { setupProfile } from './modules/profile.js';
 import { syncLocalEnrollments } from './modules/sync.js';
 import { initSearch } from './modules/search.js?v=1.5';
-import { setupReadMore } from './modules/readmore.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initSearch();
@@ -38,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventEnroll();
     setupProfile();
     syncLocalEnrollments();
-    setupReadMore();
 
     if (document.getElementById('workshopsList')) displayWorkshops();
 

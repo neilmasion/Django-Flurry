@@ -186,23 +186,22 @@
                     <span class="event-month">{{ event.date|date:"M" }}</span>
                 </div>
                 <h3>{{ event.title }}</h3>
-                <div class="event-desc-wrapper">
-                    <p class="event-description text-clamp">{{ event.description }}</p>
-                    <button class="read-more-btn" style="display:none;">Read more</button>
-                </div>
+                <!-- Description hidden -->
                 <div class="event-meta">
                     <span><i class="fa-regular fa-clock"></i> {{ event.time_range }}</span>
                     <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>
                 </div>
                 <div class="event-footer">
                     <span class="event-spots">{{ event.spots_left }}</span>
-                    {% if event.id in user_enrollments %}
-                    <button class="btn btn-primary enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}" disabled style="opacity: 0.65;">Enrolled ✓</button>
-                    {% else %}
-                    <button class="btn btn-primary enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}"
-                        data-date="{{ event.month }} {{ event.day }}" data-time="{{ event.time_range }}">Register
-                        Now</button>
-                    {% endif %}
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline" style="padding: var(--spacing-sm); font-size: 0.85rem;" onclick="alert('View details coming soon!')">View Details</button>
+                        {% if event.id in user_enrollments %}
+                        <button class="btn btn-primary enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}" disabled style="opacity: 0.65; padding: var(--spacing-sm); font-size: 0.85rem;">Enrolled ✓</button>
+                        {% else %}
+                        <button class="btn btn-primary enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}"
+                            data-date="{{ event.month }} {{ event.day }}" data-time="{{ event.time_range }}" style="padding: var(--spacing-sm); font-size: 0.85rem;">Register Now</button>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -215,23 +214,23 @@
                     <span class="event-month">{{ event.date|date:"M" }}</span>
                 </div>
                 <h3>{{ event.title }}</h3>
-                <div class="event-desc-wrapper">
-                    <p class="event-description text-clamp">{{ event.description }}</p>
-                    <button class="read-more-btn" style="display:none;">Read more</button>
-                </div>
+                <!-- Description hidden -->
                 <div class="event-meta">
                     <span><i class="fa-regular fa-clock"></i> {{ event.time_range }}</span>
                     <span><i class="fa-solid fa-location-dot"></i> {{ event.location }}</span>
                 </div>
                 <div class="event-footer">
                     <span class="event-spots">{{ event.spots_left }}</span>
-                    {% if event.id in user_enrollments %}
-                    <button class="btn btn-outline enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}" disabled style="opacity: 0.65;">Enrolled ✓</button>
-                    {% else %}
-                    <button class="btn btn-outline enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}"
-                        data-date="{{ event.month }} {{ event.day }}"
-                        data-time="{{ event.time_range }}">Register</button>
-                    {% endif %}
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline" style="padding: var(--spacing-sm); font-size: 0.85rem;" onclick="alert('View details coming soon!')">View Details</button>
+                        {% if event.id in user_enrollments %}
+                        <button class="btn btn-outline enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}" disabled style="opacity: 0.65; padding: var(--spacing-sm); font-size: 0.85rem;">Enrolled ✓</button>
+                        {% else %}
+                        <button class="btn btn-outline enroll-btn" data-id="{{ event.id }}" data-title="{{ event.title }}"
+                            data-date="{{ event.month }} {{ event.day }}"
+                            data-time="{{ event.time_range }}" style="padding: var(--spacing-sm); font-size: 0.85rem;">Register</button>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -262,10 +261,7 @@
                     <span class="ws-tag">{{ event.get_event_type_display }}</span>
                 </div>
                 <h4>{{ event.title }}</h4>
-                <div class="event-desc-wrapper">
-                    <p class="event-description text-clamp">{{ event.description }}</p>
-                    <button class="read-more-btn" style="display:none;">Read more</button>
-                </div>
+                <!-- Description hidden -->
                 <div class="workshop-item-footer">
                     <span><i class="fa-regular fa-calendar"></i> {{ event.date|date:"M d, Y" }}</span>
                     <span><i class="fa-solid fa-users"></i> {{ event.enrollments.count }} attended</span>
@@ -281,10 +277,7 @@
                     <span class="ws-tag">{{ workshop.category }}</span>
                 </div>
                 <h4>{{ workshop.title }}</h4>
-                <div class="event-desc-wrapper">
-                    <p class="event-description text-clamp">{{ workshop.description }}</p>
-                    <button class="read-more-btn" style="display:none;">Read more</button>
-                </div>
+                <!-- Description hidden -->
                 <div class="workshop-item-footer">
                     <span><i class="fa-regular fa-clock"></i> {{ workshop.duration }}</span>
                     <span><i class="fa-solid fa-users"></i> {{ workshop.attendance_count }} attended</span>
