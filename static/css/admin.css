@@ -987,7 +987,7 @@ html[data-theme="dark"] #eventModalOverlay input[type="time"]::-webkit-clear-but
     .admin-modal-overlay { padding: 0.75rem; }
     .admin-login-box { padding: 2rem 1.5rem 1.5rem; }
     .admin-toast { bottom: 1rem; right: 1rem; left: 1rem; max-width: none; }
-    .admin-table-wrap {background: transparent; border: none; border-radius: 0; overflow: visible;}
+    .admin-table-wrap { background: transparent !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; overflow: visible !important; }
     .admin-table thead { display: none; }
     .admin-table tbody tr {
         display: block;
