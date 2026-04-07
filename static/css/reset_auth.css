@@ -20,7 +20,7 @@
     border-radius: 1rem;
     width: 100%;
     max-width: 420px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
     animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     z-index: 10;
