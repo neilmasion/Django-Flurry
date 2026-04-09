@@ -219,7 +219,29 @@
                     <span class="post-time">Posted {{ item.created_at|timesince }} ago</span>
                 </div>
                 {% if item.user == request.user %}
-                <button class="card-menu-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <button class="card-menu-btn" type="button" aria-label="More actions">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </button>
+                <div class="card-menu-dropdown" role="menu">
+                    <button
+                        type="button"
+                        class="menu-item-btn edit-showcase-btn"
+                        data-showcase-id="{{ item.id }}"
+                        data-title="{{ item.title|escape }}"
+                        data-url="{{ item.website_url|escape }}"
+                        data-description="{{ item.description|escape }}"
+                    >
+                        <i class="fa-solid fa-pen"></i> Edit Post
+                    </button>
+                    <button
+                        type="button"
+                        class="menu-item-btn danger open-delete-modal-btn"
+                        data-showcase-id="{{ item.id }}"
+                        data-title="{{ item.title|escape }}"
+                    >
+                        <i class="fa-solid fa-trash"></i> Delete Post
+                    </button>
+                </div>
                 {% endif %}
             </div>
             <div class="showcase-content">
@@ -356,6 +378,85 @@
     </main>
 
     {% if user.is_authenticated %}
+    <!-- Delete Showcase Confirm Modal -->
+    <div class="admin-modal-overlay" id="deleteShowcaseModal">
+        <div class="admin-modal upload-modal">
+            <button class="admin-modal-close" id="closeDeleteShowcaseModal" type="button">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="admin-modal-header">
+                <h2>
+                    <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444;"></i>
+                    Confirm Showcase Deletion
+                </h2>
+                <p>This action cannot be undone.</p>
+            </div>
+            <form method="POST" id="deleteShowcaseForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p class="delete-confirm-note">
+                        Type the showcase title below to confirm:
+                    </p>
+                    <p class="delete-confirm-title" id="deleteShowcaseExpectedTitle"></p>
+                    <div class="edit-group">
+                        <label for="delete_showcase_confirm_title">Showcase Title</label>
+                        <input type="text" id="delete_showcase_confirm_title" name="confirm_title" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal-cancel" id="cancelDeleteShowcase">Cancel</button>
+                    <button type="submit" class="btn-modal-submit danger" id="confirmDeleteShowcaseBtn" disabled>Delete Showcase</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Showcase Modal -->
+    <div class="admin-modal-overlay" id="editShowcaseModal">
+        <div class="admin-modal upload-modal">
+            <button class="admin-modal-close" id="closeEditShowcaseModal" type="button">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="admin-modal-header">
+                <h2>
+                    <i class="fa-solid fa-pen-to-square" style="color: var(--accent-color);"></i>
+                    Edit Your Showcase
+                </h2>
+                <p>Update your website details below.</p>
+            </div>
+            <form method="POST" enctype="multipart/form-data" id="editShowcaseForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="modal-row">
+                        <div class="edit-group">
+                            <label for="edit_showcase_title">Website Title</label>
+                            <input type="text" name="title" id="edit_showcase_title" required>
+                        </div>
+                        <div class="edit-group">
+                            <label for="edit_showcase_url">Website URL</label>
+                            <input type="url" name="website_url" id="edit_showcase_url" required>
+                        </div>
+                    </div>
+                    <div class="edit-group">
+                        <label for="edit_showcase_description">Description</label>
+                        <textarea name="description" id="edit_showcase_description" rows="4" required></textarea>
+                    </div>
+                    <div class="edit-group">
+                        <label for="edit_showcase_images" style="display:flex; align-items:center; gap:0.5rem;">
+                            Add More Screenshots (Optional)
+                            <span style="font-size:0.7rem; font-weight:400; color:rgba(255,255,255,0.35);">JPG, PNG</span>
+                        </label>
+                        <input type="file" name="images" id="edit_showcase_images" accept="image/*" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal-cancel" id="cancelEditShowcase">Cancel</button>
+                    <button type="submit" class="btn-modal-submit">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Upload Modal Redesign -->
     <div class="admin-modal-overlay" id="uploadModal">
         <div class="admin-modal upload-modal">
@@ -466,6 +567,26 @@
             const closeModalBtn = document.getElementById('closeUploadModal');
             const cancelBtn = document.getElementById('cancelUpload');
             const modal = document.getElementById('uploadModal');
+            const menuButtons = document.querySelectorAll('.card-menu-btn');
+            const editButtons = document.querySelectorAll('.edit-showcase-btn');
+            const deleteButtons = document.querySelectorAll('.open-delete-modal-btn');
+            const editModal = document.getElementById('editShowcaseModal');
+            const editForm = document.getElementById('editShowcaseForm');
+            const closeEditModalBtn = document.getElementById('closeEditShowcaseModal');
+            const cancelEditBtn = document.getElementById('cancelEditShowcase');
+            const editTitleInput = document.getElementById('edit_showcase_title');
+            const editUrlInput = document.getElementById('edit_showcase_url');
+            const editDescriptionInput = document.getElementById('edit_showcase_description');
+            const editActionTemplate = "{% url 'edit-own-showcase' 0 %}";
+            const deleteModal = document.getElementById('deleteShowcaseModal');
+            const deleteForm = document.getElementById('deleteShowcaseForm');
+            const closeDeleteModalBtn = document.getElementById('closeDeleteShowcaseModal');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteShowcase');
+            const deleteExpectedTitle = document.getElementById('deleteShowcaseExpectedTitle');
+            const deleteConfirmInput = document.getElementById('delete_showcase_confirm_title');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteShowcaseBtn');
+            const deleteActionTemplate = "{% url 'delete-own-showcase' 0 %}";
+            let activeDeleteTitle = '';
 
             const openModal = () => {
                 if (modal) {
@@ -488,6 +609,172 @@
             if (modal) {
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) closeModal();
+                });
+            }
+
+            const closeAllMenus = () => {
+                document.querySelectorAll('.card-menu-dropdown.open').forEach(menu => {
+                    menu.classList.remove('open');
+                });
+            };
+
+            menuButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const menu = btn.nextElementSibling;
+                    if (!menu || !menu.classList.contains('card-menu-dropdown')) return;
+
+                    const isOpen = menu.classList.contains('open');
+                    closeAllMenus();
+                    if (!isOpen) {
+                        menu.classList.add('open');
+                    }
+                });
+            });
+
+            document.addEventListener('click', closeAllMenus);
+
+            const openEditModal = () => {
+                if (!editModal) return;
+                editModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeEditModal = () => {
+                if (!editModal) return;
+                editModal.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            const openDeleteModal = () => {
+                if (!deleteModal) return;
+                deleteModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const closeDeleteModal = () => {
+                if (!deleteModal) return;
+                deleteModal.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+
+            editButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAllMenus();
+
+                    const showcaseId = btn.dataset.showcaseId;
+                    if (!showcaseId || !editForm) return;
+
+                    editForm.action = editActionTemplate.replace('/0/', `/${showcaseId}/`);
+                    editTitleInput.value = btn.dataset.title || '';
+                    editUrlInput.value = btn.dataset.url || '';
+                    editDescriptionInput.value = btn.dataset.description || '';
+
+                    openEditModal();
+                });
+            });
+
+            if (editForm) {
+                editForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const submitBtn = editForm.querySelector('.btn-modal-submit');
+                    const originalText = submitBtn ? submitBtn.textContent : '';
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Saving...';
+                    }
+
+                    try {
+                        const formData = new FormData(editForm);
+                        const response = await fetch(editForm.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                            },
+                            credentials: 'same-origin'
+                        });
+
+                        const data = await response.json();
+                        if (!response.ok || data.status !== 'success') {
+                            throw new Error(data.message || 'Unable to update showcase.');
+                        }
+
+                        const card = document.getElementById(`showcase-${data.id}`);
+                        if (card) {
+                            const descEl = card.querySelector('.showcase-description');
+                            if (descEl) {
+                                descEl.textContent = data.description_preview || '';
+                            }
+
+                            const visitLink = card.querySelector('.visitor-btn');
+                            if (visitLink && data.website_url) {
+                                visitLink.setAttribute('href', data.website_url);
+                            }
+
+                            const editBtn = card.querySelector('.edit-showcase-btn');
+                            if (editBtn) {
+                                editBtn.dataset.title = data.title || '';
+                                editBtn.dataset.url = data.website_url || '';
+                                editBtn.dataset.description = editDescriptionInput.value || '';
+                            }
+                        }
+
+                        closeEditModal();
+                    } catch (err) {
+                        alert(err.message || 'Something went wrong while updating.');
+                    } finally {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = originalText;
+                        }
+                    }
+                });
+            }
+
+            deleteButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAllMenus();
+
+                    const showcaseId = btn.dataset.showcaseId;
+                    const title = (btn.dataset.title || '').trim();
+                    if (!showcaseId || !deleteForm) return;
+
+                    activeDeleteTitle = title;
+                    deleteForm.action = deleteActionTemplate.replace('/0/', `/${showcaseId}/`);
+                    deleteExpectedTitle.textContent = title;
+                    deleteConfirmInput.value = '';
+                    confirmDeleteBtn.disabled = true;
+
+                    openDeleteModal();
+                });
+            });
+
+            if (deleteConfirmInput) {
+                deleteConfirmInput.addEventListener('input', () => {
+                    const entered = deleteConfirmInput.value.trim();
+                    confirmDeleteBtn.disabled = entered !== activeDeleteTitle;
+                });
+            }
+
+            if (closeEditModalBtn) closeEditModalBtn.addEventListener('click', closeEditModal);
+            if (cancelEditBtn) cancelEditBtn.addEventListener('click', closeEditModal);
+            if (editModal) {
+                editModal.addEventListener('click', (e) => {
+                    if (e.target === editModal) closeEditModal();
+                });
+            }
+
+            if (closeDeleteModalBtn) closeDeleteModalBtn.addEventListener('click', closeDeleteModal);
+            if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+            if (deleteModal) {
+                deleteModal.addEventListener('click', (e) => {
+                    if (e.target === deleteModal) closeDeleteModal();
                 });
             }
 

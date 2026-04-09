@@ -96,18 +96,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'flurry_project.wsgi.application'
-database_url = os.getenv('DATABASE_URL')
-if database_url:
-    DATABASES = {
-        'default': dj_database_url.parse(database_url, conn_max_age=600, ssl_require=True)
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+
+# Safer local development: when DEBUG=True, prefer LOCAL_DATABASE_URL so
+# localhost can use a separate Neon database from production.
+local_database_url = os.getenv('LOCAL_DATABASE_URL')
+database_url = local_database_url if DEBUG and local_database_url else os.getenv('DATABASE_URL')
+if not database_url:
+    raise RuntimeError('DATABASE_URL (or LOCAL_DATABASE_URL in DEBUG) is required')
+
+DATABASES = {
+    'default': dj_database_url.parse(database_url, conn_max_age=600, ssl_require=True)
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -198,7 +197,7 @@ elif USE_S3_MEDIA:
 else:
     STORAGES = {
         'default': {
-            'BACKEND': 'django.core.files.storage.FileSystemStorage',
+            'BACKEND': 'base.storage.NormalizedFileSystemStorage',
         },
         'staticfiles': {
             'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',

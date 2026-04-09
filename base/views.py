@@ -395,6 +395,68 @@ def add_comment(request, pk):
         })
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+
+@login_required
+def edit_own_showcase(request, showcase_id):
+    if request.method != 'POST':
+        return redirect('community')
+
+    showcase = get_object_or_404(Showcase, id=showcase_id, user=request.user)
+    form = ShowcaseForm(request.POST, request.FILES, instance=showcase)
+
+    if form.is_valid():
+        updated_showcase = form.save()
+
+        # Optional: allow owner to append new screenshots while editing.
+        for img in request.FILES.getlist('images'):
+            ShowcaseImage.objects.create(showcase=updated_showcase, image=img)
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            description_text = updated_showcase.description or ''
+            words = description_text.split()
+            preview = ' '.join(words[:20]) + ('...' if len(words) > 20 else '')
+            return JsonResponse({
+                'status': 'success',
+                'id': updated_showcase.id,
+                'title': updated_showcase.title,
+                'website_url': updated_showcase.website_url,
+                'description_preview': preview,
+            })
+
+        messages.success(request, 'Your showcase has been updated successfully.')
+    else:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            first_error = 'Unable to update showcase.'
+            for _, errors in form.errors.items():
+                if errors:
+                    first_error = errors[0]
+                    break
+            return JsonResponse({'status': 'error', 'message': first_error}, status=400)
+
+        for field, errors in form.errors.items():
+            for error in errors:
+                field_name = 'Error' if field == '__all__' else field.replace('_', ' ').title()
+                messages.error(request, f"{field_name}: {error}")
+
+    return redirect(reverse('community') + f"#showcase-{showcase_id}")
+
+
+@login_required
+def delete_own_showcase(request, showcase_id):
+    if request.method != 'POST':
+        return redirect('community')
+
+    showcase = get_object_or_404(Showcase, id=showcase_id, user=request.user)
+    confirm_title = request.POST.get('confirm_title', '').strip()
+    if confirm_title != showcase.title:
+        messages.error(request, 'Title confirmation did not match. Showcase was not deleted.')
+        return redirect(reverse('community') + f"#showcase-{showcase_id}")
+
+    title = showcase.title
+    showcase.delete()
+    messages.success(request, f'Showcase "{title}" deleted successfully.')
+    return redirect('community')
+
 def contact(request):
     if request.method == 'POST':
         if not request.user.is_authenticated:

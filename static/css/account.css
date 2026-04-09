@@ -198,6 +198,41 @@
     font-weight: 600;
 }
 
+/* Account page primary buttons need stable hover contrast in both themes. */
+.account-container .btn-primary {
+    border-radius: 0.6rem;
+    border: 1px solid transparent;
+    letter-spacing: 0.01em;
+}
+
+[data-theme="dark"] .account-container .btn-primary {
+    background: linear-gradient(135deg, #f8fbff 0%, #dbe9ff 100%);
+    color: #0b1a2c;
+    border-color: rgba(255, 255, 255, 0.32);
+}
+
+[data-theme="dark"] .account-container .btn-primary:hover {
+    background: linear-gradient(135deg, #ffffff 0%, #c5dbff 100%);
+    color: #081423;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(11, 26, 44, 0.35);
+}
+
+[data-theme="light"] .account-container .btn-primary,
+html:not([data-theme]) .account-container .btn-primary {
+    background: #0a1a2b;
+    color: #ffffff;
+    border-color: rgba(10, 26, 43, 0.2);
+}
+
+[data-theme="light"] .account-container .btn-primary:hover,
+html:not([data-theme]) .account-container .btn-primary:hover {
+    background: #12314f;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(10, 26, 43, 0.24);
+}
+
 .form-switch-link {
     text-align: center;
     margin-top: 1rem;
@@ -274,31 +309,58 @@
     outline: none;
 }
 
-html:not([data-theme="dark"]) #schoolAutocomplete.search-results-dropdown {
+[data-theme="light"] #schoolAutocomplete.search-results-dropdown {
     background: rgba(255, 255, 255, 0.98);
     border: 1px solid rgba(10, 26, 43, 0.14);
     box-shadow: 0 12px 30px rgba(10, 26, 43, 0.14);
 }
 
-html:not([data-theme="dark"]) #schoolAutocomplete .search-result-item {
+[data-theme="light"] #schoolAutocomplete .search-result-item {
     color: #0a1a2b;
 }
 
-html:not([data-theme="dark"]) #schoolAutocomplete .search-result-item:hover {
+[data-theme="light"] #schoolAutocomplete .search-result-item:hover {
     background: rgba(10, 26, 43, 0.08);
 }
 
-html:not([data-theme="dark"]) #schoolAutocomplete .result-name {
+[data-theme="light"] #schoolAutocomplete .result-name {
     color: #0a1a2b;
 }
 
-html:not([data-theme="dark"]) #schoolAutocomplete .result-meta {
+[data-theme="light"] #schoolAutocomplete .result-meta {
     color: #23364a;
 }
 
-html:not([data-theme="dark"]) #schoolAutocomplete .result-avatar {
+[data-theme="light"] #schoolAutocomplete .result-avatar {
     color: #0a1a2b;
     background: rgba(10, 26, 43, 0.1);
+}
+
+[data-theme="dark"] #schoolAutocomplete.search-results-dropdown {
+    background: rgba(15, 15, 20, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] #schoolAutocomplete .search-result-item {
+    color: #ffffff;
+}
+
+[data-theme="dark"] #schoolAutocomplete .search-result-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] #schoolAutocomplete .result-name {
+    color: #ffffff;
+}
+
+[data-theme="dark"] #schoolAutocomplete .result-meta {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="dark"] #schoolAutocomplete .result-avatar {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .checkbox-container {
