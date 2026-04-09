@@ -1,0 +1,209 @@
+// Corrected user-style DBML aligned to current Django models
+
+Table User {
+  id int [pk, increment]
+  username varchar(150)
+  email varchar(254) [unique]
+  password varchar(128)
+  first_name varchar(150)
+  last_name varchar(150)
+  course varchar(50)
+  year_level varchar(20)
+  school varchar(200)
+  gender varchar(10)
+  role varchar(10)
+  department varchar(20)
+  position varchar(20)
+  is_email_verified boolean
+  email_verification_code varchar(6)
+  bio text
+  profile_picture varchar(100)
+  last_username_update datetime
+  officer_started_at date
+  officer_ends_at date
+  is_active boolean
+  is_staff boolean
+  is_superuser boolean
+  date_joined datetime
+  last_login datetime
+}
+
+Table ContactMessage {
+  id int [pk, increment]
+  user_id int
+  name varchar(100)
+  email varchar(254)
+  subject varchar(200)
+  message text
+  created_at datetime
+}
+
+Table MemberStats {
+  id int [pk, increment]
+  members varchar(50)
+  workshops varchar(50)
+  certs_earned varchar(50)
+}
+
+Table Event {
+  id int [pk, increment]
+  title varchar(200)
+  description text
+  day varchar(2)
+  month varchar(3)
+  time_range varchar(100)
+  location varchar(200)
+  spots_left varchar(50)
+  spots_capacity int
+  date date
+  start_time time
+  end_time time
+  event_type varchar(20)
+  is_featured boolean
+
+  Indexes {
+    (date, event_type)
+  }
+}
+
+Table Enrollment {
+  id int [pk, increment]
+  user_id int
+  event_id int
+  enrolled_at datetime
+
+  Indexes {
+    (user_id, event_id) [unique]
+    (event_id, enrolled_at)
+    (user_id, enrolled_at)
+  }
+}
+
+Table WorkshopCatalogItem {
+  id int [pk, increment]
+  title varchar(200)
+  description text
+  icon_class varchar(100)
+  level varchar(20)
+  category varchar(100)
+  duration varchar(50)
+  attendance_count int
+}
+
+Table Testimonial {
+  id int [pk, increment]
+  quote text
+  author_name varchar(100)
+  author_role varchar(200)
+  author_initials varchar(5)
+  is_approved boolean
+}
+
+Table OfficerApplication {
+  id int [pk, increment]
+  user_id int
+  reason text
+  department varchar(20)
+  position varchar(20)
+  gender varchar(10)
+  status varchar(10)
+  created_at datetime
+  updated_at datetime
+}
+
+Table Notification {
+  id int [pk, increment]
+  user_id int
+  message text
+  link varchar(500)
+  is_read boolean
+  created_at datetime
+
+  Indexes {
+    (user_id, is_read, created_at)
+  }
+}
+
+Table Connection {
+  id int [pk, increment]
+  user_from_id int
+  user_to_id int
+  status varchar(10)
+  created_at datetime
+  updated_at datetime
+
+  Note: 'Check constraint: user_from_id != user_to_id'
+
+  Indexes {
+    (user_from_id, user_to_id) [unique]
+    (user_to_id, status, created_at)
+    (user_from_id, status, created_at)
+  }
+}
+
+Table Showcase {
+  id int [pk, increment]
+  user_id int
+  title varchar(200)
+  website_url varchar(200)
+  description text
+  is_approved boolean
+  created_at datetime
+}
+
+Table ShowcaseImage {
+  id int [pk, increment]
+  showcase_id int
+  image varchar(100)
+}
+
+Table ShowcaseComment {
+  id int [pk, increment]
+  showcase_id int
+  user_id int
+  parent_id int
+  content text
+  created_at datetime
+
+  Indexes {
+    (showcase_id, created_at)
+    (user_id, created_at)
+  }
+}
+
+Table ShowcaseLikes {
+  id int [pk, increment]
+  showcase_id int
+  user_id int
+
+  Indexes {
+    (showcase_id, user_id) [unique]
+  }
+}
+
+Table ShowcaseSaves {
+  id int [pk, increment]
+  showcase_id int
+  user_id int
+
+  Indexes {
+    (showcase_id, user_id) [unique]
+  }
+}
+
+Ref: ContactMessage.user_id > User.id
+Ref: Enrollment.user_id > User.id
+Ref: Enrollment.event_id > Event.id
+Ref: OfficerApplication.user_id > User.id
+Ref: Notification.user_id > User.id
+Ref: Connection.user_from_id > User.id
+Ref: Connection.user_to_id > User.id
+Ref: Showcase.user_id > User.id
+Ref: ShowcaseImage.showcase_id > Showcase.id
+Ref: ShowcaseComment.showcase_id > Showcase.id
+Ref: ShowcaseComment.user_id > User.id
+Ref: ShowcaseComment.parent_id > ShowcaseComment.id
+Ref: ShowcaseLikes.showcase_id > Showcase.id
+Ref: ShowcaseLikes.user_id > User.id
+Ref: ShowcaseSaves.showcase_id > Showcase.id
+Ref: ShowcaseSaves.user_id > User.id

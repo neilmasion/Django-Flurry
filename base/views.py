@@ -1120,6 +1120,7 @@ def create_event(request):
         location = request.POST.get('location')
         spots_val = request.POST.get('spots_left')
         spots_left = f"{spots_val} spots left" if spots_val else ""
+        spots_capacity = int(spots_val) if spots_val else None
         event_type = request.POST.get('event_type')
         date_val = request.POST.get('date')
         start_time_val = request.POST.get('start_time')
@@ -1137,6 +1138,7 @@ def create_event(request):
             time_range=time_range,
             location=location,
             spots_left=spots_left,
+            spots_capacity=spots_capacity,
             event_type=event_type,
             is_featured=is_featured
         )
@@ -1155,6 +1157,7 @@ def edit_event(request, event_id):
         event.location = request.POST.get('location')
         spots_val = request.POST.get('spots_left')
         event.spots_left = f"{spots_val} spots left" if spots_val else ""
+        event.spots_capacity = int(spots_val) if spots_val else None
         event.event_type = request.POST.get('event_type')
         event.is_featured = request.POST.get('is_featured') == 'on'
         date_val = request.POST.get('date')

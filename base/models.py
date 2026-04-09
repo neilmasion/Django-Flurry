@@ -121,11 +121,17 @@ class Event(models.Model):
     time_range = models.CharField(max_length=100) 
     location = models.CharField(max_length=200)
     spots_left = models.CharField(max_length=50)
+    spots_capacity = models.PositiveIntegerField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
     event_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='workshop')
     is_featured = models.BooleanField(default=False)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['date', 'event_type']),
+        ]
     
     @property
     def is_past(self):
@@ -148,6 +154,9 @@ class Event(models.Model):
 
     @property
     def total_capacity(self):
+        if self.spots_capacity is not None:
+            return self.spots_capacity
+
         raw = (self.spots_left or '').strip()
         if not raw:
             return None
@@ -226,6 +235,11 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['user', 'is_read', '-created_at']),
+        ]
+
     def __str__(self):
         return f"Notification for {self.user.username}"
 
@@ -243,6 +257,16 @@ class Connection(models.Model):
 
     class Meta:
         unique_together = ('user_from', 'user_to')
+        constraints = [
+            models.CheckConstraint(
+                condition=~models.Q(user_from=models.F('user_to')),
+                name='connection_no_self_connection',
+            ),
+        ]
+        indexes = [
+            models.Index(fields=['user_to', 'status', '-created_at']),
+            models.Index(fields=['user_from', 'status', '-created_at']),
+        ]
 
     def __str__(self):
         return f"{self.user_from.username} -> {self.user_to.username} ({self.status})"
@@ -254,6 +278,10 @@ class Enrollment(models.Model):
 
     class Meta:
         unique_together = ('user', 'event')
+        indexes = [
+            models.Index(fields=['event', '-enrolled_at']),
+            models.Index(fields=['user', '-enrolled_at']),
+        ]
 
     def __str__(self):
         return f"{self.user.username} enrolled in {self.event.title}"
@@ -292,6 +320,12 @@ class ShowcaseComment(models.Model):
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['showcase', '-created_at']),
+            models.Index(fields=['user', '-created_at']),
+        ]
 
     def __str__(self):
         return f'{self.user.username} on {self.showcase.title}'
