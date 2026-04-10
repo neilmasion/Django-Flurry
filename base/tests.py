@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
 from django.test import TestCase
+from django.urls import reverse
 
-from .models import Connection, Enrollment, Event
+from .models import ActivityLog, Connection, Enrollment, Event, Testimonial
 
 
 class EventCapacityModelTests(TestCase):
@@ -75,3 +76,162 @@ class ConnectionConstraintTests(TestCase):
 		with self.assertRaises(IntegrityError):
 			with transaction.atomic():
 				Connection.objects.create(user_from=user, user_to=user, status='pending')
+
+
+class TestimonialAccessTests(TestCase):
+	def setUp(self):
+		self.user_model = get_user_model()
+		self.admin_user = self.user_model.objects.create_user(
+			email='admin@example.com',
+			username='adminuser',
+			password='password123',
+			role='admin',
+			is_staff=True,
+		)
+		self.officer_user = self.user_model.objects.create_user(
+			email='officer@example.com',
+			username='officeruser',
+			password='password123',
+			role='officer',
+			is_staff=True,
+		)
+		self.testimonial = Testimonial.objects.create(
+			quote='Great club!',
+			author_name='Student One',
+			author_role='IT - 3rd Year',
+			author_initials='SO',
+		)
+
+	def test_officer_cannot_approve_testimonial(self):
+		self.client.login(username='officer@example.com', password='password123')
+		response = self.client.post(reverse('approve-testimonial', args=[self.testimonial.id]))
+
+		self.assertRedirects(response, reverse('admin-dashboard'))
+		self.testimonial.refresh_from_db()
+		self.assertFalse(self.testimonial.is_approved)
+
+	def test_admin_can_approve_testimonial(self):
+		self.client.login(username='admin@example.com', password='password123')
+		response = self.client.post(reverse('approve-testimonial', args=[self.testimonial.id]))
+
+		self.assertRedirects(response, reverse('admin-dashboard'))
+		self.testimonial.refresh_from_db()
+		self.assertTrue(self.testimonial.is_approved)
+
+	def test_officer_dashboard_hides_testimonial_section(self):
+		self.client.login(username='officer@example.com', password='password123')
+		response = self.client.get(reverse('admin-dashboard'))
+
+		self.assertEqual(response.status_code, 200)
+		self.assertNotContains(response, 'data-section="testimonials"')
+		self.assertNotContains(response, 'Testimonials & Feedback')
+
+
+class LoginEmailVerificationTests(TestCase):
+	def setUp(self):
+		self.user_model = get_user_model()
+		self.admin_user = self.user_model.objects.create_user(
+			email='loginadmin@example.com',
+			username='loginadmin',
+			password='password123',
+			role='admin',
+			is_staff=True,
+			is_email_verified=False,
+		)
+		self.officer_user = self.user_model.objects.create_user(
+			email='loginofficer@example.com',
+			username='loginofficer',
+			password='password123',
+			role='officer',
+			is_staff=True,
+			is_email_verified=False,
+		)
+
+	def test_unverified_admin_can_login(self):
+		response = self.client.post(reverse('login'), {
+			'email': 'loginadmin@example.com',
+			'password': 'password123',
+		})
+
+		self.assertRedirects(response, reverse('index'))
+		self.assertEqual(int(self.client.session.get('_auth_user_id')), self.admin_user.id)
+
+	def test_unverified_officer_must_verify_before_login(self):
+		response = self.client.post(reverse('login'), {
+			'email': 'loginofficer@example.com',
+			'password': 'password123',
+		})
+
+		self.assertRedirects(response, reverse('verify-email-sent'))
+		self.assertEqual(self.client.session.get('verification_email'), 'loginofficer@example.com')
+		self.assertIsNone(self.client.session.get('_auth_user_id'))
+
+
+class AdminProfileVerificationUiTests(TestCase):
+	def setUp(self):
+		self.user_model = get_user_model()
+		self.admin_user = self.user_model.objects.create_user(
+			email='profileadmin@example.com',
+			username='profileadmin',
+			password='password123',
+			role='admin',
+			is_staff=True,
+			is_email_verified=False,
+		)
+
+	def test_admin_profile_hides_unverified_badge_and_verify_button(self):
+		self.client.login(username='profileadmin@example.com', password='password123')
+		response = self.client.get(reverse('profile'))
+
+		self.assertEqual(response.status_code, 200)
+		self.assertNotContains(response, 'Unverified')
+		self.assertNotContains(response, 'Verify Email')
+
+
+class ActivityLogDashboardTests(TestCase):
+	def setUp(self):
+		self.user_model = get_user_model()
+		self.admin_user = self.user_model.objects.create_user(
+			email='activityadmin@example.com',
+			username='activityadmin',
+			password='password123',
+			role='admin',
+			is_staff=True,
+		)
+		self.officer_user = self.user_model.objects.create_user(
+			email='activityofficer@example.com',
+			username='activityofficer',
+			password='password123',
+			role='officer',
+			is_staff=True,
+		)
+
+	def test_create_event_generates_activity_log(self):
+		self.client.force_login(self.officer_user)
+		response = self.client.post(reverse('create-event'), {
+			'title': 'Ops Planning',
+			'description': 'Weekly operations planning',
+			'day': '10',
+			'month': 'APR',
+			'time_range': '1:00 PM - 2:00 PM',
+			'location': 'Lab 1',
+			'spots_left': '30',
+			'event_type': 'workshop',
+		})
+
+		self.assertRedirects(response, reverse('admin-dashboard'))
+		self.assertTrue(ActivityLog.objects.filter(actor=self.officer_user, action_type='event_create').exists())
+
+	def test_admin_dashboard_displays_recent_activity_summary(self):
+		ActivityLog.objects.create(
+			actor=self.officer_user,
+			action_type='event_create',
+			summary='Created event: Ops Planning.',
+		)
+
+		self.client.force_login(self.admin_user)
+		response = self.client.get(reverse('admin-dashboard'))
+
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, 'Recent Activities')
+		self.assertContains(response, 'Created event: Ops Planning.')

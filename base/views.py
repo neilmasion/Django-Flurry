@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.conf import settings
 from django_ratelimit.decorators import ratelimit
 from django.templatetags.static import static
-from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, ContactMessage, OfficerApplication, Notification, Enrollment, Showcase, ShowcaseImage, ShowcaseComment, Connection
+from .models import MemberStats, Event, WorkshopCatalogItem, Testimonial, User, ContactMessage, OfficerApplication, Notification, Enrollment, Showcase, ShowcaseImage, ShowcaseComment, Connection, ActivityLog
 from .forms import StudentRegistrationForm, StudentLoginForm, ContactForm, ShowcaseForm
 from django.core.mail import send_mail
 from django.urls import reverse
@@ -31,6 +31,16 @@ OFFICER_ROLE_LABELS = {
     'finance': 'Chief of Finance',
     'relations': 'Chief of Relations',
 }
+
+
+def _log_admin_activity(actor, action_type, summary):
+    if not actor or not getattr(actor, 'is_authenticated', False):
+        return
+    ActivityLog.objects.create(
+        actor=actor,
+        action_type=action_type,
+        summary=summary[:255],
+    )
 
 
 def _default_avatar_url(user):
@@ -200,6 +210,11 @@ def update_role(request, user_id):
 
             target_user.save()
             messages.success(request, f'Role updated for {target_user.username}.')
+            _log_admin_activity(
+                request.user,
+                'role_update',
+                f"Updated role for {target_user.username} to {target_user.role}.",
+            )
         else:
             messages.error(request, 'Invalid role selected.')
     return redirect('admin-dashboard')
@@ -511,12 +526,12 @@ def login_view(request):
         total_users = User.objects.count()
         total_events = Event.objects.count()
         total_messages = ContactMessage.objects.count()
-        recent_users = User.objects.order_by('-date_joined')[:5]
+        recent_activities = ActivityLog.objects.select_related('actor').order_by('-created_at')[:8]
         context = {
             'total_users': total_users,
             'total_events': total_events,
             'total_messages': total_messages,
-            'recent_users': recent_users,
+            'recent_activities': recent_activities,
             'all_users': User.objects.all().order_by('-date_joined'),
             'all_events': Event.objects.all().order_by('-id'),
             'all_messages': ContactMessage.objects.all().order_by('-created_at'),
@@ -548,7 +563,7 @@ def login_view(request):
                         form,
                     )
 
-                if not user.is_email_verified and not (user.is_staff or user.is_superuser):
+                if not user.is_email_verified and not (user.role == 'admin' or user.is_superuser):
                     request.session['verification_email'] = user.email
                     return redirect('verify-email-sent')
                 
@@ -631,7 +646,7 @@ def admin_dashboard(request):
     total_users = User.objects.count()
     total_events = Event.objects.count()
     total_messages = ContactMessage.objects.count()
-    recent_users = User.objects.order_by('-date_joined')[:5]
+    recent_activities = ActivityLog.objects.select_related('actor').order_by('-created_at')[:8]
     
     # Separated lists for UI
     officers = User.objects.filter(role='officer').order_by('-date_joined')
@@ -686,7 +701,7 @@ def admin_dashboard(request):
         'total_users': total_users,
         'total_events': total_events,
         'total_messages': total_messages,
-        'recent_users': recent_users,
+        'recent_activities': recent_activities,
         'officers': officers,
         'members': members,
         'pending_applications': pending_applications,
@@ -782,6 +797,11 @@ def handle_officer_application(request, app_id):
             link=reverse('profile')
         )
         messages.success(request, f"Approved {user.username}'s application.")
+        _log_admin_activity(
+            request.user,
+            'application_review',
+            f"Approved officer application of {user.username} ({application.get_department_display()}).",
+        )
     elif action == 'deny':
         application.status = 'denied'
         Notification.objects.create(
@@ -790,6 +810,11 @@ def handle_officer_application(request, app_id):
             link=reverse('profile')
         )
         messages.success(request, f"Denied {application.user.username}'s application.")
+        _log_admin_activity(
+            request.user,
+            'application_review',
+            f"Denied officer application of {application.user.username} ({application.get_department_display()}).",
+        )
     
     application.save()
     return redirect('admin-dashboard')
@@ -820,6 +845,11 @@ def demote_officer(request, user_id):
         link=reverse('profile')
     )
     messages.success(request, f'{target_user.username} has been moved back to member.')
+    _log_admin_activity(
+        request.user,
+        'officer_demote',
+        f"Moved {target_user.username} from officer to member.",
+    )
     return redirect('admin-dashboard')
 
 @login_required
@@ -1189,7 +1219,7 @@ def create_event(request):
         end_time_val = request.POST.get('end_time')
         is_featured = request.POST.get('is_featured') == 'on'
         
-        Event.objects.create(
+        event = Event.objects.create(
             title=title,
             description=description,
             day=day,
@@ -1205,6 +1235,11 @@ def create_event(request):
             is_featured=is_featured
         )
         messages.success(request, f'Event "{title}" created successfully.')
+        _log_admin_activity(
+            request.user,
+            'event_create',
+            f"Created event: {event.title}.",
+        )
     return redirect('admin-dashboard')
 
 @staff_member_required
@@ -1236,6 +1271,11 @@ def edit_event(request, event_id):
             
         event.save()
         messages.success(request, f'Event "{event.title}" updated successfully.')
+        _log_admin_activity(
+            request.user,
+            'event_edit',
+            f"Edited event: {event.title}.",
+        )
     return redirect('admin-dashboard')
 
 @staff_member_required
@@ -1245,6 +1285,11 @@ def delete_event(request, event_id):
         title = event.title
         event.delete()
         messages.success(request, f'Event "{title}" deleted successfully.')
+        _log_admin_activity(
+            request.user,
+            'event_delete',
+            f"Deleted event: {title}.",
+        )
     return redirect('admin-dashboard')
 
 def account(request):
@@ -1289,13 +1334,19 @@ def submit_testimonial(request):
 @login_required
 def approve_testimonial(request, testimonial_id):
     if request.method == 'POST':
-        if not request.user.is_staff:
-            return redirect('index')
+        if request.user.role != 'admin' and not request.user.is_superuser:
+            messages.error(request, 'Only Administrators can manage testimonials.')
+            return redirect('admin-dashboard')
         testimonial = get_object_or_404(Testimonial, id=testimonial_id)
         testimonial.is_approved = not testimonial.is_approved
         testimonial.save()
         status = "approved" if testimonial.is_approved else "hidden"
         messages.success(request, f'Testimonial by {testimonial.author_name} is now {status}.')
+        _log_admin_activity(
+            request.user,
+            'testimonial_toggle',
+            f"Set testimonial of {testimonial.author_name} to {status}.",
+        )
         return redirect('admin-dashboard')
     return redirect('admin-dashboard')
 
@@ -1309,6 +1360,11 @@ def delete_adm_testimonial(request, testimonial_id):
         name = testimonial.author_name
         testimonial.delete()
         messages.success(request, f'Testimonial by {name} deleted.')
+        _log_admin_activity(
+            request.user,
+            'testimonial_delete',
+            f"Deleted testimonial of {name}.",
+        )
     return redirect('admin-dashboard')
 
 @staff_member_required
@@ -1319,6 +1375,11 @@ def approve_showcase(request, showcase_id):
         showcase.save()
         status = "approved" if showcase.is_approved else "hidden"
         messages.success(request, f'Showcase "{showcase.title}" is now {status}.')
+        _log_admin_activity(
+            request.user,
+            'showcase_toggle',
+            f"Set showcase '{showcase.title}' to {status}.",
+        )
     return redirect('admin-dashboard')
 
 @staff_member_required
@@ -1331,6 +1392,11 @@ def delete_showcase(request, showcase_id):
         title = showcase.title
         showcase.delete()
         messages.success(request, f'Showcase "{title}" deleted successfully.')
+        _log_admin_activity(
+            request.user,
+            'showcase_delete',
+            f"Deleted showcase: {title}.",
+        )
     return redirect('admin-dashboard')
 
 def public_profile(request, username):

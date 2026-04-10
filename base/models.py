@@ -243,6 +243,35 @@ class Notification(models.Model):
     def __str__(self):
         return f"Notification for {self.user.username}"
 
+
+class ActivityLog(models.Model):
+    ACTION_CHOICES = [
+        ('event_create', 'Created Event'),
+        ('event_edit', 'Edited Event'),
+        ('event_delete', 'Deleted Event'),
+        ('testimonial_toggle', 'Updated Testimonial'),
+        ('testimonial_delete', 'Deleted Testimonial'),
+        ('application_review', 'Reviewed Application'),
+        ('showcase_toggle', 'Updated Showcase'),
+        ('showcase_delete', 'Deleted Showcase'),
+        ('officer_demote', 'Demoted Officer'),
+        ('role_update', 'Updated User Role'),
+    ]
+
+    actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activity_logs')
+    action_type = models.CharField(max_length=40, choices=ACTION_CHOICES)
+    summary = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['actor', '-created_at']),
+        ]
+
+    def __str__(self):
+        return f"{self.actor.username}: {self.summary}"
+
 class Connection(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),

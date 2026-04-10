@@ -71,24 +71,6 @@
     </div>
     {% endif %}
 
-    {% if messages %}
-    <div class="messages admin-toast-persistent" style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; min-width: 300px;">
-        {% for message in messages %}
-            <div class="aerror {% if message.tags %}aerror--{{ message.tags }}{% endif %}" style="margin-bottom: 0.5rem; background: rgba(13, 36, 144, 0.9); color: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; gap: 0.75rem;">
-                <i class="fa-solid {% if message.tags == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
-                <span>{{ message }}</span>
-            </div>
-        {% endfor %}
-    </div>
-    <script>
-        setTimeout(() => {
-            const msgs = document.querySelector('.admin-toast-persistent');
-            if (msgs) msgs.style.opacity = '0';
-            setTimeout(() => { if (msgs) msgs.remove(); }, 500);
-        }, 4000);
-    </script>
-    {% endif %}
-
     {% if user.is_authenticated and user.is_staff or user.role == 'admin' or user.role == 'officer' or user.is_superuser %}
     <div class="admin-app" id="adminApp" style="display:flex;">
         <div class="admin-sidebar-overlay" id="adminSidebarOverlay"></div>
@@ -127,10 +109,12 @@
                         <i class="fa-solid fa-envelope"></i>
                         <span>Messages</span>
                     </button>
+                    {% if user.role == 'admin' or user.is_superuser %}
                     <button class="admin-nav-item" data-section="testimonials">
                         <i class="fa-solid fa-comment-dots"></i>
                         <span>Testimonials</span>
                     </button>
+                    {% endif %}
                 </nav>
             </div>
             <div class="admin-sidebar-bottom">
@@ -199,23 +183,23 @@
                             {% if user.role == 'admin' or user.is_superuser %}
                             <div class="regs-divider"></div>
                             <div class="recent-regs-list-compact">
-                                <h5 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 0 0 0.65rem 0; letter-spacing: 0.05em;"><i class="fa-solid fa-clock-rotate-left"></i> Latest Joins</h5>
-                                {% for r_user in recent_users %}
+                                <h5 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: rgba(255,255,255,0.4); margin: 0 0 0.65rem 0; letter-spacing: 0.05em;"><i class="fa-solid fa-clock-rotate-left"></i> Recent Activities</h5>
+                                {% for activity in recent_activities %}
                                 <div class="recent-reg-item-compact">
                                     <div class="reg-avatar-sm">
-                                        {% if r_user.profile_picture %}
-                                            <img src="{{ r_user.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                        {% if activity.actor.profile_picture %}
+                                            <img src="{{ activity.actor.profile_picture.url }}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
                                         {% else %}
-                                            {{ r_user.username.0|upper }}
+                                            {{ activity.actor.username.0|upper }}
                                         {% endif %}
                                     </div>
                                     <div class="reg-details-compact">
-                                        <div class="reg-name">{{ r_user.username }}</div>
-                                        <div class="reg-date">{{ r_user.date_joined|date:"M d" }}</div>
+                                        <div class="reg-name">{{ activity.summary }}</div>
+                                        <div class="reg-date">{{ activity.actor.username }} · {{ activity.created_at|timesince }} ago</div>
                                     </div>
                                 </div>
                                 {% empty %}
-                                <div class="dash-empty" style="padding: 1rem;"><p>No recent registrations.</p></div>
+                                <div class="dash-empty" style="padding: 1rem;"><p>No recent activity yet.</p></div>
                                 {% endfor %}
                             </div>
                             {% endif %}
@@ -289,6 +273,7 @@
                 </div>
             </section>
 
+            {% if user.role == 'admin' or user.is_superuser %}
             <section class="admin-section" id="section-testimonials">
                 <div class="admin-section-header">
                     <h2>Testimonials & Feedback</h2>
@@ -355,6 +340,7 @@
                     </table>
                 </div>
             </section>
+            {% endif %}
 
 
             {% if user.role == 'admin' or user.is_superuser %}
