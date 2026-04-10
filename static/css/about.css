@@ -646,10 +646,51 @@ html:not([data-theme="dark"]) .dept-icon {
     }
 }
 
-/* Keep a consistent deck + info layout on desktop to avoid broken alignment
-   when officer count is lower than a fixed grid column count. */
 @media (min-width: 769px) {
+    .deck-section {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .officer-deck {
+        display: grid;
+        grid-template-columns: repeat(var(--officer-count, 1), 220px);
+        grid-template-rows: 280px auto;
+        gap: 0.9rem 1.5rem;
+        width: max-content;
+        min-width: 100%;
+        height: auto;
+        position: static;
+        margin-left: 0;
+        justify-content: center;
+        justify-items: center;
+        cursor: default;
+    }
+
+    .officer-deck .deck-card {
+        position: relative;
+        inset: auto;
+        width: 220px;
+        height: 280px;
+        transform: none !important;
+        opacity: 1 !important;
+        z-index: auto !important;
+        filter: grayscale(0.18);
+        background: rgba(255, 255, 255, 0.11);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        cursor: default;
+    }
+
     .officer-card-info {
-        display: none;
+        display: block;
+        width: 220px;
+        padding-top: 0;
+        text-align: left;
+    }
+
+    .deck-info,
+    .deck-hint {
+        display: none !important;
     }
 }

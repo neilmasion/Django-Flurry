@@ -74,7 +74,12 @@ def _build_officer_card(user, role_label=None):
         if user.department == 'captain':
             role_label = 'Captain'
         elif user.department and user.position:
-            role_label = f'{user.get_position_display()} of {user.get_department_display()}'
+            position_label = user.get_position_display() or ''
+            department_label = user.get_department_display() or ''
+            if department_label and department_label.lower() in position_label.lower():
+                role_label = position_label
+            else:
+                role_label = f'{position_label} of {department_label}'
         else:
             role_label = user.get_department_display() or 'Officer'
 

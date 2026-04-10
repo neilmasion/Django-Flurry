@@ -45,6 +45,7 @@ export function setupOfficerDeck() {
     }
 
     deck.addEventListener('click', () => {
+        if (window.innerWidth > 768) return;
         if (total <= 1) return; // Prevent flip if only 1 card
         if (animating) return;
         animating = true;

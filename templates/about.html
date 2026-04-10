@@ -270,7 +270,7 @@
 
         {% if officer_cards %}
         <div class="deck-section">
-            <div class="officer-deck" id="officerDeck">
+            <div class="officer-deck" id="officerDeck" style="--officer-count: {{ officer_cards|length }};">
                 {% for officer in officer_cards %}
                 <div class="deck-card" data-pos="{{ forloop.counter0 }}" data-index="{{ forloop.counter0 }}" data-name="{{ officer.name }}" data-role="{{ officer.role }}" data-course="{{ officer.course }}">
                     <img src="{{ officer.avatar_url }}" alt="{{ officer.name }}">
