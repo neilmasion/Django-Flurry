@@ -417,6 +417,31 @@ def add_comment(request, pk):
 
 
 @login_required
+@ratelimit(key='user', rate='80/h', method='POST', block=False)
+def delete_comment(request, comment_id):
+    if getattr(request, 'limited', False):
+        return JsonResponse({'error': 'Too many requests. Please try again later.'}, status=429)
+
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+    comment = get_object_or_404(ShowcaseComment, id=comment_id)
+    if comment.user_id != request.user.id:
+        return JsonResponse({'error': 'You can only delete your own comments.'}, status=403)
+
+    showcase_id = comment.showcase_id
+    deleted_count = 1 + comment.replies.count()
+    comment.delete()
+
+    return JsonResponse({
+        'status': 'success',
+        'id': comment_id,
+        'showcase_id': showcase_id,
+        'deleted_count': deleted_count,
+    })
+
+
+@login_required
 def edit_own_showcase(request, showcase_id):
     if request.method != 'POST':
         return redirect('community')

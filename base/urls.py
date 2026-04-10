@@ -38,6 +38,7 @@ urlpatterns = [
     path('like-showcase/<int:pk>/', views.toggle_like, name='like-showcase'),
     path('save-showcase/<int:pk>/', views.toggle_save, name='save-showcase'),
     path('add-comment/<int:pk>/', views.add_comment, name='add-comment'),
+    path('delete-comment/<int:comment_id>/', views.delete_comment, name='delete-comment'),
     
     # User Connections
     path('profile/<str:username>/', views.public_profile, name='public-profile'),

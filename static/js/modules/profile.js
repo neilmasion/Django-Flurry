@@ -116,12 +116,97 @@ async function doRemovePhoto() {
 
 function setupPhotoUpload() {
     let selectedFile = null;
+    const MAX_UPLOAD_BYTES = Math.floor(1.9 * 1024 * 1024); // Keep below common 2MB gateway limits.
+
+    async function compressImageFile(file, maxBytes = MAX_UPLOAD_BYTES) {
+        if (!file || !file.type.startsWith('image/')) return file;
+
+        // Leave small files untouched.
+        if (file.size <= maxBytes) return file;
+
+        const supported = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!supported.includes(file.type)) {
+            throw new Error('Unsupported image format for auto-compression. Use JPG, PNG, or WEBP.');
+        }
+
+        const img = await new Promise((resolve, reject) => {
+            const objectUrl = URL.createObjectURL(file);
+            const image = new Image();
+            image.onload = () => {
+                URL.revokeObjectURL(objectUrl);
+                resolve(image);
+            };
+            image.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                reject(new Error('Unable to read the selected image.'));
+            };
+            image.src = objectUrl;
+        });
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return file;
+
+        // Start with a reasonably sized square-ish avatar source.
+        const maxDimension = 1600;
+        const scale = Math.min(1, maxDimension / Math.max(img.width, img.height));
+        let width = Math.max(1, Math.round(img.width * scale));
+        let height = Math.max(1, Math.round(img.height * scale));
+
+        const toBlob = (quality, mime = 'image/jpeg') => new Promise((resolve) => {
+            canvas.toBlob(resolve, mime, quality);
+        });
+
+        let bestBlob = null;
+        let quality = 0.88;
+        let attempt = 0;
+
+        while (attempt < 8) {
+            canvas.width = width;
+            canvas.height = height;
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const blob = await toBlob(quality, 'image/jpeg');
+            if (!blob) break;
+
+            bestBlob = blob;
+            if (blob.size <= maxBytes) {
+                return new File([blob], file.name.replace(/\.[^/.]+$/, '.jpg'), {
+                    type: 'image/jpeg',
+                    lastModified: Date.now(),
+                });
+            }
+
+            // First lower quality, then downscale further if still large.
+            if (quality > 0.55) {
+                quality -= 0.08;
+            } else {
+                width = Math.max(640, Math.round(width * 0.85));
+                height = Math.max(640, Math.round(height * 0.85));
+            }
+
+            attempt += 1;
+        }
+
+        if (bestBlob) {
+            return new File([bestBlob], file.name.replace(/\.[^/.]+$/, '.jpg'), {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+            });
+        }
+
+        throw new Error('Image compression failed. Please try a different image.');
+    }
 
     async function handleFile(file) {
         if (!file) return;
-        if (file.size > 2 * 1024 * 1024) { alert('Image must be under 2MB.'); return; }
-        
-        selectedFile = file;
+        try {
+            selectedFile = await compressImageFile(file);
+        } catch (err) {
+            alert(err.message || 'Unable to process this image.');
+            return;
+        }
 
         // Show preview in modal
         const reader = new FileReader();

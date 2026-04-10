@@ -587,6 +587,23 @@ html[data-theme="dark"] .community-hero .btn-primary:hover i {
     text-decoration: underline;
 }
 
+.delete-comment-btn {
+    background: none;
+    border: none;
+    color: #fda4af;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+    margin-left: 0.9rem;
+}
+
+.delete-comment-btn:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
 .replies-list {
     margin-top: 1rem;
     padding-left: 0; /* Align with parent avatar if preferred, or keep inset */

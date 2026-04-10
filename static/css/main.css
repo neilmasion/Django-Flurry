@@ -131,8 +131,19 @@ a:hover {
 
 .btn-primary:hover {
     background-color: var(--bg-hover);
+    color: var(--text-primary);
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
+}
+
+html[data-theme="dark"] .btn-primary:hover {
+    background-color: #dbeafe;
+    color: #0a1a2b;
+    border-color: rgba(219, 234, 254, 0.9);
+}
+
+html[data-theme="dark"] .btn-primary:hover i {
+    color: #0a1a2b;
 }
 
 .btn-outline {
