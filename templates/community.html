@@ -80,7 +80,7 @@
                         <button class="user-menu-btn" id="userMenuBtn">
                             <div class="user-avatar-sm" id="userAvatarNav">
                                 {% if user.profile_picture %}
-                                    <img src="{{ user.profile_picture.url }}" alt="avatar" onerror="this.onerror=null; this.src='{% static \'images/no-profile.png\' %}';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                                    <img src="{{ user.profile_picture.url }}" alt="avatar" onerror="this.onerror=null; this.src='{% static 'images/no-profile.png' %}';" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
                                 {% else %}
                                     {{ user.username|slice:":1"|upper }}
                                 {% endif %}
@@ -209,7 +209,7 @@
             <div class="showcase-card-author">
                 <a href="{% url 'public-profile-id' user_id=item.user.id %}" class="author-avatar" title="View Profile">
                     {% if item.user.profile_picture %}
-                        <img src="{{ item.user.profile_picture.url }}" alt="avatar" onerror="this.onerror=null; this.src='{% static \'images/no-profile.png\' %}';">
+                        <img src="{{ item.user.profile_picture.url }}" alt="avatar" onerror="this.onerror=null; this.src='{% static 'images/no-profile.png' %}';">
                     {% else %}
                         {{ item.user.username|slice:":1"|upper }}
                     {% endif %}
@@ -287,7 +287,7 @@
                             <div class="comment {% if comment.user == request.user %}comment--self{% endif %}" id="comment-{{ comment.id }}">
                                 <a href="{% url 'public-profile-id' user_id=comment.user.id %}" class="comment-avatar" title="View Profile">
                                     {% if comment.user.profile_picture %}
-                                        <img src="{{ comment.user.profile_picture.url }}" alt="avatar" onerror="this.onerror=null; this.src='{% static \'images/no-profile.png\' %}';">
+                                        <img src="{{ comment.user.profile_picture.url }}" alt="avatar" onerror="this.onerror=null; this.src='{% static 'images/no-profile.png' %}';">
                                     {% else %}
                                         {{ comment.user.username|slice:":1"|upper }}
                                     {% endif %}
@@ -320,7 +320,7 @@
                                             <div class="reply {% if reply.user == request.user %}comment--self{% endif %}" id="comment-{{ reply.id }}">
                                                 <div class="comment-avatar sm">
                                                     {% if reply.user.profile_picture %}
-                                                        <img src="{{ reply.user.profile_picture.url }}" alt="avatar" onerror="this.onerror=null; this.src='{% static \'images/no-profile.png\' %}';">
+                                                        <img src="{{ reply.user.profile_picture.url }}" alt="avatar" onerror="this.onerror=null; this.src='{% static 'images/no-profile.png' %}';">
                                                     {% else %}
                                                         {{ reply.user.username|slice:":1"|upper }}
                                                     {% endif %}
