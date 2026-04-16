@@ -29,6 +29,7 @@ urlpatterns = [
     path('demote-officer/<int:user_id>/', views.demote_officer, name='demote-officer'),
     path('apply-for-officer/', views.apply_for_officer, name='apply-for-officer'),
     path('handle-officer-application/<int:app_id>/', views.handle_officer_application, name='handle-officer-application'),
+    path('reply-contact-message/<int:msg_id>/', views.reply_contact_message, name='reply-contact-message'),
     path('notification-read/<int:notification_id>/', views.mark_notification_read, name='mark-notification-read'),
     path('notifications-mark-all-read/', views.mark_all_notifications_read, name='mark-all-notifications-read'),
     path('notifications-clear-all/', views.clear_all_notifications, name='clear-all-notifications'),

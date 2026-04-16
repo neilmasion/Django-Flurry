@@ -93,6 +93,11 @@ class ContactMessage(models.Model):
     subject = models.CharField(max_length=200)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    # Reply fields
+    reply_message = models.TextField(null=True, blank=True)
+    replied_at = models.DateTimeField(null=True, blank=True)
+    replied_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='replied_messages')
 
     def __str__(self):
         return f"{self.name} - {self.subject}"
@@ -256,6 +261,7 @@ class ActivityLog(models.Model):
         ('showcase_delete', 'Deleted Showcase'),
         ('officer_demote', 'Demoted Officer'),
         ('role_update', 'Updated User Role'),
+        ('message_reply', 'Replied to Message'),
     ]
 
     actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activity_logs')

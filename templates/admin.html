@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flurry | Admin</title>
+    <title>Flurry | Dashboard</title>
     <link rel="stylesheet" href="{% static 'fontawesome/css/all.min.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/root.css' %}">
@@ -240,6 +240,7 @@
                                 <th>Email</th>
                                 <th>Subject</th>
                                 <th>Date</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -250,14 +251,24 @@
                                 <td data-label="Email">{{ msg.email }}</td>
                                 <td data-label="Subject">{{ msg.subject }}</td>
                                 <td data-label="Date">{{ msg.created_at|date:"M d, Y" }}</td>
+                                <td data-label="Status">
+                                    {% if msg.reply_message %}
+                                    <span class="admin-tag admin-tag--success">Replied</span>
+                                    {% else %}
+                                    <span class="admin-tag admin-tag--orange">Pending</span>
+                                    {% endif %}
+                                </td>
                                 <td data-label="">
                                     <div class="admin-actions">
                                         <button class="admin-btn-icon view-msg-btn" title="View Message"
+                                            data-id="{{ msg.id }}"
                                             data-name="{{ msg.name }}"
                                             data-email="{{ msg.email }}"
                                             data-subject="{{ msg.subject }}"
                                             data-date="{{ msg.created_at|date:'M d, Y' }}"
-                                            data-message="{{ msg.message }}">
+                                            data-message="{{ msg.message }}"
+                                            data-reply="{{ msg.reply_message|default:'' }}"
+                                            data-replied-at="{{ msg.replied_at|date:'M d, Y H:i'|default:'' }}">
                                             <i class="fa-solid fa-eye"></i>
                                         </button>
                                     </div>
@@ -931,10 +942,26 @@
                     <span class="modal-info-label">Message</span>
                     <div class="view-msg-content" id="msgModalBody"></div>
                 </div>
+                
+                <div class="modal-info-item" id="msgReplySection" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-light); display: none;">
+                    <span class="modal-info-label" style="color: var(--accent-success);">Staff Reply <span id="msgRepliedAt" style="font-size: 0.75rem; color: var(--text-tertiary); margin-left: 0.5rem; font-weight: normal;"></span></span>
+                    <div class="view-msg-content" id="msgModalReplyBody" style="background: rgba(34, 197, 94, 0.05); border-color: rgba(34, 197, 94, 0.2);"></div>
+                </div>
             </div>
-            <div class="admin-modal-actions" style="margin-top: 2rem;">
-                <button class="btn btn-primary" id="messageModalClose">Close</button>
-            </div>
+            
+            <form id="replyMessageForm" method="POST" action="" style="margin-top: 1.5rem;">
+                {% csrf_token %}
+                <div class="aform-group" id="replyFormGroup">
+                    <label for="replyMessageText">Write a Reply</label>
+                    <textarea name="reply_message" id="replyMessageText" rows="4" placeholder="Type your response here..." required style="width: 100%; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 0.75rem; background: var(--bg-tertiary); color: var(--text-primary); resize: vertical; margin-top: 0.5rem;"></textarea>
+                </div>
+                <div class="admin-modal-actions" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between;">
+                    <button type="button" class="btn btn-outline" id="messageModalClose">Close</button>
+                    <button type="submit" class="btn btn-primary" id="messageModalReplyBtn">
+                        Send Reply
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 

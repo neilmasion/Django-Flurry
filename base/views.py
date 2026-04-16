@@ -749,6 +749,59 @@ def admin_dashboard(request):
     }
     return render(request, 'admin.html', context)
 
+@staff_member_required
+def reply_contact_message(request, msg_id):
+    if request.method != 'POST':
+        return redirect('admin-dashboard')
+    
+    msg = get_object_or_404(ContactMessage, id=msg_id)
+    reply_text = request.POST.get('reply_message', '').strip()
+    
+    if not reply_text:
+        messages.error(request, "Reply message cannot be empty.")
+        return redirect('admin-dashboard')
+    
+    msg.reply_message = reply_text
+    msg.replied_at = timezone.now()
+    msg.replied_by = request.user
+    msg.save()
+    
+    # Send Notification to user if linked
+    if msg.user:
+        Notification.objects.create(
+            user=msg.user,
+            message=f"You have a new reply to your message: {msg.subject}",
+            link=reverse('profile')
+        )
+    
+    # Try sending email
+    from django.core.mail import send_mail
+    from django.conf import settings
+    
+    subject = f"Re: {msg.subject}"
+    email_body = f"Hello {msg.name},\n\nThank you for contacting Flurry. Here is our response to your message:\n\n---\n{reply_text}\n---\n\nBest regards,\nThe Flurry Team"
+    
+    try:
+        send_mail(
+            subject,
+            email_body,
+            settings.DEFAULT_FROM_EMAIL,
+            [msg.email],
+            fail_silently=False,
+        )
+        messages.success(request, f"Reply sent successfully to {msg.email}")
+    except Exception as e:
+        messages.warning(request, f"Reply saved, but failed to send email: {str(e)}")
+
+    _log_admin_activity(
+        request.user,
+        'message_reply',
+        f"Replied to message from {msg.name} ({msg.subject})"
+    )
+    
+    return redirect('admin-dashboard')
+
+
 @login_required
 def apply_for_officer(request):
     if not request.user.is_email_verified:

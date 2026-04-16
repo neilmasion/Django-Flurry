@@ -348,11 +348,31 @@ function setupModalHandlers() {
     document.addEventListener('click', e => {
         const btn = e.target.closest('.view-msg-btn');
         if (btn) {
-            const { name, email, subject, message } = btn.dataset;
+            const { id, name, email, subject, message, reply, repliedAt } = btn.dataset;
             document.getElementById('msgModalName').textContent = name;
             document.getElementById('msgModalEmail').textContent = email;
             document.getElementById('msgModalSubject').textContent = subject;
             document.getElementById('msgModalBody').textContent = message;
+
+            const replySection = document.getElementById('msgReplySection');
+            const replyFormGroup = document.getElementById('replyFormGroup');
+            const replyBtn = document.getElementById('messageModalReplyBtn');
+            const formObj = document.getElementById('replyMessageForm');
+
+            if (reply && reply.trim() !== '') {
+                replySection.style.display = 'block';
+                document.getElementById('msgModalReplyBody').textContent = reply;
+                document.getElementById('msgRepliedAt').textContent = repliedAt ? `on ${repliedAt}` : '';
+                replyFormGroup.style.display = 'none';
+                replyBtn.style.display = 'none';
+            } else {
+                replySection.style.display = 'none';
+                document.getElementById('replyMessageText').value = '';
+                replyFormGroup.style.display = 'block';
+                replyBtn.style.display = 'block';
+                formObj.action = `/reply-contact-message/${id}/`;
+            }
+
             document.getElementById('messageModalOverlay').style.display = 'flex';
         }
     });
